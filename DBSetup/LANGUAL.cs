@@ -36,6 +36,7 @@ internal class LANGUAL
         {
             Delimiter = "^",
             Quote = '~',
+            Escape = '$',
             HasHeaderRecord = false,
             BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
             MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
@@ -48,7 +49,7 @@ internal class LANGUAL
         {
             var item = await ParseFoodDescriptionAsync(context, record);
             context.Add(item);
-            Console.WriteLine(item.NDB_No1.NDB_No + " " + item.Factor_Code1.Factor_Code);
+            Console.WriteLine(item.NDB_No + " " + item.Factor_Code);
         }
 
         await context.SaveChangesAsync();
@@ -57,22 +58,16 @@ internal class LANGUAL
 
     private static async Task<LangualFactor> ParseFoodDescriptionAsync(DbContext context, LangualFactorDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
-        if (foodDescription == null)
-        {
-            throw new Exception($"FoodGroup {record.NDB_No} not found!");
-        }
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
+                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
 
-        var langualFactorsDescription = await context.FindAsync<LangualFactorsDescription>(record.FdGrp_Desc);
-        if (langualFactorsDescription == null)
-        {
-            throw new Exception($"LangualFactorsDescription {record.FdGrp_Desc} not found!");
-        }
+        var langualFactorsDescription = await context.FindAsync<LangualFactorsDescription>(record.FdGrp_Desc)
+                                        ?? throw new Exception($"LangualFactorsDescription {record.FdGrp_Desc} not found!");
 
         var item = new LangualFactor
         {
-            NDB_No1 = foodDescription,
-            Factor_Code1 = langualFactorsDescription,
+            NDB_No = foodDescription.NDB_No,
+            Factor_Code = langualFactorsDescription.Factor_Code,
         };
 
         return item;
@@ -83,20 +78,27 @@ internal class LANGUAL
 #pragma warning disable CS8632
 
 [Table("LANGUAL")]
-[Comment(" This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.")]
+[Comment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.")]
 public class LangualFactor
 {
     [Required]
+    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [ForeignKey("NDB_No")]
+    [Column(Order = 0)]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.")]
-    public FoodDescription NDB_No1 { get; set; }
-
+    public string NDB_No { get; set; }
+    
     [Required]
+    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [ForeignKey("Factor_Code")]
-    [Comment("he LanguaL factor from the Thesaurus.")]
-    public LangualFactorsDescription Factor_Code1 { get; set; }
+    [Column(Order = 1)]
+    [Comment("The LanguaL factor from the Thesaurus.")]
+    public string Factor_Code { get; set; }
+
+    public FoodDescription FoodDescription { get; set; }
+    public LangualFactorsDescription LangualFactorsDescription { get; set; }
 }
 
 public class LangualFactorDto

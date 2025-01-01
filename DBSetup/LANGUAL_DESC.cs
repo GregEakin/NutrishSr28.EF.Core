@@ -36,6 +36,7 @@ internal class LANGUAL_DESC
         {
             Delimiter = "^",
             Quote = '~',
+            Escape = '$',
             HasHeaderRecord = false,
             BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
             MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
@@ -71,10 +72,11 @@ internal class LANGUAL_DESC
 #pragma warning disable CS8632
 
 [Table("LANGDESC")]
-[Comment(" This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
+[Comment("This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
 public class LangualFactorsDescription
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
     [MaxLength(5)]
     [Column("Factor_Code")]

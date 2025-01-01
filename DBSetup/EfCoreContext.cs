@@ -21,7 +21,7 @@ public class EfCoreContext : DbContext
     public DbSet<FoodGroupDescription> FoodGroups { get; set; }
     public DbSet<FoodDescription> Foods { get; set; }
     public DbSet<LangualFactorsDescription> LangualDescs { get; set; }
-    // public DbSet<LangualFactor> LangualFactors { get; set; }
+    public DbSet<LangualFactor> Languals { get; set; }
 
     public EfCoreContext()
     {
@@ -38,8 +38,8 @@ public class EfCoreContext : DbContext
         // var entity = new ETC();
         // modelBuilder.ApplyConfiguration(entity);
 
-        // modelBuilder.Entity<LangualFactor>()
-        //     .HasKey(b => new { b.NDB_No1, b.Factor_Code1 });
+        modelBuilder.Entity<LangualFactor>()
+            .HasKey(b => new { NDB_No1 = b.NDB_No, Factor_Code1 = b.Factor_Code });
 
         base.OnModelCreating(modelBuilder);
     }

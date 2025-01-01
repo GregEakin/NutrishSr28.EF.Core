@@ -33,6 +33,7 @@ public static class FOOD_DES
         {
             Delimiter = "^",
             Quote = '~',
+            Escape = '$',
             HasHeaderRecord = false,
             BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
             MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
@@ -44,7 +45,7 @@ public static class FOOD_DES
         await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
         {
             var item = await ParseFoodDescriptionAsync(context, record);
-            Console.WriteLine(item.NDB_No + " " + item.FoodGroupCode + " " + item.Shrt_Desc);
+            Console.WriteLine(item.NDB_No + " " + item.FoodGroupCode.FdGrp_Desc + " " + item.Shrt_Desc);
         }
 
         await context.SaveChangesAsync();
@@ -53,11 +54,8 @@ public static class FOOD_DES
 
     private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionDto record)
     {
-        var foodGroup = await context.FindAsync<FoodGroupDescription>(record.FdGrp_Cd);
-        if (foodGroup == null)
-        {
-            throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
-        }
+        var foodGroup = await context.FindAsync<FoodGroupDescription>(record.FdGrp_Cd) 
+                        ?? throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
 
         var item = new FoodDescription
         {
@@ -93,7 +91,8 @@ public static class FOOD_DES
          "FNDDS are also identified by value of 'Y' in the Survey field. ")]
 public class FoodDescription
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [MaxLength(5)]
     [Column("NDB_No")]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.")]

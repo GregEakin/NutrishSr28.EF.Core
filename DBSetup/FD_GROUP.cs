@@ -33,6 +33,7 @@ public static class FD_GROUP
         {
             Delimiter = "^",
             Quote = '~',
+            Escape = '$',
             HasHeaderRecord = false,
             BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
             MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
@@ -71,7 +72,8 @@ public static class FD_GROUP
 [Comment("Contains a list of food groups used in SR28 and their descriptions.")]
 public class FoodGroupDescription
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
     [MaxLength(4)]
     [Column("FdGrp_Cd")]
@@ -87,7 +89,7 @@ public class FoodGroupDescription
 
     //-----------------------------------------------
     //Relationships
-    public ICollection<FoodDescription> FoodDescriptions { get; set; }
+    public ICollection<FoodDescription> FoodDescriptions { get; set; } = [];
 }
 
 public class FoodGroupDescriptionDto

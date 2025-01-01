@@ -21,7 +21,7 @@ namespace DBSetup.Migrations
                 {
                     table.PrimaryKey("PK_LANGDESC", x => x.Factor_Code);
                 },
-                comment: " This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.");
+                comment: "This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.");
         }
 
         /// <inheritdoc />
