@@ -19,6 +19,8 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 
+namespace DBSetup;
+
 public static class FOOD_DES
 {
     public static readonly string Filename = "../../../../data/FOOD_DES.txt";
@@ -30,42 +32,45 @@ public static class FOOD_DES
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             Delimiter = "^",
+            Quote = '~',
             HasHeaderRecord = false,
-            BadDataFound = null,
-            MissingFieldFound = null,
-            // CultureInfo = { CultureInfo.InvariantCulture }
+            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
+            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
         };
 
         using var csv = new CsvReader(reader, config);
-        var records = csv.GetRecords<FoodDescriptionCsv>();
-        foreach (var record in records)
+        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add(string.Empty);
+        
+        await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
         {
             var item = await ParseFoodDescriptionAsync(context, record);
-            // Console.WriteLine(item.NDB_No + " " + item.FoodGroupCode + " " + item.Shrt_Desc);
+            Console.WriteLine(item.NDB_No + " " + item.FoodGroupCode + " " + item.Shrt_Desc);
         }
+
+        await context.SaveChangesAsync();
+        Console.WriteLine("FoodGroupDescription done!");
     }
 
-    private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionCsv record)
+    private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionDto record)
     {
-        var foodGroup = await context.FindAsync<FoodGroupDescription>(record.FdGrp_Cd.Substring(1, record.FdGrp_Cd.Length - 2));
+        var foodGroup = await context.FindAsync<FoodGroupDescription>(record.FdGrp_Cd);
         if (foodGroup == null)
         {
-            Console.WriteLine($"FoodGroup {record.FdGrp_Cd} not found!");
-            return new FoodDescription();
+            throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
         }
 
         var item = new FoodDescription
         {
-            NDB_No = record.NDB_No.Substring(1, record.NDB_No.Length - 2),
+            NDB_No = record.NDB_No,
             FoodGroupCode = foodGroup,
-            Long_Desc = record.Long_Desc.Substring(1, record.Long_Desc.Length - 2),
-            Shrt_Desc = record.Shrt_Desc.Substring(1, record.Shrt_Desc.Length - 2),
-            ComName = record.ComName?.Substring(1, record.ComName.Length - 2),
-            ManufacName = record.ManufacName?.Substring(1, record.ManufacName.Length - 2),
-            Survey = record.Survey[1],
-            Ref_desc = record.Ref_desc?.Substring(1, record.Ref_desc.Length - 2),
+            Long_Desc = record.Long_Desc,
+            Shrt_Desc = record.Shrt_Desc,
+            ComName = record.ComName,
+            ManufacName = record.ManufacName,
+            Survey = record.Survey?[0],
+            Ref_desc = record.Ref_desc,
             Refuse = record.Refuse,
-            SciName = record.SciName?.Substring(1, record.SciName.Length - 2),
+            SciName = record.SciName,
             N_Factor = record.N_Factor,
             Pro_Factor = record.Pro_Factor,
             Fat_Factor = record.Fat_Factor,
@@ -79,6 +84,7 @@ public static class FOOD_DES
 }
 
 #nullable disable
+#pragma warning disable CS8632
 
 [Table("FOOD_DES")]
 [Comment("This file contains long and short descriptions and food group designators for all food items, " +
@@ -135,6 +141,7 @@ public class FoodDescription
     public string? Ref_desc { get; set; }
 
     [Comment("Percentage of refuse.")]
+    [Precision(2,0)]
     public decimal? Refuse { get; set; }
 
     [Comment("Scientific name of the food item. Given for the least " +
@@ -143,19 +150,23 @@ public class FoodDescription
     public string? SciName { get; set; }
 
     [Comment("Factor for converting nitrogen to protein.")]
+    [Precision(4, 2)]
     public decimal? N_Factor { get; set; }
 
     [Comment("Factor for calculating calories from protein.")]
+    [Precision(4, 2)]
     public decimal? Pro_Factor { get; set; }
 
     [Comment("Factor for calculating calories from fat.")]
+    [Precision(4, 2)]
     public decimal? Fat_Factor { get; set; }
 
     [Comment("Factor for calculating calories from carbohydrate.")]
+    [Precision(4, 2)]
     public decimal? CHO_Factor { get; set; }
 }
 
-public class FoodDescriptionCsv
+public class FoodDescriptionDto
 {
     public string NDB_No { get; set; }
     public string FdGrp_Cd { get; set; }

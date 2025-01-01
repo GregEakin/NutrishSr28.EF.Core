@@ -14,9 +14,14 @@
 
 using Microsoft.EntityFrameworkCore;
 
+namespace DBSetup;
+
 public class EfCoreContext : DbContext
 {
     public DbSet<FoodGroupDescription> FoodGroups { get; set; }
+    public DbSet<FoodDescription> Foods { get; set; }
+    public DbSet<LangualFactorsDescription> LangualDescs { get; set; }
+    // public DbSet<LangualFactor> LangualFactors { get; set; }
 
     public EfCoreContext()
     {
@@ -29,22 +34,14 @@ public class EfCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<FoodDescription>()
-            .Property(b => b.Refuse)
-            .HasPrecision(2, 0);
+        // modelBuilder.Configurations.Add(new MyEntityConfiguration())
+        // var entity = new ETC();
+        // modelBuilder.ApplyConfiguration(entity);
 
-        modelBuilder.Entity<FoodDescription>()
-            .Property(b => b.N_Factor)
-            .HasPrecision(4, 2);
-        modelBuilder.Entity<FoodDescription>()
-            .Property(b => b.Pro_Factor)
-            .HasPrecision(4, 2);
-        modelBuilder.Entity<FoodDescription>()
-            .Property(b => b.Fat_Factor)
-            .HasPrecision(4, 2);
-        modelBuilder.Entity<FoodDescription>()
-            .Property(b => b.CHO_Factor)
-            .HasPrecision(4, 2);
+        // modelBuilder.Entity<LangualFactor>()
+        //     .HasKey(b => new { b.NDB_No1, b.Factor_Code1 });
+
+        base.OnModelCreating(modelBuilder);
     }
 
     private const string ConnectionString = "Host=vim3.lab.eakin.wtf;Database=SR28;Username=docker;Password=secret";
@@ -53,7 +50,15 @@ public class EfCoreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options
-            .UseNpgsql(ConnectionString)
-            .LogTo(Console.WriteLine)
-            .EnableSensitiveDataLogging();
+            .UseNpgsql(ConnectionString);
+            // .LogTo(Console.WriteLine)
+            // .EnableSensitiveDataLogging();
 }
+
+// public class ETC : IEntityTypeConfiguration<FoodDescription>
+// {
+//     public void Configure(EntityTypeBuilder<FoodDescription> builder)
+//     {
+//         throw new NotImplementedException();
+//     }
+// }

@@ -21,9 +21,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DBSetup;
 
-public static class FD_GROUP
+// LanguaL stands for "Langua aLimentaria" or "language of food".
+// See http://www.langual.org
+
+internal class LANGUAL_DESC
 {
-    private static readonly string Filename = "../../../../data/FD_GROUP.txt";
+    private static readonly string Filename = "../../../../data/LANGDESC.txt";
 
     public static async Task ParseFileAsync(DbContext context)
     {
@@ -41,23 +44,23 @@ public static class FD_GROUP
         using var csv = new CsvReader(reader, config);
         csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
 
-        await foreach (var record in csv.GetRecordsAsync<FoodGroupDescriptionDto>())
+        await foreach (var record in csv.GetRecordsAsync<LangualFactorsDescriptionDto>())
         {
             var item = ParseFoodDescription(record);
             context.Add(item);
-            Console.WriteLine(item.FdGrp_Cd + " " + item.FdGrp_Desc);
+            Console.WriteLine(item.Factor_Code + " " + item.Description);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("FoodGroupDescription done!");
+        Console.WriteLine("LangualFactorsDescription done!");
     }
 
-    private static FoodGroupDescription ParseFoodDescription(FoodGroupDescriptionDto record)
+    private static LangualFactorsDescription ParseFoodDescription(LangualFactorsDescriptionDto record)
     {
-        var item = new FoodGroupDescription
+        var item = new LangualFactorsDescription
         {
-            FdGrp_Cd = record.FdGrp_Cd,
-            FdGrp_Desc = record.FdGrp_Desc,
+            Factor_Code = record.Factor_Code,
+            Description = record.Description,
         };
 
         return item;
@@ -67,31 +70,28 @@ public static class FD_GROUP
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FD_GROUP")]
-[Comment("Contains a list of food groups used in SR28 and their descriptions.")]
-public class FoodGroupDescription
+[Table("LANGDESC")]
+[Comment(" This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
+public class LangualFactorsDescription
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
-    [MaxLength(4)]
-    [Column("FdGrp_Cd")]
-    [Comment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. " +
-             "In the future, the last 2 digits may be used. Codes may not be consecutive.")]
-    public string FdGrp_Cd { get; set; }
+    [MaxLength(5)]
+    [Column("Factor_Code")]
+    [Comment("The LanguaL factor from the Thesaurus. Only those " +
+             "codes used to factor the foods contained in the " + 
+             "LanguaL Factor file are included in this file. ")]
+    public string Factor_Code { get; set; }
 
     [Required]
-    [MaxLength(60)]
-    [Column("FdGrp_Desc")]
-    [Comment("Name of food group.")]
-    public string FdGrp_Desc { get; set; }
-
-    //-----------------------------------------------
-    //Relationships
-    public ICollection<FoodDescription> FoodDescriptions { get; set; }
+    [MaxLength(140)]
+    [Column("Description")]
+    [Comment("The description of the LanguaL Factor Code from the thesaurus. ")]
+    public string Description { get; set; }
 }
 
-public class FoodGroupDescriptionDto
+public class LangualFactorsDescriptionDto
 {
-    public string FdGrp_Cd { get; set; }
-    public string FdGrp_Desc { get; set; }
+    public string Factor_Code { get; set; }
+    public string Description { get; set; }
 }

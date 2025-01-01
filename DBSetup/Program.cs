@@ -12,15 +12,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using DBSetup;
+
 Console.WriteLine("Hello, World!");
 
 await using var context = new EfCoreContext();
 
-// FD_GROUP.ParseFile(context);
+await FD_GROUP.ParseFileAsync(context);
 // SrcCd
 // DerivCD
-// LangDesc
+await LANGUAL_DESC.ParseFileAsync(context);
 // DataSrc
 // NutrDef
 await FOOD_DES.ParseFileAsync(context);
+// Weight
+// await LANGUAL.ParseFileAsync(context);
+// Footnote
+// NutData
+// DataSrcLn
 
