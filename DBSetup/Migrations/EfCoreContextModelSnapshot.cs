@@ -2,8 +2,8 @@
 using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,83 +17,83 @@ namespace DBSetup.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
                     b.Property<string>("NDB_No")
                         .HasMaxLength(5)
-                        .HasColumnType("character varying(5)")
+                        .HasColumnType("nvarchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<decimal?>("CHO_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("numeric(4,2)")
+                        .HasColumnType("decimal(4,2)")
                         .HasComment("Factor for calculating calories from carbohydrate.");
 
                     b.Property<string>("ComName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("nvarchar(100)")
                         .HasComment("Other names commonly used to describe a food, including local or regional names for various foods, for example, 'soda' or 'pop' for 'carbonated beverages.'");
 
                     b.Property<decimal?>("Fat_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("numeric(4,2)")
+                        .HasColumnType("decimal(4,2)")
                         .HasComment("Factor for calculating calories from fat.");
 
                     b.Property<string>("FdGrp_Cd")
                         .IsRequired()
-                        .HasColumnType("character varying(4)");
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("Long_Desc")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("Long_Desc")
                         .HasComment("200-character description of food item.");
 
                     b.Property<string>("ManufacName")
                         .HasMaxLength(65)
-                        .HasColumnType("character varying(65)")
+                        .HasColumnType("nvarchar(65)")
                         .HasComment("Indicates the company that manufactured the product, when appropriate.");
 
                     b.Property<decimal?>("N_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("numeric(4,2)")
+                        .HasColumnType("decimal(4,2)")
                         .HasComment("Factor for converting nitrogen to protein.");
 
                     b.Property<decimal?>("Pro_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("numeric(4,2)")
+                        .HasColumnType("decimal(4,2)")
                         .HasComment("Factor for calculating calories from protein.");
 
                     b.Property<string>("Ref_desc")
                         .HasMaxLength(135)
-                        .HasColumnType("character varying(135)")
+                        .HasColumnType("nvarchar(135)")
                         .HasComment("Description of inedible parts of a food item (refuse), such as seeds or bone.");
 
                     b.Property<decimal?>("Refuse")
                         .HasPrecision(2)
-                        .HasColumnType("numeric(2,0)")
+                        .HasColumnType("decimal(2,0)")
                         .HasComment("Percentage of refuse.");
 
                     b.Property<string>("SciName")
                         .HasMaxLength(65)
-                        .HasColumnType("character varying(65)")
+                        .HasColumnType("nvarchar(65)")
                         .HasComment("Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable.");
 
                     b.Property<string>("Shrt_Desc")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("character varying(60)")
+                        .HasColumnType("nvarchar(60)")
                         .HasColumnName("Shrt_Desc")
                         .HasComment("60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made. ");
 
-                    b.Property<char?>("Survey")
-                        .HasColumnType("character(1)")
+                    b.Property<string>("Survey")
+                        .HasColumnType("nvarchar(1)")
                         .HasComment("Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients.");
 
                     b.HasKey("NDB_No");
@@ -110,14 +110,14 @@ namespace DBSetup.Migrations
                 {
                     b.Property<string>("FdGrp_Cd")
                         .HasMaxLength(4)
-                        .HasColumnType("character varying(4)")
+                        .HasColumnType("nvarchar(4)")
                         .HasColumnName("FdGrp_Cd")
                         .HasComment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. In the future, the last 2 digits may be used. Codes may not be consecutive.");
 
                     b.Property<string>("FdGrp_Desc")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("character varying(60)")
+                        .HasColumnType("nvarchar(60)")
                         .HasColumnName("FdGrp_Desc")
                         .HasComment("Name of food group.");
 
@@ -132,12 +132,12 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LangualFactor", b =>
                 {
                     b.Property<string>("NDB_No")
-                        .HasColumnType("character varying(5)")
+                        .HasColumnType("nvarchar(5)")
                         .HasColumnOrder(0)
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("Factor_Code")
-                        .HasColumnType("character varying(5)")
+                        .HasColumnType("nvarchar(5)")
                         .HasColumnOrder(1)
                         .HasComment("The LanguaL factor from the Thesaurus.");
 
@@ -155,14 +155,14 @@ namespace DBSetup.Migrations
                 {
                     b.Property<string>("Factor_Code")
                         .HasMaxLength(5)
-                        .HasColumnType("character varying(5)")
+                        .HasColumnType("nvarchar(5)")
                         .HasColumnName("Factor_Code")
                         .HasComment("The LanguaL factor from the Thesaurus. Only those codes used to factor the foods contained in the LanguaL Factor file are included in this file. ");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(140)
-                        .HasColumnType("character varying(140)")
+                        .HasColumnType("nvarchar(140)")
                         .HasColumnName("Description")
                         .HasComment("The description of the LanguaL Factor Code from the thesaurus. ");
 
