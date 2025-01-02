@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20250102161004_DataSourceLink")]
-    partial class DataSourceLink
+    [Migration("20250102161628_SqlServer")]
+    partial class SqlServer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("NutrientDefinitionId");
 
-                    b.ToTable("DATASRCLN", t =>
+                    b.ToTable("DATSRCLN", t =>
                         {
                             t.HasComment("This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.");
                         });

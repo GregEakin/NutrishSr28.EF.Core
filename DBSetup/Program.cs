@@ -24,22 +24,9 @@ await DERIV_CD.ParseFileAsync(context);
 await LANGDESC.ParseFileAsync(context);
 await DATA_SRC.ParseFileAsync(context);
 await NUTR_DEF.ParseFileAsync(context);
-await FOOD_DES.ParseFileAsync(context);         // Primary
-await WEIGHT.ParseFileAsync(context);           // Primary
+await FOOD_DES.ParseFileAsync(context);
+await WEIGHT.ParseFileAsync(context);
 await LANGUAL.ParseFileAsync(context);
-await FOOTNOTE.ParseFileAsync(context);         // Primary
-await NUT_DATA.ParseFileAsync(context);         // Primary
-await DATSRCLN.ParseFileAsync(context);           // DataSrcLn
-
-// FOOD_DES     4
-// FD_GROUP     5
-// LANGUAL      6
-// LANGDESC     7
-// NUT_DATA     8
-// NUTR_DEF     9
-// SRC_CD       10
-// DERIV_CD     11
-// WEIGHT       12
-// FOOTNOTE     13
-// DATSRCLN     14
-// DATA_SRC     15
+await FOOTNOTE.ParseFileAsync(context);
+await NUT_DATA.ParseFileAsync(context);
+await DATSRCLN.ParseFileAsync(context);
