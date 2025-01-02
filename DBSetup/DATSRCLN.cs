@@ -44,22 +44,42 @@ public static class DATSRCLN
 
         await foreach (var record in csv.GetRecordsAsync<DataSourceLinkDto>())
         {
-            var item = ParseDataSourceLink(record);
+            var item = await ParseDataSourceLinkAsync(context, record);
             context.Add(item);
             Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
+            await context.SaveChangesAsync();
         }
 
         await context.SaveChangesAsync();
         Console.WriteLine("Source Code done!");
     }
 
-    private static DataSourceLink ParseDataSourceLink(DataSourceLinkDto record)
+    private static async Task<DataSourceLink> ParseDataSourceLinkAsync(DbContext context, DataSourceLinkDto record)
     {
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
+                              ?? new FoodDescription
+                              {
+                                  FoodDescriptionId = record.NDB_No,
+                                  FoodGroupId = "2500",
+                                  Long_Desc = $"Unknown {record.NDB_No}",
+                                  Shrt_Desc = $"Unknown {record.NDB_No}",
+                              };
+
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
+                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+
+        var dataSource = await context.FindAsync<DataSource>(record.DataSrc_ID)
+                         ?? new DataSource
+                         {
+                             DataSourceId = record.DataSrc_ID,
+                             Title = $"Unknown {record.DataSrc_ID}"
+                         };
+
         var item = new DataSourceLink
         {
-            FoodDescriptionId = record.NDB_No,
-            NutrientDefinitionId = record.Nutr_No,
-            DataSourceId = record.DataSrc_ID,
+            FoodDescription = foodDescription,
+            NutrientDefinition = nutrientDefinition,
+            DataSource = dataSource,
         };
 
         return item;

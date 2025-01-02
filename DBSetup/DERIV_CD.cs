@@ -89,7 +89,7 @@ public class DerivationCode
 
     //-----------------------------------------------
     //Relationships
-    // Links to the Nutrient Data file by Deriv_Cd 
+    ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class DerivationCodeDto

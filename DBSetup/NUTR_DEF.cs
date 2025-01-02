@@ -118,6 +118,7 @@ public class NutrientDefinition
     //-----------------------------------------------
     //Relationships
     ICollection<DataSourceLink> DataSourceLinks { get; set; }
+    ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class NutrientDefinitionDto

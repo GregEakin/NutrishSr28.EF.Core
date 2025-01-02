@@ -44,7 +44,7 @@ public static class NUT_DATA
 
         await foreach (var record in csv.GetRecordsAsync<NutrientDataDto>())
         {
-            var item = ParseNutrientData(record);
+            var item = await ParseNutrientDataAsync(context, record);
             context.Add(item);
             Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
         }
@@ -53,18 +53,33 @@ public static class NUT_DATA
         Console.WriteLine("Nutrient Data done!");
     }
 
-    private static NutrientData ParseNutrientData(NutrientDataDto record)
+    private static async Task<NutrientData> ParseNutrientDataAsync(DbContext context, NutrientDataDto record)
     {
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
+                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+
+        var foodDescriptionRef = await context.FindAsync<FoodDescription>(record.Ref_NDB_No)
+                              ?? throw new Exception($"FoodDescription {record.Ref_NDB_No} not found!");
+
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
+                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+
+        var sourceCode = await context.FindAsync<SourceCode>(record.Src_Cd)
+                         ?? throw new Exception($"SourceCode {record.Src_Cd} not found!");
+
+        var derivationCode = await context.FindAsync<DerivationCode>(record.Deriv_Cd)
+                            ?? throw new Exception($"DerivationCode {record.Deriv_Cd} not found!");
+
         var item = new NutrientData
         {
-            FoodDescriptionId = record.NDB_No,
-            NutrientDefinitionId = record.Nutr_No,
+            FoodDescription = foodDescription,
+            NutrientDefinition = nutrientDefinition,
             Nutr_Val = record.Nutr_Val,
             Num_Data_Pts = record.Num_Data_Pts,
             Std_Error = record.Std_Error,
-            SourceCodeId = record.Src_Cd,
-            DerivationCodeId = record.Deriv_Cd,
-            Ref_NDB_No = record.Ref_NDB_No,
+            SourceCode = sourceCode,
+            DerivationCode = derivationCode,
+            FoodDescriptionRef = foodDescriptionRef,
             Add_Nutr_Mark = record.Add_Nutr_Mark,
             Num_Studies = record.Num_Studies,
             Min = record.Min,
@@ -140,7 +155,7 @@ public class NutrientData
     [Column("Ref_NDB_No")]
     [MaxLength(5)]
     [Comment("NDB number of the item used to calculate a missing value. Populated only for items added or updated starting with SR14.")]
-    public string? Ref_NDB_No { get; set; }
+    public string? FoodDescriptionRefId { get; set; }
     
     [Column("Add_Nutr_Mark")]
     [MaxLength(1)]
@@ -198,13 +213,13 @@ public class NutrientData
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    // public FoodDescription FoodDescriptionRef { get; set; }
+    public FoodDescription FoodDescriptionRef { get; set; }
     private ICollection<Weight> Weights { get; set; } = [];
-    // Links to the Footnote file by NDB_No and when applicable, Nutr_No 
-    // Links to the Sources of Data Link file by NDB_No and Nutr_No 
+    private ICollection<Footnote> Footnotes { get; set; } = [];
+    private ICollection<DataSource> DataSources { get; set; } = [];
     public NutrientDefinition NutrientDefinition { get; set; }
     public SourceCode SourceCode { get; set; }
-    public DerivationCode DataDerivationCode { get; set; }
+    public DerivationCode DerivationCode { get; set; }
 }
 
 public class NutrientDataDto

@@ -44,7 +44,7 @@ public static class FOOTNOTE
 
         await foreach (var record in csv.GetRecordsAsync<FootnoteDto>())
         {
-            var item = ParseFootnote(record);
+            var item = await ParseFootnoteAsync(context, record);
             context.Add(item);
             Console.WriteLine(item.FoodDescriptionId + " " + item.Footnt_No);
         }
@@ -53,14 +53,20 @@ public static class FOOTNOTE
         Console.WriteLine("Source Code done!");
     }
 
-    private static Footnote ParseFootnote(FootnoteDto record)
+    private static async Task<Footnote> ParseFootnoteAsync(DbContext context, FootnoteDto record)
     {
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
+                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
+                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+
         var item = new Footnote
         {
-            FoodDescriptionId = record.NDB_No,
+            FoodDescription = foodDescription,
             Footnt_No = record.Footnt_No,
             Footnt_Typ = record.Footnt_Typ[0],
-            NutrientDefinitionId = record.Nutr_No,
+            NutrientDefinition = nutrientDefinition,
             Footnt_Txt = record.Footnt_Txt,
         };
 
@@ -116,7 +122,7 @@ public class Footnote
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    // Links to the Nutrient Data file by NDB_No and when applicable, Nutr_No 
+    public NutrientData NutrientData { get; set; }
     public NutrientDefinition NutrientDefinition { get; set; }
 
 }

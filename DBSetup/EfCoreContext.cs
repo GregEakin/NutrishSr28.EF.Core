@@ -53,6 +53,18 @@ public class EfCoreContext : DbContext
         modelBuilder.Entity<NutrientData>()
             .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
 
+        modelBuilder.Entity<NutrientData>()
+            .HasOne(nd => nd.FoodDescription)
+            .WithOne()
+            .HasForeignKey<NutrientData>(nd => nd.FoodDescriptionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<NutrientData>()
+            .HasOne(nd => nd.FoodDescriptionRef)
+            .WithOne()
+            .HasForeignKey<NutrientData>(nd => nd.FoodDescriptionRefId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<DataSourceLink>()
             .HasKey(dsl => new { dsl.FoodDescriptionId, dsl.NutrientDefinitionId, dsl.DataSourceId });
 

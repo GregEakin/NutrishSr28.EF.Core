@@ -44,7 +44,7 @@ public static class WEIGHT
 
         await foreach (var record in csv.GetRecordsAsync<WeightDto>())
         {
-            var item = ParseWeight(record);
+            var item = await ParseWeightAsync(context, record);
             context.Add(item);
             Console.WriteLine(item.FoodDescriptionId + " " + item.Msre_Desc);
         }
@@ -53,11 +53,14 @@ public static class WEIGHT
         Console.WriteLine("Weight done!");
     }
 
-    private static Weight ParseWeight(WeightDto record)
+    private static async Task<Weight> ParseWeightAsync(DbContext context, WeightDto record)
     {
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
+                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+
         var item = new Weight
         {
-            FoodDescriptionId = record.NDB_No,
+            FoodDescription = foodDescription,
             Seq = record.Seq,
             Amount = record.Amount,
             Msre_Desc = record.Msre_Desc,
@@ -128,7 +131,8 @@ public class Weight
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    
+    public NutrientData NutrientData { get; set; }
+
     // Links to Nutrient Data file by NDB_No 
 }
 

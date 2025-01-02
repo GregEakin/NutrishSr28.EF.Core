@@ -52,12 +52,12 @@ public class FoodDescriptionTests
     {
         await using var context = new EfCoreContext();
         var foodDescription = await context.FoodDescriptions
-            .Include(fd => fd.LangualFactors)
+            .Include(fd => fd.LanguaLFactors)
             .ThenInclude(lf => lf.LanguaLDescription)
             .SingleAsync(fd => fd.FoodDescriptionId == "02002");
         
         Assert.NotNull(foodDescription);
-        var langualFactors = foodDescription.LangualFactors;
+        var langualFactors = foodDescription.LanguaLFactors;
         Assert.Equal(13, langualFactors.Count);
         foreach (var langualFactor in langualFactors) 
             Assert.Equal(foodDescription, langualFactor.FoodDescription);

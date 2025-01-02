@@ -60,7 +60,7 @@ public static class FOOD_DES
         var item = new FoodDescription
         {
             FoodDescriptionId = record.NDB_No,
-            FoodGroupId = foodGroup.FoodGroupId,
+            FoodGroup = foodGroup,
             Long_Desc = record.Long_Desc,
             Shrt_Desc = record.Shrt_Desc,
             ComName = record.ComName,
@@ -168,11 +168,10 @@ public class FoodDescription
 
     // Relationships
     public FoodGroup FoodGroup { get; set; }
-
-    public ICollection<LanguaLFactor> LangualFactors { get; set; } = [];
-
+    public NutrientData NutrientData { get; set; }
     public ICollection<Weight> Weights { get; set; } = [];
-
+    public ICollection<Footnote> Footnotes { get; set; } = [];
+    public ICollection<LanguaLFactor> LanguaLFactors { get; set; } = [];
     ICollection<DataSourceLink> DataSourceLinks { get; set; } = [];
 }
 

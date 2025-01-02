@@ -92,7 +92,7 @@ public class SourceCode
     //-----------------------------------------------
     //Relationships
 
-    // Links to the Nutrient Data file by Src_Cd
+    ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class SrcCdDto

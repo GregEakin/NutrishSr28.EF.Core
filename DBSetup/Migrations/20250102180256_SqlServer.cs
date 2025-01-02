@@ -163,35 +163,6 @@ namespace DBSetup.Migrations
                 comment: "This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.");
 
             migrationBuilder.CreateTable(
-                name: "FOOTNOTE",
-                columns: table => new
-                {
-                    FootnoteId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
-                    Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
-                    Footnt_Typ = table.Column<string>(type: "nvarchar(1)", nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
-                    Nutr_No = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
-                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FOOTNOTE", x => x.FootnoteId);
-                    table.ForeignKey(
-                        name: "FK_FOOTNOTE_FOOD_DES_NDB_No",
-                        column: x => x.NDB_No,
-                        principalTable: "FOOD_DES",
-                        principalColumn: "NDB_No",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FOOTNOTE_NUTR_DEF_Nutr_No",
-                        column: x => x.Nutr_No,
-                        principalTable: "NUTR_DEF",
-                        principalColumn: "Nutr_No");
-                },
-                comment: "This file contains additional information about the food item, household weight, and nutrient value.");
-
-            migrationBuilder.CreateTable(
                 name: "LANGUAL",
                 columns: table => new
                 {
@@ -237,7 +208,8 @@ namespace DBSetup.Migrations
                     Up_EB = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true, comment: "Upper 95% error bound."),
                     Stat_cmt = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "Statistical comments."),
                     AddMod_Date = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "Indicates when a value was either added to the database or last modified."),
-                    CC = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true, comment: "Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytical quality control, and number of samples analysed. Not included in this release, but is planned for future releases.")
+                    CC = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true, comment: "Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytical quality control, and number of samples analysed. Not included in this release, but is planned for future releases."),
+                    FoodDescriptionId1 = table.Column<string>(type: "nvarchar(5)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,11 +220,22 @@ namespace DBSetup.Migrations
                         principalTable: "DERIVCD",
                         principalColumn: "Deriv_Cd");
                     table.ForeignKey(
+                        name: "FK_NUT_DATA_FOOD_DES_FoodDescriptionId1",
+                        column: x => x.FoodDescriptionId1,
+                        principalTable: "FOOD_DES",
+                        principalColumn: "NDB_No");
+                    table.ForeignKey(
                         name: "FK_NUT_DATA_FOOD_DES_NDB_No",
                         column: x => x.NDB_No,
                         principalTable: "FOOD_DES",
                         principalColumn: "NDB_No",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_NUT_DATA_FOOD_DES_Ref_NDB_No",
+                        column: x => x.Ref_NDB_No,
+                        principalTable: "FOOD_DES",
+                        principalColumn: "NDB_No",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_NUT_DATA_NUTR_DEF_Nutr_No",
                         column: x => x.Nutr_No,
@@ -269,6 +252,42 @@ namespace DBSetup.Migrations
                 comment: "This file contains the nutrient values and information about the values, including expanded statistical information.");
 
             migrationBuilder.CreateTable(
+                name: "FOOTNOTE",
+                columns: table => new
+                {
+                    FootnoteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
+                    Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
+                    Footnt_Typ = table.Column<string>(type: "nvarchar(1)", nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
+                    Nutr_No = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
+                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text."),
+                    NutrientDataFoodDescriptionId = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    NutrientDataNutrientDefinitionId = table.Column<string>(type: "nvarchar(3)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FOOTNOTE", x => x.FootnoteId);
+                    table.ForeignKey(
+                        name: "FK_FOOTNOTE_FOOD_DES_NDB_No",
+                        column: x => x.NDB_No,
+                        principalTable: "FOOD_DES",
+                        principalColumn: "NDB_No",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FOOTNOTE_NUTR_DEF_Nutr_No",
+                        column: x => x.Nutr_No,
+                        principalTable: "NUTR_DEF",
+                        principalColumn: "Nutr_No");
+                    table.ForeignKey(
+                        name: "FK_FOOTNOTE_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                        columns: x => new { x.NutrientDataFoodDescriptionId, x.NutrientDataNutrientDefinitionId },
+                        principalTable: "NUT_DATA",
+                        principalColumns: new[] { "NDB_No", "Nutr_No" });
+                },
+                comment: "This file contains additional information about the food item, household weight, and nutrient value.");
+
+            migrationBuilder.CreateTable(
                 name: "WEIGHT",
                 columns: table => new
                 {
@@ -278,7 +297,9 @@ namespace DBSetup.Migrations
                     Msre_Desc = table.Column<string>(type: "nvarchar(84)", maxLength: 84, nullable: false, comment: "Description (for example, cup, diced, and 1-inch pieces)"),
                     Gm_Wgt = table.Column<decimal>(type: "decimal(7,1)", precision: 7, scale: 1, nullable: false, comment: "Gram weight."),
                     Num_Data_Pts = table.Column<decimal>(type: "decimal(4,0)", precision: 4, scale: 0, nullable: true, comment: "Number of data points."),
-                    Std_Dev = table.Column<decimal>(type: "decimal(7,3)", precision: 7, scale: 3, nullable: true, comment: "Standard deviation.")
+                    Std_Dev = table.Column<decimal>(type: "decimal(7,3)", precision: 7, scale: 3, nullable: true, comment: "Standard deviation."),
+                    NutrientDataFoodDescriptionId = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    NutrientDataNutrientDefinitionId = table.Column<string>(type: "nvarchar(3)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -289,6 +310,11 @@ namespace DBSetup.Migrations
                         principalTable: "FOOD_DES",
                         principalColumn: "NDB_No",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WEIGHT_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                        columns: x => new { x.NutrientDataFoodDescriptionId, x.NutrientDataNutrientDefinitionId },
+                        principalTable: "NUT_DATA",
+                        principalColumns: new[] { "NDB_No", "Nutr_No" });
                 },
                 comment: "This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
 
@@ -318,6 +344,11 @@ namespace DBSetup.Migrations
                 column: "Nutr_No");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FOOTNOTE_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                table: "FOOTNOTE",
+                columns: new[] { "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LANGUAL_Factor_Code",
                 table: "LANGUAL",
                 column: "Factor_Code");
@@ -328,14 +359,39 @@ namespace DBSetup.Migrations
                 column: "Deriv_Cd");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NUT_DATA_FoodDescriptionId1",
+                table: "NUT_DATA",
+                column: "FoodDescriptionId1",
+                unique: true,
+                filter: "[FoodDescriptionId1] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NUT_DATA_NDB_No",
+                table: "NUT_DATA",
+                column: "NDB_No",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NUT_DATA_Nutr_No",
                 table: "NUT_DATA",
                 column: "Nutr_No");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NUT_DATA_Ref_NDB_No",
+                table: "NUT_DATA",
+                column: "Ref_NDB_No",
+                unique: true,
+                filter: "[Ref_NDB_No] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NUT_DATA_Src_Cd",
                 table: "NUT_DATA",
                 column: "Src_Cd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WEIGHT_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                table: "WEIGHT",
+                columns: new[] { "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId" });
         }
 
         /// <inheritdoc />
@@ -351,9 +407,6 @@ namespace DBSetup.Migrations
                 name: "LANGUAL");
 
             migrationBuilder.DropTable(
-                name: "NUT_DATA");
-
-            migrationBuilder.DropTable(
                 name: "WEIGHT");
 
             migrationBuilder.DropTable(
@@ -363,16 +416,19 @@ namespace DBSetup.Migrations
                 name: "LANGDESC");
 
             migrationBuilder.DropTable(
+                name: "NUT_DATA");
+
+            migrationBuilder.DropTable(
                 name: "DERIVCD");
+
+            migrationBuilder.DropTable(
+                name: "FOOD_DES");
 
             migrationBuilder.DropTable(
                 name: "NUTR_DEF");
 
             migrationBuilder.DropTable(
                 name: "SRC");
-
-            migrationBuilder.DropTable(
-                name: "FOOD_DES");
 
             migrationBuilder.DropTable(
                 name: "FD_GROUP");

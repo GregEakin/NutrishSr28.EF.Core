@@ -91,7 +91,7 @@ public class LanguaLDescription
     [Comment("The description of the LanguaL Factor Code from the thesaurus. ")]
     public string Description { get; set; }
 
-    public ICollection<LanguaLFactor> LangualFactors { get; set; } = [];
+    public ICollection<LanguaLFactor> LanguaLFactors { get; set; } = [];
 }
 
 public class LangualDescriptionDto
