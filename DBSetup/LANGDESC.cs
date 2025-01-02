@@ -24,7 +24,7 @@ namespace DBSetup;
 // LanguaL stands for "Langua aLimentaria" or "language of food".
 // See http://www.langual.org
 
-internal class LANGUAL_DESC
+internal class LANGDESC
 {
     private static readonly string Filename = "../../../../data/LANGDESC.txt";
 

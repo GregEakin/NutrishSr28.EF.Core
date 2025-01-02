@@ -53,6 +53,9 @@ public class EfCoreContext : DbContext
         modelBuilder.Entity<NutrientData>()
             .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
 
+        modelBuilder.Entity<DataSourceLink>()
+            .HasKey(dsl => new { dsl.FoodDescriptionId, dsl.NutrientDefinitionId, dsl.DataSourceId });
+
         base.OnModelCreating(modelBuilder);
     }
 

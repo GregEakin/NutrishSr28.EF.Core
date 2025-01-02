@@ -172,6 +172,8 @@ public class FoodDescription
     public ICollection<LanguaLFactor> LangualFactors { get; set; } = [];
 
     public ICollection<Weight> Weights { get; set; } = [];
+
+    ICollection<DataSourceLink> DataSourceLinks { get; set; } = [];
 }
 
 public class FoodDescriptionDto

@@ -130,8 +130,7 @@ public class DataSource
 
     //-----------------------------------------------
     //Relationships
-
-    // Links to Nutrient Data file by NDB No. through the Sources of Data Link file 
+    ICollection<DataSourceLink> DataSourceLinks { get; set; }
 }
 
 public class DataSourceDto

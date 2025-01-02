@@ -117,8 +117,7 @@ public class NutrientDefinition
 
     //-----------------------------------------------
     //Relationships
-
-    // Links to the Nutrient Data file by Nutr_No 
+    ICollection<DataSourceLink> DataSourceLinks { get; set; }
 }
 
 public class NutrientDefinitionDto
