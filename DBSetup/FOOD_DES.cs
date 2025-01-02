@@ -45,7 +45,7 @@ public static class FOOD_DES
         await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
         {
             var item = await ParseFoodDescriptionAsync(context, record);
-            Console.WriteLine(item.NDB_No + " " + item.FoodGroupCode.FdGrp_Desc + " " + item.Shrt_Desc);
+            Console.WriteLine(item.FoodDescriptionId + " " + item.FoodGroupId + " " + item.Shrt_Desc);
         }
 
         await context.SaveChangesAsync();
@@ -54,13 +54,13 @@ public static class FOOD_DES
 
     private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionDto record)
     {
-        var foodGroup = await context.FindAsync<FoodGroupDescription>(record.FdGrp_Cd) 
-                        ?? throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
+        var foodGroup = await context.FindAsync<FoodGroup>(record.FdGrp_Cd) 
+                        ?? throw new Exception($"FoodGroup { record.FdGrp_Cd } not found!");
 
         var item = new FoodDescription
         {
-            NDB_No = record.NDB_No,
-            FoodGroupCode = foodGroup,
+            FoodDescriptionId = record.NDB_No,
+            FoodGroupId = foodGroup.FoodGroupId,
             Long_Desc = record.Long_Desc,
             Shrt_Desc = record.Shrt_Desc,
             ComName = record.ComName,
@@ -96,12 +96,13 @@ public class FoodDescription
     [MaxLength(5)]
     [Column("NDB_No")]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.")]
-    public string NDB_No { get; set; }
+    public string FoodDescriptionId { get; set; }
 
-    [ForeignKey("FdGrp_Cd")]
     [Required]
+    [MaxLength(4)]
+    [Column("FdGrp_Cd")]
     [Comment("4-digit code indicating food group to which a food item belongs.")]
-    public FoodGroupDescription FoodGroupCode { get; set; }
+    public string FoodGroupId { get; set; }
 
     [Required]
     [MaxLength(200)]
@@ -163,6 +164,11 @@ public class FoodDescription
     [Comment("Factor for calculating calories from carbohydrate.")]
     [Precision(4, 2)]
     public decimal? CHO_Factor { get; set; }
+
+    // Relationships
+    public FoodGroup FoodGroup { get; set; }
+
+    public ICollection<LangualFactor> LangualFactors { get; set; } = [];
 }
 
 public class FoodDescriptionDto

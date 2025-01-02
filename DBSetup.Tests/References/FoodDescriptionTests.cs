@@ -22,11 +22,10 @@ public class FoodDescriptionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
+        var foodDescription = await context.FoodDescriptions.FindAsync("01119");
 
-        var foodDescription = await context.Foods.FindAsync("01119");
         Assert.NotNull(foodDescription);
-
-        Assert.Equal("01119", foodDescription.NDB_No);
+        Assert.Equal("01119", foodDescription.FoodDescriptionId);
         Assert.Equal("YOGURT,VANILLA,LOFAT,11 GRAMS PROT PER 8 OZ", foodDescription.Shrt_Desc);
         Assert.Equal("Yogurt, vanilla, low fat, 11 grams protein per 8 ounce", foodDescription.Long_Desc);
     }
@@ -35,16 +34,15 @@ public class FoodDescriptionTests
     public async Task FoodGroupTest()
     {
         await using var context = new EfCoreContext();
-
-        var foodDescription = await context.Foods
-            .Include(fd => fd.FoodGroupCode)
-            .SingleAsync(fd => fd.NDB_No == "01119");
+        var foodDescription = await context.FoodDescriptions
+            .Include(fd => fd.FoodGroup)
+            .ThenInclude(fg => fg.FoodDescriptions)
+            .SingleAsync(fd => fd.FoodDescriptionId == "01119");
+        
         Assert.NotNull(foodDescription);
-
-        var foodGroup = foodDescription.FoodGroupCode;
-        Assert.Equal("0100", foodGroup.FdGrp_Cd);
-        Assert.Equal("Dairy and Egg Products", foodGroup.FdGrp_Desc);
-
+        var foodGroup = foodDescription.FoodGroup;
+        Assert.Equal("0100", foodGroup.FoodGroupId);
+        Assert.Equal("Dairy and Egg Products", foodGroup.FoodGroupName);
         Assert.True(foodGroup.FoodDescriptions.Contains(foodDescription));
     }
 
@@ -53,13 +51,15 @@ public class FoodDescriptionTests
     public async Task LanguageTest()
     {
         await using var context = new EfCoreContext();
-        var foodDescription = await context.Foods.FindAsync("02002");
+        var foodDescription = await context.FoodDescriptions
+            .Include(fd => fd.LangualFactors)
+            .ThenInclude(lf => lf.FoodDescription)
+            .SingleAsync(fd => fd.FoodDescriptionId == "02002");
+        
         Assert.NotNull(foodDescription);
-
-        // var languageSet = foodDescription.LanguageSet;
-        // Assert.Equal(13, languageSet.Count);
-        // await foreach (var language in languageSet)
-        //     Assert.True(language.FoodDescriptionSet.Contains(foodDescription));
+        var langualFactors = foodDescription.LangualFactors;
+        Assert.Equal(13, langualFactors.Count);
+        foreach (var langualFactor in langualFactors) 
+            Assert.Equal(foodDescription, langualFactor.FoodDescription);
     }
-
 }

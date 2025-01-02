@@ -42,23 +42,23 @@ public static class FD_GROUP
         using var csv = new CsvReader(reader, config);
         csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
 
-        await foreach (var record in csv.GetRecordsAsync<FoodGroupDescriptionDto>())
+        await foreach (var record in csv.GetRecordsAsync<FoodGroupDto>())
         {
             var item = ParseFoodDescription(record);
             context.Add(item);
-            Console.WriteLine(item.FdGrp_Cd + " " + item.FdGrp_Desc);
+            Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
         }
 
         await context.SaveChangesAsync();
         Console.WriteLine("FoodGroupDescription done!");
     }
 
-    private static FoodGroupDescription ParseFoodDescription(FoodGroupDescriptionDto record)
+    private static FoodGroup ParseFoodDescription(FoodGroupDto record)
     {
-        var item = new FoodGroupDescription
+        var item = new FoodGroup
         {
-            FdGrp_Cd = record.FdGrp_Cd,
-            FdGrp_Desc = record.FdGrp_Desc,
+            FoodGroupId = record.FdGrp_Cd,
+            FoodGroupName = record.FdGrp_Desc,
         };
 
         return item;
@@ -70,7 +70,7 @@ public static class FD_GROUP
 
 [Table("FD_GROUP")]
 [Comment("Contains a list of food groups used in SR28 and their descriptions.")]
-public class FoodGroupDescription
+public class FoodGroup
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -79,20 +79,20 @@ public class FoodGroupDescription
     [Column("FdGrp_Cd")]
     [Comment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. " +
              "In the future, the last 2 digits may be used. Codes may not be consecutive.")]
-    public string FdGrp_Cd { get; set; }
+    public string FoodGroupId { get; set; }
 
     [Required]
     [MaxLength(60)]
     [Column("FdGrp_Desc")]
     [Comment("Name of food group.")]
-    public string FdGrp_Desc { get; set; }
+    public string FoodGroupName { get; set; }
 
     //-----------------------------------------------
     //Relationships
     public ICollection<FoodDescription> FoodDescriptions { get; set; } = [];
 }
 
-public class FoodGroupDescriptionDto
+public class FoodGroupDto
 {
     public string FdGrp_Cd { get; set; }
     public string FdGrp_Desc { get; set; }

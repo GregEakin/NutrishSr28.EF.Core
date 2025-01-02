@@ -41,7 +41,7 @@ namespace DBSetup.Migrations
                 columns: table => new
                 {
                     NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost."),
-                    FdGrp_Cd = table.Column<string>(type: "nvarchar(4)", nullable: false),
+                    FdGrp_Cd = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "4-digit code indicating food group to which a food item belongs."),
                     Long_Desc = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "200-character description of food item."),
                     Shrt_Desc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made. "),
                     ComName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "Other names commonly used to describe a food, including local or regional names for various foods, for example, 'soda' or 'pop' for 'carbonated beverages.'"),
@@ -71,8 +71,8 @@ namespace DBSetup.Migrations
                 name: "LANGUAL",
                 columns: table => new
                 {
-                    NDB_No = table.Column<string>(type: "nvarchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
-                    Factor_Code = table.Column<string>(type: "nvarchar(5)", nullable: false, comment: "The LanguaL factor from the Thesaurus.")
+                    NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
+                    Factor_Code = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "The LanguaL factor from the Thesaurus.")
                 },
                 constraints: table =>
                 {

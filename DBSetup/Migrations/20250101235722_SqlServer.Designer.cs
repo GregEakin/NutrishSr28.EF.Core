@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20250101224836_SqlServer")]
+    [Migration("20250101235722_SqlServer")]
     partial class SqlServer
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
-                    b.Property<string>("NDB_No")
+                    b.Property<string>("FoodDescriptionId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnName("NDB_No")
@@ -47,9 +47,12 @@ namespace DBSetup.Migrations
                         .HasColumnType("decimal(4,2)")
                         .HasComment("Factor for calculating calories from fat.");
 
-                    b.Property<string>("FdGrp_Cd")
+                    b.Property<string>("FoodGroupId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4)");
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)")
+                        .HasColumnName("FdGrp_Cd")
+                        .HasComment("4-digit code indicating food group to which a food item belongs.");
 
                     b.Property<string>("Long_Desc")
                         .IsRequired()
@@ -99,9 +102,9 @@ namespace DBSetup.Migrations
                         .HasColumnType("nvarchar(1)")
                         .HasComment("Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients.");
 
-                    b.HasKey("NDB_No");
+                    b.HasKey("FoodDescriptionId");
 
-                    b.HasIndex("FdGrp_Cd");
+                    b.HasIndex("FoodGroupId");
 
                     b.ToTable("FOOD_DES", t =>
                         {
@@ -109,22 +112,22 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.FoodGroupDescription", b =>
+            modelBuilder.Entity("DBSetup.FoodGroup", b =>
                 {
-                    b.Property<string>("FdGrp_Cd")
+                    b.Property<string>("FoodGroupId")
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)")
                         .HasColumnName("FdGrp_Cd")
                         .HasComment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. In the future, the last 2 digits may be used. Codes may not be consecutive.");
 
-                    b.Property<string>("FdGrp_Desc")
+                    b.Property<string>("FoodGroupName")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)")
                         .HasColumnName("FdGrp_Desc")
                         .HasComment("Name of food group.");
 
-                    b.HasKey("FdGrp_Cd");
+                    b.HasKey("FoodGroupId");
 
                     b.ToTable("FD_GROUP", t =>
                         {
@@ -132,31 +135,9 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.LangualFactor", b =>
+            modelBuilder.Entity("DBSetup.LangualDescription", b =>
                 {
-                    b.Property<string>("NDB_No")
-                        .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
-
-                    b.Property<string>("Factor_Code")
-                        .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(1)
-                        .HasComment("The LanguaL factor from the Thesaurus.");
-
-                    b.HasKey("NDB_No", "Factor_Code");
-
-                    b.HasIndex("Factor_Code");
-
-                    b.ToTable("LANGUAL", t =>
-                        {
-                            t.HasComment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.");
-                        });
-                });
-
-            modelBuilder.Entity("DBSetup.LangualFactorsDescription", b =>
-                {
-                    b.Property<string>("Factor_Code")
+                    b.Property<string>("LangualDescriptionId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnName("Factor_Code")
@@ -169,7 +150,7 @@ namespace DBSetup.Migrations
                         .HasColumnName("Description")
                         .HasComment("The description of the LanguaL Factor Code from the thesaurus. ");
 
-                    b.HasKey("Factor_Code");
+                    b.HasKey("LangualDescriptionId");
 
                     b.ToTable("LANGDESC", t =>
                         {
@@ -177,39 +158,73 @@ namespace DBSetup.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DBSetup.LangualFactor", b =>
+                {
+                    b.Property<string>("FoodDescriptionId")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasColumnName("NDB_No")
+                        .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
+
+                    b.Property<string>("LangualDescriptionId")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasColumnName("Factor_Code")
+                        .HasComment("The LanguaL factor from the Thesaurus.");
+
+                    b.HasKey("FoodDescriptionId", "LangualDescriptionId");
+
+                    b.HasIndex("LangualDescriptionId");
+
+                    b.ToTable("LANGUAL", t =>
+                        {
+                            t.HasComment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.");
+                        });
+                });
+
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
-                    b.HasOne("DBSetup.FoodGroupDescription", "FoodGroupCode")
+                    b.HasOne("DBSetup.FoodGroup", "FoodGroup")
                         .WithMany("FoodDescriptions")
-                        .HasForeignKey("FdGrp_Cd")
+                        .HasForeignKey("FoodGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FoodGroupCode");
+                    b.Navigation("FoodGroup");
                 });
 
             modelBuilder.Entity("DBSetup.LangualFactor", b =>
                 {
-                    b.HasOne("DBSetup.LangualFactorsDescription", "LangualFactorsDescription")
-                        .WithMany()
-                        .HasForeignKey("Factor_Code")
+                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                        .WithMany("LangualFactors")
+                        .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
-                        .WithMany()
-                        .HasForeignKey("NDB_No")
+                    b.HasOne("DBSetup.LangualDescription", "LangualDescription")
+                        .WithMany("LangualFactors")
+                        .HasForeignKey("LangualDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FoodDescription");
 
-                    b.Navigation("LangualFactorsDescription");
+                    b.Navigation("LangualDescription");
                 });
 
-            modelBuilder.Entity("DBSetup.FoodGroupDescription", b =>
+            modelBuilder.Entity("DBSetup.FoodDescription", b =>
+                {
+                    b.Navigation("LangualFactors");
+                });
+
+            modelBuilder.Entity("DBSetup.FoodGroup", b =>
                 {
                     b.Navigation("FoodDescriptions");
+                });
+
+            modelBuilder.Entity("DBSetup.LangualDescription", b =>
+                {
+                    b.Navigation("LangualFactors");
                 });
 #pragma warning restore 612, 618
         }

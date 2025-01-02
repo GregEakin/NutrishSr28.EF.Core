@@ -22,8 +22,8 @@ public class FoodGroupTests
     public async Task RecordNotFoundTest()
     {
         await using var context = new EfCoreContext();
+        var foodGroup = await context.FoodGroups.FindAsync("9999");
 
-        var foodGroup = await context.FoodGroups.FindAsync("Food");
         Assert.Null(foodGroup);
     }
 
@@ -31,37 +31,35 @@ public class FoodGroupTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-
         var foodGroup = await context.FoodGroups.FindAsync("0400");
+
         Assert.NotNull(foodGroup);
-        Assert.Equal("0400", foodGroup.FdGrp_Cd);
-        Assert.Equal("Fats and Oils", foodGroup.FdGrp_Desc);
+        Assert.Equal("0400", foodGroup.FoodGroupId);
+        Assert.Equal("Fats and Oils", foodGroup.FoodGroupName);
     }
 
     [Fact]
     public async Task FindByValueTest()
     {
         await using var context = new EfCoreContext();
-
         var foodGroup = await context.FoodGroups
-            .SingleAsync(fg => fg.FdGrp_Desc == "Fats and Oils");
+            .SingleAsync(fg => fg.FoodGroupName == "Fats and Oils");
 
         Assert.NotNull(foodGroup);
-        Assert.Equal("0400", foodGroup.FdGrp_Cd);
-        Assert.Equal("Fats and Oils", foodGroup.FdGrp_Desc);
+        Assert.Equal("0400", foodGroup.FoodGroupId);
+        Assert.Equal("Fats and Oils", foodGroup.FoodGroupName);
     }
 
     [Fact]
     public async Task FoodDescriptionTest()
     {
         await using var context = new EfCoreContext();
-
         var foodGroup = await context.FoodGroups
             .Include(fg => fg.FoodDescriptions)
-            .SingleAsync(fg => fg.FdGrp_Cd == "0400");
+            .SingleAsync(fg => fg.FoodGroupId == "0400");
 
         Assert.Equal(220, foodGroup.FoodDescriptions.Count);
         foreach (var foodDescription in foodGroup.FoodDescriptions) 
-            Assert.Equal(foodGroup, foodDescription.FoodGroupCode);
+            Assert.Equal(foodGroup, foodDescription.FoodGroup);
     }
 }

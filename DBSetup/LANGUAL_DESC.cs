@@ -45,22 +45,22 @@ internal class LANGUAL_DESC
         using var csv = new CsvReader(reader, config);
         csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
 
-        await foreach (var record in csv.GetRecordsAsync<LangualFactorsDescriptionDto>())
+        await foreach (var record in csv.GetRecordsAsync<LangualDescriptionDto>())
         {
             var item = ParseFoodDescription(record);
             context.Add(item);
-            Console.WriteLine(item.Factor_Code + " " + item.Description);
+            Console.WriteLine(item.LangualDescriptionId + " " + item.Description);
         }
 
         await context.SaveChangesAsync();
         Console.WriteLine("LangualFactorsDescription done!");
     }
 
-    private static LangualFactorsDescription ParseFoodDescription(LangualFactorsDescriptionDto record)
+    private static LangualDescription ParseFoodDescription(LangualDescriptionDto record)
     {
-        var item = new LangualFactorsDescription
+        var item = new LangualDescription
         {
-            Factor_Code = record.Factor_Code,
+            LangualDescriptionId = record.Factor_Code,
             Description = record.Description,
         };
 
@@ -73,7 +73,7 @@ internal class LANGUAL_DESC
 
 [Table("LANGDESC")]
 [Comment("This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
-public class LangualFactorsDescription
+public class LangualDescription
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -83,16 +83,18 @@ public class LangualFactorsDescription
     [Comment("The LanguaL factor from the Thesaurus. Only those " +
              "codes used to factor the foods contained in the " + 
              "LanguaL Factor file are included in this file. ")]
-    public string Factor_Code { get; set; }
+    public string LangualDescriptionId { get; set; }
 
     [Required]
     [MaxLength(140)]
     [Column("Description")]
     [Comment("The description of the LanguaL Factor Code from the thesaurus. ")]
     public string Description { get; set; }
+
+    public ICollection<LangualFactor> LangualFactors { get; set; } = [];
 }
 
-public class LangualFactorsDescriptionDto
+public class LangualDescriptionDto
 {
     public string Factor_Code { get; set; }
     public string Description { get; set; }
