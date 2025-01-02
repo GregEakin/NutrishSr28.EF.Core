@@ -16,28 +16,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DBSetup.Tests.References;
 
-public class LangualDescriptionTests
+public class LanguaLDescriptionTests
 {
     [Fact]
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var langualDescription = await context.LangualDescriptions.FindAsync("A0208");
+        var languaLDescription = await context.LanguaLDescriptions.FindAsync("A0208");
 
-        Assert.NotNull(langualDescription);
-        Assert.Equal("A0208", langualDescription.LangualDescriptionId);
-        Assert.Equal("SALAD (US CFR)", langualDescription.Description);
+        Assert.NotNull(languaLDescription);
+        Assert.Equal("A0208", languaLDescription.LangualDescriptionId);
+        Assert.Equal("SALAD (US CFR)", languaLDescription.Description);
     }
 
     [Fact]
     public async Task FindByValueTest()
     {
         await using var context = new EfCoreContext();
-        var langualDescription = await context.LangualDescriptions
+        var languaLDescription = await context.LanguaLDescriptions
             .SingleAsync(ld => ld.Description == "SALAD (US CFR)");
 
-        Assert.NotNull(langualDescription);
-        Assert.Equal("A0208", langualDescription.LangualDescriptionId);
-        Assert.Equal("SALAD (US CFR)", langualDescription.Description);
+        Assert.NotNull(languaLDescription);
+        Assert.Equal("A0208", languaLDescription.LangualDescriptionId);
+        Assert.Equal("SALAD (US CFR)", languaLDescription.Description);
     }
 }

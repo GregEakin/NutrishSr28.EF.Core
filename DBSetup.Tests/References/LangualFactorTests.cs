@@ -16,6 +16,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DBSetup.Tests.References;
 
-public class LangualFactorTests
+public class LanguaLFactorTests
 {
 }

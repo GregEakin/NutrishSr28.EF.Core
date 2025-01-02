@@ -12,12 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace DBSetup;
 
@@ -49,7 +49,7 @@ public static class FOOD_DES
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("FoodGroupDescription done!");
+        Console.WriteLine("Food Description done!");
     }
 
     private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionDto record)
@@ -95,7 +95,8 @@ public class FoodDescription
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [MaxLength(5)]
     [Column("NDB_No")]
-    [Comment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.")]
+    [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. " +
+             "If this field is defined as numeric, the leading zero will be lost.")]
     public string FoodDescriptionId { get; set; }
 
     [Required]
@@ -168,7 +169,9 @@ public class FoodDescription
     // Relationships
     public FoodGroup FoodGroup { get; set; }
 
-    public ICollection<LangualFactor> LangualFactors { get; set; } = [];
+    public ICollection<LanguaLFactor> LangualFactors { get; set; } = [];
+
+    public ICollection<Weight> Weights { get; set; } = [];
 }
 
 public class FoodDescriptionDto
@@ -177,12 +180,12 @@ public class FoodDescriptionDto
     public string FdGrp_Cd { get; set; }
     public string Long_Desc { get; set; }
     public string Shrt_Desc { get; set; }
-    public string ComName { get; set; }
-    public string ManufacName { get; set; }
-    public string Survey { get; set; }
-    public string Ref_desc { get; set; }
+    public string? ComName { get; set; }
+    public string? ManufacName { get; set; }
+    public string? Survey { get; set; }
+    public string? Ref_desc { get; set; }
     public int? Refuse { get; set; }
-    public string SciName { get; set; }
+    public string? SciName { get; set; }
     public decimal? N_Factor { get; set; }
     public decimal? Pro_Factor { get; set; }
     public decimal? Fat_Factor { get; set; }

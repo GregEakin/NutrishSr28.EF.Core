@@ -12,12 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace DBSetup;
 
@@ -47,18 +47,18 @@ internal class LANGUAL_DESC
 
         await foreach (var record in csv.GetRecordsAsync<LangualDescriptionDto>())
         {
-            var item = ParseFoodDescription(record);
+            var item = ParseLanguaLDescription(record);
             context.Add(item);
             Console.WriteLine(item.LangualDescriptionId + " " + item.Description);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("LangualFactorsDescription done!");
+        Console.WriteLine("LanguaL Description done!");
     }
 
-    private static LangualDescription ParseFoodDescription(LangualDescriptionDto record)
+    private static LanguaLDescription ParseLanguaLDescription(LangualDescriptionDto record)
     {
-        var item = new LangualDescription
+        var item = new LanguaLDescription
         {
             LangualDescriptionId = record.Factor_Code,
             Description = record.Description,
@@ -73,7 +73,7 @@ internal class LANGUAL_DESC
 
 [Table("LANGDESC")]
 [Comment("This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
-public class LangualDescription
+public class LanguaLDescription
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -91,7 +91,7 @@ public class LangualDescription
     [Comment("The description of the LanguaL Factor Code from the thesaurus. ")]
     public string Description { get; set; }
 
-    public ICollection<LangualFactor> LangualFactors { get; set; } = [];
+    public ICollection<LanguaLFactor> LangualFactors { get; set; } = [];
 }
 
 public class LangualDescriptionDto

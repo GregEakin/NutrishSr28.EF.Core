@@ -3,6 +3,7 @@ using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250102153058_Footnote2")]
+    partial class Footnote2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,25 +225,23 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.Footnote", b =>
                 {
-                    b.Property<int>("FootnoteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FootnoteId"));
-
                     b.Property<string>("FoodDescriptionId")
-                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("Footnt_No")
-                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)")
                         .HasColumnName("Footnt_No")
                         .HasComment("Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. ");
+
+                    b.Property<string>("NutrientDefinitionId")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)")
+                        .HasColumnName("Nutr_No")
+                        .HasComment("Unique 3-digit identifier code for a nutrient to which footnote applies.");
 
                     b.Property<string>("Footnt_Txt")
                         .IsRequired()
@@ -255,15 +256,7 @@ namespace DBSetup.Migrations
                         .HasColumnName("Footnt_Typ")
                         .HasComment("Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.");
 
-                    b.Property<string>("NutrientDefinitionId")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
-                        .HasColumnName("Nutr_No")
-                        .HasComment("Unique 3-digit identifier code for a nutrient to which footnote applies.");
-
-                    b.HasKey("FootnoteId");
-
-                    b.HasIndex("FoodDescriptionId");
+                    b.HasKey("FoodDescriptionId", "Footnt_No", "NutrientDefinitionId");
 
                     b.HasIndex("NutrientDefinitionId");
 
@@ -591,7 +584,9 @@ namespace DBSetup.Migrations
 
                     b.HasOne("DBSetup.NutrientDefinition", "NutrientDefinition")
                         .WithMany()
-                        .HasForeignKey("NutrientDefinitionId");
+                        .HasForeignKey("NutrientDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("FoodDescription");
 

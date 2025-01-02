@@ -3,6 +3,7 @@ using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250102152823_Footnote")]
+    partial class Footnote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,21 +225,13 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.Footnote", b =>
                 {
-                    b.Property<int>("FootnoteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FootnoteId"));
-
                     b.Property<string>("FoodDescriptionId")
-                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("Footnt_No")
-                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)")
                         .HasColumnName("Footnt_No")
@@ -261,9 +256,7 @@ namespace DBSetup.Migrations
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient to which footnote applies.");
 
-                    b.HasKey("FootnoteId");
-
-                    b.HasIndex("FoodDescriptionId");
+                    b.HasKey("FoodDescriptionId", "Footnt_No");
 
                     b.HasIndex("NutrientDefinitionId");
 

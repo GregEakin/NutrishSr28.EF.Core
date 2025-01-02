@@ -21,9 +21,9 @@ using System.Globalization;
 
 namespace DBSetup;
 
-public static class FD_GROUP
+public static class SRC_CD
 {
-    private static readonly string Filename = "../../../../data/FD_GROUP.txt";
+    private static readonly string Filename = "../../../../data/SRC_CD.txt";
 
     public static async Task ParseFileAsync(DbContext context)
     {
@@ -42,23 +42,23 @@ public static class FD_GROUP
         using var csv = new CsvReader(reader, config);
         csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
 
-        await foreach (var record in csv.GetRecordsAsync<FoodGroupDto>())
+        await foreach (var record in csv.GetRecordsAsync<SrcCdDto>())
         {
-            var item = ParseFoodGroup(record);
+            var item = ParseSourceCode(record);
             context.Add(item);
-            Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
+            Console.WriteLine(item.SourceCodeId + " " + item.SourceCodeDescription);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("Food Group done!");
+        Console.WriteLine("Source Code done!");
     }
 
-    private static FoodGroup ParseFoodGroup(FoodGroupDto record)
+    private static SourceCode ParseSourceCode(SrcCdDto record)
     {
-        var item = new FoodGroup
+        var item = new SourceCode
         {
-            FoodGroupId = record.FdGrp_Cd,
-            FoodGroupName = record.FdGrp_Desc,
+            SourceCodeId = record.Src_Cd,
+            SourceCodeDescription = record.SrcCd_Desc,
         };
 
         return item;
@@ -68,32 +68,35 @@ public static class FD_GROUP
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FD_GROUP")]
-[Comment("Contains a list of food groups used in SR28 and their descriptions.")]
-public class FoodGroup
+[Table("SRC")]
+[Comment("This file contains codes indicating the type of data (analytical, calculated, assumed zero, " +
+         "and so on) in the Nutrient Data file. To improve the usability of the database and to provide " +
+         "values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, " +
+         "total dietary fiber, total sugar, and vitamin and mineral values.")]
+public class SourceCode
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
-    [MaxLength(4)]
-    [Column("FdGrp_Cd")]
-    [Comment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. " +
-             "In the future, the last 2 digits may be used. Codes may not be consecutive.")]
-    public string FoodGroupId { get; set; }
+    [MaxLength(2)]
+    [Column("Src_Cd")]
+    [Comment("A 2-digit code indicating type of data.")]
+    public string SourceCodeId { get; set; }
 
     [Required]
     [MaxLength(60)]
-    [Column("FdGrp_Desc")]
-    [Comment("Name of food group.")]
-    public string FoodGroupName { get; set; }
+    [Column("SrcCd_Desc")]
+    [Comment("Description of source code that identifies the type of nutrient data.")]
+    public string SourceCodeDescription { get; set; }
 
     //-----------------------------------------------
     //Relationships
-    public ICollection<FoodDescription> FoodDescriptions { get; set; } = [];
+
+    // Links to the Nutrient Data file by Src_Cd
 }
 
-public class FoodGroupDto
+public class SrcCdDto
 {
-    public string FdGrp_Cd { get; set; }
-    public string FdGrp_Desc { get; set; }
+    public string Src_Cd { get; set; }
+    public string SrcCd_Desc { get; set; }
 }

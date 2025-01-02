@@ -53,7 +53,7 @@ public class FoodDescriptionTests
         await using var context = new EfCoreContext();
         var foodDescription = await context.FoodDescriptions
             .Include(fd => fd.LangualFactors)
-            .ThenInclude(lf => lf.LangualDescription)
+            .ThenInclude(lf => lf.LanguaLDescription)
             .SingleAsync(fd => fd.FoodDescriptionId == "02002");
         
         Assert.NotNull(foodDescription);

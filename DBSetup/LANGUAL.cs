@@ -12,13 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace DBSetup;
 
@@ -48,24 +47,24 @@ internal class LANGUAL
 
         await foreach (var record in csv.GetRecordsAsync<LangualFactorDto>())
         {
-            var item = await ParseFoodDescriptionAsync(context, record);
+            var item = await ParseLanguaL(context, record);
             context.Add(item);
             Console.WriteLine(item.FoodDescriptionId + " " + item.LangualDescriptionId);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("LangualFactor done!");
+        Console.WriteLine("LanguaL Factor done!");
     }
 
-    private static async Task<LangualFactor> ParseFoodDescriptionAsync(DbContext context, LangualFactorDto record)
+    private static async Task<LanguaLFactor> ParseLanguaL(DbContext context, LangualFactorDto record)
     {
         var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
                               ?? throw new Exception($"FoodDescription { record.NDB_No } not found!");
 
-        var langualFactorsDescription = await context.FindAsync<LangualDescription>(record.Factor_Code)
+        var langualFactorsDescription = await context.FindAsync<LanguaLDescription>(record.Factor_Code)
                                         ?? throw new Exception($"LangualFactorsDescription { record.Factor_Code } not found!");
 
-        var item = new LangualFactor
+        var item = new LanguaLFactor
         {
             FoodDescriptionId = foodDescription.FoodDescriptionId,
             LangualDescriptionId = langualFactorsDescription.LangualDescriptionId,
@@ -80,7 +79,7 @@ internal class LANGUAL
 
 [Table("LANGUAL")]
 [Comment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.")]
-public class LangualFactor
+public class LanguaLFactor
 {
     [Required]
     [Key]
@@ -99,7 +98,7 @@ public class LangualFactor
     public string LangualDescriptionId { get; set; }
 
     public FoodDescription FoodDescription { get; set; }
-    public LangualDescription LangualDescription { get; set; }
+    public LanguaLDescription LanguaLDescription { get; set; }
 }
 
 public class LangualFactorDto

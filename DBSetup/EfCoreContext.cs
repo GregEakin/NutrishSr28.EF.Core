@@ -20,7 +20,14 @@ public class EfCoreContext : DbContext
 {
     public DbSet<FoodGroup> FoodGroups { get; set; }
     public DbSet<FoodDescription> FoodDescriptions { get; set; }
-    public DbSet<LangualDescription> LangualDescriptions { get; set; }
+    public DbSet<LanguaLDescription> LanguaLDescriptions { get; set; }
+    public DbSet<SourceCode> SourceCodes { get; set; }
+    public DbSet<DerivationCode> DerivationCodes { get; set; }
+    public DbSet<DataSource> DataSources { get; set; }
+    public DbSet<NutrientDefinition> NutrientDefinitions { get; set; }
+    public DbSet<Weight> Weights { get; set; }
+    public DbSet<Footnote> Footnotes { get; set; }
+    public DbSet<NutrientData> NutrientData { get; set; }
 
     public EfCoreContext()
     {
@@ -37,8 +44,14 @@ public class EfCoreContext : DbContext
         // var entity = new ETC();
         // modelBuilder.ApplyConfiguration(entity);
 
-        modelBuilder.Entity<LangualFactor>()
+        modelBuilder.Entity<LanguaLFactor>()
             .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });
+
+        modelBuilder.Entity<Weight>()
+            .HasKey(w => new { w.FoodDescriptionId , w.Seq });
+
+        modelBuilder.Entity<NutrientData>()
+            .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
 
         base.OnModelCreating(modelBuilder);
     }

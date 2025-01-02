@@ -21,9 +21,9 @@ using System.Globalization;
 
 namespace DBSetup;
 
-public static class FD_GROUP
+public static class DERIV_CD
 {
-    private static readonly string Filename = "../../../../data/FD_GROUP.txt";
+    private static readonly string Filename = "../../../../data/DERIV_CD.txt";
 
     public static async Task ParseFileAsync(DbContext context)
     {
@@ -42,23 +42,23 @@ public static class FD_GROUP
         using var csv = new CsvReader(reader, config);
         csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
 
-        await foreach (var record in csv.GetRecordsAsync<FoodGroupDto>())
+        await foreach (var record in csv.GetRecordsAsync<DerivationCodeDto>())
         {
-            var item = ParseFoodGroup(record);
+            var item = ParseDerivationCode(record);
             context.Add(item);
-            Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
+            Console.WriteLine(item.DerivationCodeId + " " + item.DerivationCodeCodeDescription);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("Food Group done!");
+        Console.WriteLine("Derivation Code done!");
     }
 
-    private static FoodGroup ParseFoodGroup(FoodGroupDto record)
+    private static DerivationCode ParseDerivationCode(DerivationCodeDto record)
     {
-        var item = new FoodGroup
+        var item = new DerivationCode
         {
-            FoodGroupId = record.FdGrp_Cd,
-            FoodGroupName = record.FdGrp_Desc,
+            DerivationCodeId = record.Deriv_Cd,
+            DerivationCodeCodeDescription = record.Deriv_Desc,
         };
 
         return item;
@@ -68,32 +68,32 @@ public static class FD_GROUP
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FD_GROUP")]
-[Comment("Contains a list of food groups used in SR28 and their descriptions.")]
-public class FoodGroup
+[Table("DERIVCD")]
+[Comment("This file provides information on how the nutrient values were determined. " +
+         "The file contains the derivation codes and their descriptions.")]
+public class DerivationCode
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
     [MaxLength(4)]
-    [Column("FdGrp_Cd")]
-    [Comment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. " +
-             "In the future, the last 2 digits may be used. Codes may not be consecutive.")]
-    public string FoodGroupId { get; set; }
+    [Column("Deriv_Cd")]
+    [Comment("Derivation Code.")]
+    public string DerivationCodeId { get; set; }
 
     [Required]
-    [MaxLength(60)]
-    [Column("FdGrp_Desc")]
-    [Comment("Name of food group.")]
-    public string FoodGroupName { get; set; }
+    [MaxLength(120)]
+    [Column("Deriv_Desc")]
+    [Comment("Description of derivation code giving specific information on how the value was determined.")]
+    public string DerivationCodeCodeDescription { get; set; }
 
     //-----------------------------------------------
     //Relationships
-    public ICollection<FoodDescription> FoodDescriptions { get; set; } = [];
+    // Links to the Nutrient Data file by Deriv_Cd 
 }
 
-public class FoodGroupDto
+public class DerivationCodeDto
 {
-    public string FdGrp_Cd { get; set; }
-    public string FdGrp_Desc { get; set; }
+    public string Deriv_Cd { get; set; }
+    public string Deriv_Desc { get; set; }
 }
