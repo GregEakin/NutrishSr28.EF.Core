@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20250101235722_SqlServer")]
+    [Migration("20250102001257_SqlServer")]
     partial class SqlServer
     {
         /// <inheritdoc />

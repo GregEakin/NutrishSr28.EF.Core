@@ -21,7 +21,6 @@ public class EfCoreContext : DbContext
     public DbSet<FoodGroup> FoodGroups { get; set; }
     public DbSet<FoodDescription> FoodDescriptions { get; set; }
     public DbSet<LangualDescription> LangualDescriptions { get; set; }
-    public DbSet<LangualFactor> LangualFactors { get; set; }
 
     public EfCoreContext()
     {
