@@ -47,7 +47,7 @@ internal class LANGUAL
 
         await foreach (var record in csv.GetRecordsAsync<LangualFactorDto>())
         {
-            var item = await ParseLanguaL(context, record);
+            var item = await ParseDtoRecord(context, record);
             context.Add(item);
             // Console.WriteLine(item.FoodDescriptionId + " " + item.LangualDescriptionId);
         }
@@ -56,13 +56,21 @@ internal class LANGUAL
         Console.WriteLine("LanguaL Factor done!");
     }
 
-    private static async Task<LanguaLFactor> ParseLanguaL(DbContext context, LangualFactorDto record)
+    private static async Task<LanguaLFactor> ParseDtoRecord(DbContext context, LangualFactorDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
-                              ?? throw new Exception($"FoodDescription { record.NDB_No } not found!");
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        if (foodDescription == null)
+        {
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(LanguaLFactor), nameof(FoodDescription), record.NDB_No); 
+            throw new Exception($"{nameof(LanguaLFactor)} {nameof(FoodDescription)} {record.NDB_No} not found!");
+        }
 
-        var langualFactorsDescription = await context.FindAsync<LanguaLDescription>(record.Factor_Code)
-                                        ?? throw new Exception($"LangualFactorsDescription { record.Factor_Code } not found!");
+        var langualFactorsDescription = await context.FindAsync<LanguaLDescription>(record.Factor_Code);
+        if (langualFactorsDescription == null)
+        {
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(LanguaLFactor), nameof(LanguaLDescription), record.Factor_Code);
+            throw new Exception($"{nameof(LanguaLFactor)} {nameof(LanguaLDescription)} {record.Factor_Code} not found!");
+        }
 
         var item = new LanguaLFactor
         {
@@ -77,24 +85,23 @@ internal class LANGUAL
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("LANGUAL")]
+[Table("LANGUAL", Schema = "SR28")]
+[PrimaryKey(nameof(FoodDescriptionId), nameof(LangualDescriptionId))]
 [Comment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.")]
 public class LanguaLFactor
 {
-    [Required]
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("NDB_No")]
-    [MaxLength(5)]
+    [Column("NDB_No", TypeName = "nchar(5)")]
+    [Required]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodDescriptionId { get; set; }
     
-    [Required]
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("Factor_Code")]
-    [MaxLength(5)]
+    [Column("Factor_Code", TypeName = "nchar(5)")]
+    [Required]
     [Comment("The LanguaL factor from the Thesaurus.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string LangualDescriptionId { get; set; }
 
     public FoodDescription FoodDescription { get; set; }

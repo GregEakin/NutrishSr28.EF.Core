@@ -44,14 +44,14 @@ public class EfCoreContext : DbContext
         // var entity = new ETC();
         // modelBuilder.ApplyConfiguration(entity);
 
-        modelBuilder.Entity<LanguaLFactor>()
-            .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });
+        // modelBuilder.Entity<LanguaLFactor>()
+        //     .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });
 
-        modelBuilder.Entity<Weight>()
-            .HasKey(w => new { w.FoodDescriptionId, w.Seq });
+        // modelBuilder.Entity<Weight>()
+        //     .HasKey(w => new { w.FoodDescriptionId, w.Seq });
 
-        modelBuilder.Entity<NutrientData>()
-            .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
+        // modelBuilder.Entity<NutrientData>()
+        //     .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
 
         modelBuilder.Entity<NutrientData>()
             .HasOne(nd => nd.FoodDescription)
@@ -65,8 +65,18 @@ public class EfCoreContext : DbContext
             .HasForeignKey(nd => nd.FoodDescriptionRefId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<DataSourceLink>()
-            .HasKey(dsl => new { dsl.FoodDescriptionId, dsl.NutrientDefinitionId, dsl.DataSourceId });
+        modelBuilder.Entity<NutrientData>()
+            .HasMany(nd => nd.Footnotes)
+            .WithOne(f => f.NutrientData)
+            .HasForeignKey(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
+            .HasPrincipalKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId })
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // modelBuilder.Entity<DataSourceLink>()
+        //     .HasKey(dsl => new { dsl.FoodDescriptionId, dsl.NutrientDefinitionId, dsl.DataSourceId });
+
+        modelBuilder.Entity<Footnote>()
+            .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId, f.Footnt_No });
 
         base.OnModelCreating(modelBuilder);
     }

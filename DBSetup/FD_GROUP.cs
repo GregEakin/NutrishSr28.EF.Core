@@ -44,7 +44,7 @@ public static class FD_GROUP
 
         await foreach (var record in csv.GetRecordsAsync<FoodGroupDto>())
         {
-            var item = ParseFoodGroup(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             // Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
         }
@@ -53,7 +53,7 @@ public static class FD_GROUP
         Console.WriteLine("Food Group done!");
     }
 
-    private static FoodGroup ParseFoodGroup(FoodGroupDto record)
+    private static FoodGroup ParseDtoRecord(FoodGroupDto record)
     {
         var item = new FoodGroup
         {
@@ -68,22 +68,21 @@ public static class FD_GROUP
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FD_GROUP")]
+[Table("FD_GROUP", Schema = "SR28")]
 [Comment("Contains a list of food groups used in SR28 and their descriptions.")]
 public class FoodGroup
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("FdGrp_Cd", TypeName = "nchar(4)")]
     [Required]
-    [MaxLength(4)]
-    [Column("FdGrp_Cd")]
     [Comment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. " +
              "In the future, the last 2 digits may be used. Codes may not be consecutive.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodGroupId { get; set; }
 
-    [Required]
-    [MaxLength(60)]
     [Column("FdGrp_Desc")]
+    [MaxLength(60)]
+    [Required]
     [Comment("Name of food group.")]
     public string FoodGroupName { get; set; }
 

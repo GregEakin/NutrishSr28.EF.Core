@@ -44,7 +44,7 @@ public static class SRC_CD
 
         await foreach (var record in csv.GetRecordsAsync<SrcCdDto>())
         {
-            var item = ParseSourceCode(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             // Console.WriteLine(item.SourceCodeId + " " + item.SourceCodeDescription);
         }
@@ -53,11 +53,11 @@ public static class SRC_CD
         Console.WriteLine("Source Code done!");
     }
 
-    private static SourceCode ParseSourceCode(SrcCdDto record)
+    private static SourceCode ParseDtoRecord(SrcCdDto record)
     {
         var item = new SourceCode
         {
-            SourceCodeId = record.Src_Cd,
+            SourceCodeId = int.Parse(record.Src_Cd),
             SourceCodeDescription = record.SrcCd_Desc,
         };
 
@@ -68,7 +68,7 @@ public static class SRC_CD
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("SRC")]
+[Table("SRC", Schema = "SR28")]
 [Comment("This file contains codes indicating the type of data (analytical, calculated, assumed zero, " +
          "and so on) in the Nutrient Data file. To improve the usability of the database and to provide " +
          "values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, " +
@@ -76,16 +76,15 @@ public static class SRC_CD
 public class SourceCode
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Required]
-    [MaxLength(2)]
     [Column("Src_Cd")]
-    [Comment("A 2-digit code indicating type of data.")]
-    public string SourceCodeId { get; set; }
-
     [Required]
-    [MaxLength(60)]
+    [Comment("A 2-digit code indicating type of data.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int SourceCodeId { get; set; }
+
     [Column("SrcCd_Desc")]
+    [MaxLength(60)]
+    [Required]
     [Comment("Description of source code that identifies the type of nutrient data.")]
     public string SourceCodeDescription { get; set; }
 

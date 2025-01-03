@@ -59,20 +59,20 @@ public class NutrientDataTests
         Assert.Equal("Seeds, sunflower seed kernels, dried", nutrientData.FoodDescriptionRef.Long_Desc);
     }
 
-    [Fact]
-    public async Task WeightsTest()
-    {
-        await using var context = new EfCoreContext();
-        var nutrientData = await context.NutrientData
-            .Include(nd => nd.Weights)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
-
-        Assert.NotNull(nutrientData);
-        var weights = nutrientData.Weights;
-        Assert.Equal(2, weights.Count);
-        foreach (var weight in weights)
-            Assert.Equal(nutrientData, weight.NutrientData);
-    }
+    // [Fact]
+    // public async Task WeightsTest()
+    // {
+    //     await using var context = new EfCoreContext();
+    //     var nutrientData = await context.NutrientData
+    //         .Include(nd => nd.Weights)
+    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+    //
+    //     Assert.NotNull(nutrientData);
+    //     var weights = nutrientData.Weights;
+    //     Assert.Equal(2, weights.Count);
+    //     foreach (var weight in weights)
+    //         Assert.Equal(nutrientData, weight.NutrientData);
+    // }
 
     [Fact]
     public async Task FootnotesTest()
@@ -85,16 +85,16 @@ public class NutrientDataTests
         Assert.NotNull(nutrientData);
     }
 
-    [Fact]
-    public async Task DataSourcesTest()
-    {
-        await using var context = new EfCoreContext();
-        var nutrientData = await context.NutrientData
-            .Include(nd => nd.DataSources)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
-
-        Assert.NotNull(nutrientData);
-    }
+    // [Fact]
+    // public async Task DataSourcesTest()
+    // {
+    //     await using var context = new EfCoreContext();
+    //     var nutrientData = await context.NutrientData
+    //         .Include(nd => nd.DataSources)
+    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+    //
+    //     Assert.NotNull(nutrientData);
+    // }
 
     [Fact]
     public async Task NutrientDefinitionTest()

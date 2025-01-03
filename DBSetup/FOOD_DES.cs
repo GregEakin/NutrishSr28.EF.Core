@@ -44,7 +44,7 @@ public static class FOOD_DES
         
         await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
         {
-            var item = await ParseFoodDescriptionAsync(context, record);
+            var item = await ParseDtoRecordAsync(context, record);
             // Console.WriteLine(item.FoodDescriptionId + " " + item.FoodGroupId + " " + item.Shrt_Desc);
         }
 
@@ -52,10 +52,14 @@ public static class FOOD_DES
         Console.WriteLine("Food Description done!");
     }
 
-    private static async Task<FoodDescription> ParseFoodDescriptionAsync(DbContext context, FoodDescriptionDto record)
+    private static async Task<FoodDescription> ParseDtoRecordAsync(DbContext context, FoodDescriptionDto record)
     {
-        var foodGroup = await context.FindAsync<FoodGroup>(record.FdGrp_Cd) 
-                        ?? throw new Exception($"FoodGroup { record.FdGrp_Cd } not found!");
+        var foodGroup = await context.FindAsync<FoodGroup>(record.FdGrp_Cd);
+        if (foodGroup == null)
+        {
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(FoodDescription), nameof(FoodGroup), record.FdGrp_Cd);
+            throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
+        }
 
         var item = new FoodDescription
         {
@@ -84,7 +88,7 @@ public static class FOOD_DES
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FOOD_DES")]
+[Table("FOOD_DES", Schema = "SR28")]
 [Comment("This file contains long and short descriptions and food group designators for all food items, " +
          "along with common names, manufacturer name, scientific name, percentage and description of refuse, and " +
          "factors used for calculating protein and kilocalories, if applicable. Items used in the " +
@@ -92,28 +96,26 @@ public static class FOOD_DES
 public class FoodDescription
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [MaxLength(5)]
-    [Column("NDB_No")]
+    [Column("NDB_No", TypeName = "nchar(5)")]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. " +
              "If this field is defined as numeric, the leading zero will be lost.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodDescriptionId { get; set; }
 
+    [Column("FdGrp_Cd", TypeName = "nchar(4)")]
     [Required]
-    [MaxLength(4)]
-    [Column("FdGrp_Cd")]
     [Comment("4-digit code indicating food group to which a food item belongs.")]
     public string FoodGroupId { get; set; }
 
-    [Required]
-    [MaxLength(200)]
     [Column("Long_Desc")]
+    [MaxLength(200)]
+    [Required]
     [Comment("200-character description of food item.")]
     public string Long_Desc { get; set; }
 
-    [Required]
-    [MaxLength(60)]
     [Column("Shrt_Desc")]
+    [MaxLength(60)]
+    [Required]
     [Comment("60-character abbreviated description of food item. " +
              "Generated from the 200-character description using " +
              "abbreviations in Appendix A. If short description is " +
@@ -121,14 +123,14 @@ public class FoodDescription
              "are made. ")]
     public string Shrt_Desc { get; set; }
 
+    [MaxLength(100)]
     [Comment("Other names commonly used to describe a food, " +
              "including local or regional names for various foods, " +
              "for example, 'soda' or 'pop' for 'carbonated beverages.'")]
-    [MaxLength(100)]
     public string? ComName { get; set; }
 
-    [Comment("Indicates the company that manufactured the product, when appropriate.")]
     [MaxLength(65)]
+    [Comment("Indicates the company that manufactured the product, when appropriate.")]
     public string? ManufacName{ get; set; }
 
     [Comment("Indicates if the food item is used in the USDA Food " +
@@ -137,33 +139,33 @@ public class FoodDescription
              "FNDDS nutrients.")]
     public char? Survey { get; set; }
 
-    [Comment("Description of inedible parts of a food item (refuse), such as seeds or bone.")]
     [MaxLength(135)]
+    [Comment("Description of inedible parts of a food item (refuse), such as seeds or bone.")]
     public string? Ref_desc { get; set; }
 
+    [Precision(2, 0)]
     [Comment("Percentage of refuse.")]
-    [Precision(2,0)]
     public decimal? Refuse { get; set; }
 
+    [MaxLength(65)]
     [Comment("Scientific name of the food item. Given for the least " +
              "processed form of the food (usually raw), if applicable.")]
-    [MaxLength(65)]
     public string? SciName { get; set; }
 
-    [Comment("Factor for converting nitrogen to protein.")]
     [Precision(4, 2)]
+    [Comment("Factor for converting nitrogen to protein.")]
     public decimal? N_Factor { get; set; }
 
-    [Comment("Factor for calculating calories from protein.")]
     [Precision(4, 2)]
+    [Comment("Factor for calculating calories from protein.")]
     public decimal? Pro_Factor { get; set; }
 
-    [Comment("Factor for calculating calories from fat.")]
     [Precision(4, 2)]
+    [Comment("Factor for calculating calories from fat.")]
     public decimal? Fat_Factor { get; set; }
 
-    [Comment("Factor for calculating calories from carbohydrate.")]
     [Precision(4, 2)]
+    [Comment("Factor for calculating calories from carbohydrate.")]
     public decimal? CHO_Factor { get; set; }
 
     // Relationships

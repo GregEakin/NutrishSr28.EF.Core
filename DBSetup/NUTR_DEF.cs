@@ -44,7 +44,7 @@ public static class NUTR_DEF
 
         await foreach (var record in csv.GetRecordsAsync<NutrientDefinitionDto>())
         {
-            var item = ParseNutrientDefinition(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             // Console.WriteLine(item.NutrientDefinitionId + " " + item.NutrDesc);
         }
@@ -53,7 +53,7 @@ public static class NUTR_DEF
         Console.WriteLine("Nutrient Definition done!");
     }
 
-    private static NutrientDefinition ParseNutrientDefinition(NutrientDefinitionDto record)
+    private static NutrientDefinition ParseDtoRecord(NutrientDefinitionDto record)
     {
         var item = new NutrientDefinition
         {
@@ -72,46 +72,45 @@ public static class NUTR_DEF
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("NUTR_DEF")]
+[Table("NUTR_DEF", Schema = "SR28")]
 [Comment("This file is a support file to the Nutrient Data file. " +
          "It provides the 3-digit nutrient code, unit of measure, INFOODS tagname, and description.")]
 public class NutrientDefinition
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("Nutr_No", TypeName = "nchar(3)")]
     [Required]
-    [MaxLength(3)]
-    [Column("Nutr_No")]
     [Comment("Unique 3-digit identifier code for a nutrient.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string NutrientDefinitionId { get; set; }
 
-    [Required]
-    [MaxLength(7)]
     [Column("Units")]
+    [MaxLength(7)]
+    [Required]
     [Comment("Units of measure (mg, g, μg, and so on).")]
     public string Units { get; set; }
 
-    [MaxLength(20)]
     [Column("Tagname")]
+    [MaxLength(20)]
     [Comment("International Network of Food Data Systems (INFOODS) Tagnames. " +
              "A unique abbreviation for a nutrient/food component developed " +
              "by INFOODS to aid in the interchange of data.")]
     public string? TagName { get; set; }
 
-    [Required]
-    [MaxLength(60)]
     [Column("NutrDesc")]
+    [MaxLength(60)]
+    [Required]
     [Comment("Name of nutrient/food component.")]
     public string NutrDesc { get; set; }
 
-    [Required]
     [Column("Num_Dec")]
+    [Required]
     [Comment("Number of decimal places to which a nutrient value is rounded.")]
     public char Num_Dec { get; set; }
 
-    [Required]
-    [MaxLength(6)]
     [Column("SR_Order")]
+    [MaxLength(6)]
+    [Required]
     [Comment("Used to sort nutrient records in the same order as \r\nvarious reports produced from SR.")]
     public string SR_Order { get; set; }
 

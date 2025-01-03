@@ -53,12 +53,6 @@ namespace DBSetup.Migrations
                         .HasColumnName("Journal")
                         .HasComment("Name of the journal in which the article was published.");
 
-                    b.Property<string>("NutrientDataFoodDescriptionId")
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("NutrientDataNutrientDefinitionId")
-                        .HasColumnType("nvarchar(3)");
-
                     b.Property<string>("Start_Page")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
@@ -79,16 +73,13 @@ namespace DBSetup.Migrations
                         .HasComment("Volume number for journal articles, books, or reports; city where sponsoring organization is located.");
 
                     b.Property<string>("Year")
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("nchar(4)")
                         .HasColumnName("Year")
                         .HasComment("Year article or document was published.");
 
                     b.HasKey("DataSourceId");
 
-                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.ToTable("DATA_SRC", t =>
+                    b.ToTable("DATA_SRC", "SR28", t =>
                         {
                             t.HasComment("This file provides a citation to the DataSrc_ID in the Sources of Data Link file.");
                         });
@@ -97,14 +88,12 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.DataSourceLink", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("NutrientDefinitionId")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
+                        .HasColumnType("nchar(3)")
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient.");
 
@@ -120,7 +109,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("NutrientDefinitionId");
 
-                    b.ToTable("DATSRCLN", t =>
+                    b.ToTable("DATSRCLN", "SR28", t =>
                         {
                             t.HasComment("This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.");
                         });
@@ -129,8 +118,7 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.DerivationCode", b =>
                 {
                     b.Property<string>("DerivationCodeId")
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("nchar(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Derivation Code.");
 
@@ -143,7 +131,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("DerivationCodeId");
 
-                    b.ToTable("DERIVCD", t =>
+                    b.ToTable("DERIVCD", "SR28", t =>
                         {
                             t.HasComment("This file provides information on how the nutrient values were determined. The file contains the derivation codes and their descriptions.");
                         });
@@ -152,8 +140,7 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
@@ -174,8 +161,7 @@ namespace DBSetup.Migrations
 
                     b.Property<string>("FoodGroupId")
                         .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("nchar(4)")
                         .HasColumnName("FdGrp_Cd")
                         .HasComment("4-digit code indicating food group to which a food item belongs.");
 
@@ -231,7 +217,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("FoodGroupId");
 
-                    b.ToTable("FOOD_DES", t =>
+                    b.ToTable("FOOD_DES", "SR28", t =>
                         {
                             t.HasComment("This file contains long and short descriptions and food group designators for all food items, along with common names, manufacturer name, scientific name, percentage and description of refuse, and factors used for calculating protein and kilocalories, if applicable. Items used in the FNDDS are also identified by value of 'Y' in the Survey field. ");
                         });
@@ -240,8 +226,7 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.FoodGroup", b =>
                 {
                     b.Property<string>("FoodGroupId")
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("nchar(4)")
                         .HasColumnName("FdGrp_Cd")
                         .HasComment("4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. In the future, the last 2 digits may be used. Codes may not be consecutive.");
 
@@ -254,7 +239,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FoodGroupId");
 
-                    b.ToTable("FD_GROUP", t =>
+                    b.ToTable("FD_GROUP", "SR28", t =>
                         {
                             t.HasComment("Contains a list of food groups used in SR28 and their descriptions.");
                         });
@@ -270,8 +255,7 @@ namespace DBSetup.Migrations
 
                     b.Property<string>("FoodDescriptionId")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
@@ -296,18 +280,17 @@ namespace DBSetup.Migrations
                         .HasComment("Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.");
 
                     b.Property<string>("NutrientDefinitionId")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
+                        .HasColumnType("nchar(3)")
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient to which footnote applies.");
 
                     b.HasKey("FootnoteId");
 
-                    b.HasIndex("FoodDescriptionId");
-
                     b.HasIndex("NutrientDefinitionId");
 
-                    b.ToTable("FOOTNOTE", t =>
+                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId", "Footnt_No");
+
+                    b.ToTable("FOOTNOTE", "SR28", t =>
                         {
                             t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
                         });
@@ -316,8 +299,7 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
                 {
                     b.Property<string>("LangualDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("Factor_Code")
                         .HasComment("The LanguaL factor from the Thesaurus. Only those codes used to factor the foods contained in the LanguaL Factor file are included in this file. ");
 
@@ -330,7 +312,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("LangualDescriptionId");
 
-                    b.ToTable("LANGDESC", t =>
+                    b.ToTable("LANGDESC", "SR28", t =>
                         {
                             t.HasComment("This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.");
                         });
@@ -339,14 +321,12 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LanguaLFactor", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("LangualDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("Factor_Code")
                         .HasComment("The LanguaL factor from the Thesaurus.");
 
@@ -354,7 +334,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("LangualDescriptionId");
 
-                    b.ToTable("LANGUAL", t =>
+                    b.ToTable("LANGUAL", "SR28", t =>
                         {
                             t.HasComment("This file is a support file to the Food Description file and contains the factors from the LanguaL Thesaurus used to code a particular food.");
                         });
@@ -363,14 +343,12 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.NutrientData", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<string>("NutrientDefinitionId")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
+                        .HasColumnType("nchar(3)")
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient.");
 
@@ -399,14 +377,13 @@ namespace DBSetup.Migrations
                         .HasComment("Degrees of freedom.");
 
                     b.Property<string>("DerivationCodeId")
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("nchar(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.");
 
                     b.Property<string>("FoodDescriptionRefId")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("Ref_NDB_No")
                         .HasComment("NDB number of the item used to calculate a missing value. Populated only for items added or updated starting with SR14.");
 
@@ -446,10 +423,8 @@ namespace DBSetup.Migrations
                         .HasColumnName("Nutr_Val")
                         .HasComment("Amount in 100 grams, edible portion.");
 
-                    b.Property<string>("SourceCodeId")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
+                    b.Property<int>("SourceCodeId")
+                        .HasColumnType("int")
                         .HasColumnName("Src_Cd")
                         .HasComment("Code indicating type of data.");
 
@@ -481,7 +456,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("SourceCodeId");
 
-                    b.ToTable("NUT_DATA", t =>
+                    b.ToTable("NUT_DATA", "SR28", t =>
                         {
                             t.HasComment("This file contains the nutrient values and information about the values, including expanded statistical information.");
                         });
@@ -490,8 +465,7 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.NutrientDefinition", b =>
                 {
                     b.Property<string>("NutrientDefinitionId")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)")
+                        .HasColumnType("nchar(3)")
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient.");
 
@@ -530,7 +504,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("NutrientDefinitionId");
 
-                    b.ToTable("NUTR_DEF", t =>
+                    b.ToTable("NUTR_DEF", "SR28", t =>
                         {
                             t.HasComment("This file is a support file to the Nutrient Data file. It provides the 3-digit nutrient code, unit of measure, INFOODS tagname, and description.");
                         });
@@ -538,9 +512,8 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.SourceCode", b =>
                 {
-                    b.Property<string>("SourceCodeId")
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
+                    b.Property<int>("SourceCodeId")
+                        .HasColumnType("int")
                         .HasColumnName("Src_Cd")
                         .HasComment("A 2-digit code indicating type of data.");
 
@@ -553,7 +526,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("SourceCodeId");
 
-                    b.ToTable("SRC", t =>
+                    b.ToTable("SRC", "SR28", t =>
                         {
                             t.HasComment("This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
                         });
@@ -562,26 +535,22 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.Weight", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("nchar(5)")
                         .HasColumnName("NDB_No")
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.");
 
-                    b.Property<string>("Seq")
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
+                    b.Property<int>("Seq")
+                        .HasColumnType("int")
                         .HasColumnName("Seq")
                         .HasComment("Sequence number.");
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(6, 3)
-                        .HasColumnType("decimal(6,3)")
+                    b.Property<float>("Amount")
+                        .HasColumnType("real")
                         .HasColumnName("Amount")
                         .HasComment("Unit modifier (for example, 1 in '1 cup').");
 
-                    b.Property<decimal>("Gm_Wgt")
-                        .HasPrecision(7, 1)
-                        .HasColumnType("decimal(7,1)")
+                    b.Property<float>("Gm_Wgt")
+                        .HasColumnType("real")
                         .HasColumnName("Gm_Wgt")
                         .HasComment("Gram weight.");
 
@@ -592,57 +561,22 @@ namespace DBSetup.Migrations
                         .HasColumnName("Msre_Desc")
                         .HasComment("Description (for example, cup, diced, and 1-inch pieces)");
 
-                    b.Property<decimal?>("Num_Data_Pts")
-                        .HasPrecision(4)
-                        .HasColumnType("decimal(4,0)")
+                    b.Property<int?>("Num_Data_Pts")
+                        .HasColumnType("int")
                         .HasColumnName("Num_Data_Pts")
                         .HasComment("Number of data points.");
 
-                    b.Property<string>("NutrientDataFoodDescriptionId")
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("NutrientDataNutrientDefinitionId")
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<decimal?>("Std_Dev")
-                        .HasPrecision(7, 3)
-                        .HasColumnType("decimal(7,3)")
+                    b.Property<float?>("Std_Dev")
+                        .HasColumnType("real")
                         .HasColumnName("Std_Dev")
                         .HasComment("Standard deviation.");
 
                     b.HasKey("FoodDescriptionId", "Seq");
 
-                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.ToTable("WEIGHT", t =>
+                    b.ToTable("WEIGHT", "SR28", t =>
                         {
                             t.HasComment("This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
                         });
-                });
-
-            modelBuilder.Entity("FootnoteNutrientData", b =>
-                {
-                    b.Property<int>("FootnotesFootnoteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NutrientDataFoodDescriptionId")
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("NutrientDataNutrientDefinitionId")
-                        .HasColumnType("nvarchar(3)");
-
-                    b.HasKey("FootnotesFootnoteId", "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.ToTable("FootnoteNutrientData");
-                });
-
-            modelBuilder.Entity("DBSetup.DataSource", b =>
-                {
-                    b.HasOne("DBSetup.NutrientData", null)
-                        .WithMany("DataSources")
-                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
                 });
 
             modelBuilder.Entity("DBSetup.DataSourceLink", b =>
@@ -695,7 +629,14 @@ namespace DBSetup.Migrations
                         .WithMany()
                         .HasForeignKey("NutrientDefinitionId");
 
+                    b.HasOne("DBSetup.NutrientData", "NutrientData")
+                        .WithMany("Footnotes")
+                        .HasForeignKey("FoodDescriptionId", "NutrientDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("FoodDescription");
+
+                    b.Navigation("NutrientData");
 
                     b.Navigation("NutrientDefinition");
                 });
@@ -767,28 +708,7 @@ namespace DBSetup.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.NutrientData", "NutrientData")
-                        .WithMany("Weights")
-                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
                     b.Navigation("FoodDescription");
-
-                    b.Navigation("NutrientData");
-                });
-
-            modelBuilder.Entity("FootnoteNutrientData", b =>
-                {
-                    b.HasOne("DBSetup.Footnote", null)
-                        .WithMany()
-                        .HasForeignKey("FootnotesFootnoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBSetup.NutrientData", null)
-                        .WithMany()
-                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DBSetup.DataSource", b =>
@@ -824,9 +744,7 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.NutrientData", b =>
                 {
-                    b.Navigation("DataSources");
-
-                    b.Navigation("Weights");
+                    b.Navigation("Footnotes");
                 });
 
             modelBuilder.Entity("DBSetup.NutrientDefinition", b =>

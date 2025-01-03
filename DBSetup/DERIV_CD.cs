@@ -44,7 +44,7 @@ public static class DERIV_CD
 
         await foreach (var record in csv.GetRecordsAsync<DerivationCodeDto>())
         {
-            var item = ParseDerivationCode(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             // Console.WriteLine(item.DerivationCodeId + " " + item.DerivationCodeDescription);
         }
@@ -53,7 +53,7 @@ public static class DERIV_CD
         Console.WriteLine("Derivation Code done!");
     }
 
-    private static DerivationCode ParseDerivationCode(DerivationCodeDto record)
+    private static DerivationCode ParseDtoRecord(DerivationCodeDto record)
     {
         var item = new DerivationCode
         {
@@ -68,22 +68,21 @@ public static class DERIV_CD
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("DERIVCD")]
+[Table("DERIVCD", Schema = "SR28")]
 [Comment("This file provides information on how the nutrient values were determined. " +
          "The file contains the derivation codes and their descriptions.")]
 public class DerivationCode
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("Deriv_Cd", TypeName = "nchar(4)")]
     [Required]
-    [MaxLength(4)]
-    [Column("Deriv_Cd")]
     [Comment("Derivation Code.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string DerivationCodeId { get; set; }
 
-    [Required]
-    [MaxLength(120)]
     [Column("Deriv_Desc")]
+    [MaxLength(120)]
+    [Required]
     [Comment("Description of derivation code giving specific information on how the value was determined.")]
     public string DerivationCodeDescription { get; set; }
 

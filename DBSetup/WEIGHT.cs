@@ -44,7 +44,7 @@ public static class WEIGHT
 
         await foreach (var record in csv.GetRecordsAsync<WeightDto>())
         {
-            var item = await ParseWeightAsync(context, record);
+            var item = await ParseDtoRecord(context, record);
             context.Add(item);
             // Console.WriteLine(item.FoodDescriptionId + " " + item.Msre_Desc);
         }
@@ -53,20 +53,24 @@ public static class WEIGHT
         Console.WriteLine("Weight done!");
     }
 
-    private static async Task<Weight> ParseWeightAsync(DbContext context, WeightDto record)
+    private static async Task<Weight> ParseDtoRecord(DbContext context, WeightDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
-                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        if (foodDescription == null)
+        {
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(Weight), nameof(FoodDescription), record.NDB_No);
+            throw new Exception($"{nameof(Weight)} {nameof(FoodDescription)} {record.NDB_No} not found!");
+        }
 
         var item = new Weight
         {
             FoodDescription = foodDescription,
-            Seq = record.Seq,
-            Amount = record.Amount,
+            Seq = int.Parse(record.Seq),
+            Amount = (float)record.Amount,
             Msre_Desc = record.Msre_Desc,
-            Gm_Wgt = record.Gm_Wgt,
-            Num_Data_Pts = record.Num_Data_Pts,
-            Std_Dev = record.Std_Dev,
+            Gm_Wgt = (float)record.Gm_Wgt,
+            Num_Data_Pts = record.Num_Data_Pts.HasValue ? (int?)record.Num_Data_Pts.Value : null,
+            Std_Dev = (float?)record.Std_Dev,
         };
 
         return item;
@@ -76,7 +80,8 @@ public static class WEIGHT
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("WEIGHT")]
+[Table("WEIGHT", Schema = "SR28")]
+[PrimaryKey(nameof(FoodDescriptionId), nameof(Seq))]
 [Comment("This file contains codes indicating the type of data (analytical, calculated, assumed zero, " +
          "and so on) in the Nutrient Data file. To improve the usability of the database and to provide " +
          "values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, " +
@@ -84,27 +89,24 @@ public static class WEIGHT
 public class Weight
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [MaxLength(5)]
-    [Column("NDB_No")]
+    [Column("NDB_No", TypeName = "nchar(5)")]
     [Required]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item.  " +
              "If this field is defined as numeric, the leading zero will be lost.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodDescriptionId { get; set; }
 
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [MaxLength(2)]
     [Column("Seq")]
     [Required]
     [Comment("Sequence number.")]
-    public string Seq { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Seq { get; set; }
 
     [Column("Amount")]
-    [Precision(6, 3)]
     [Required]
     [Comment("Unit modifier (for example, 1 in '1 cup').")]
-    public Decimal Amount { get; set; }
+    public float Amount { get; set; }
 
     [Column("Msre_Desc")]
     [MaxLength(84)]
@@ -113,25 +115,22 @@ public class Weight
     public string Msre_Desc { get; set; }
 
     [Column("Gm_Wgt")]
-    [Precision(7, 1)]
     [Required]
     [Comment("Gram weight.")]
-    public Decimal Gm_Wgt { get; set; }
+    public float Gm_Wgt { get; set; }
     
     [Column("Num_Data_Pts")]
-    [Precision(4, 0)]
     [Comment("Number of data points.")]
-    public Decimal? Num_Data_Pts { get; set; }
+    public int? Num_Data_Pts { get; set; }
 
     [Column("Std_Dev")]
-    [Precision(7, 3)]
     [Comment("Standard deviation.")]
-    public Decimal? Std_Dev { get; set; }
+    public float? Std_Dev { get; set; }
 
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    public NutrientData NutrientData { get; set; }
+    //public NutrientData NutrientData { get; set; }
 
     // Links to Nutrient Data file by NDB_No 
 }

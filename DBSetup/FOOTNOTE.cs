@@ -44,7 +44,7 @@ public static class FOOTNOTE
 
         await foreach (var record in csv.GetRecordsAsync<FootnoteDto>())
         {
-            var item = await ParseFootnoteAsync(context, record);
+            var item = await ParseDtoRecordAsync(context, record);
             if (item == null)
                 continue;
 
@@ -56,19 +56,19 @@ public static class FOOTNOTE
         Console.WriteLine("Footnote done!");
     }
 
-    private static async Task<Footnote?> ParseFootnoteAsync(DbContext context, FootnoteDto record)
+    private static async Task<Footnote?> ParseDtoRecordAsync(DbContext context, FootnoteDto record)
     {
         var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
         if (foodDescription == null)
         {
-            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(FoodDescription), record.NDB_No);
             return null;
         }
 
         var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
-        if (nutrientDefinition == null)
+        if (record.Nutr_No != null && nutrientDefinition == null)
         {
-            Console.WriteLine("Can't find Nutrient Definition {0}", record.Nutr_No);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(NutrientDefinition), record.Nutr_No);
             return null;
         }
 
@@ -88,16 +88,15 @@ public static class FOOTNOTE
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("FOOTNOTE")]
+[Table("FOOTNOTE", Schema = "SR28")]
 [Comment("This file contains additional information about the food item, household weight, and nutrient value.")]
 public class Footnote
 {
     [Key]
     public int FootnoteId { get; set; }
 
-    [Column("NDB_No")]
-    [MaxLength(5)]
     [Required]
+    [Column("NDB_No", TypeName = "nchar(5)")]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. " +
              "If this field is defined as numeric, the leading zero will be lost.")]
     public string FoodDescriptionId { get; set; }
@@ -119,8 +118,7 @@ public class Footnote
              "If the Footnt_typ = N, the Nutr_No will also be filled in.")]
     public char Footnt_Typ { get; set; }
 
-    [Column("Nutr_No")]
-    [MaxLength(3)]
+    [Column("Nutr_No", TypeName = "nchar(3)")]
     [Comment("Unique 3-digit identifier code for a nutrient to which footnote applies.")]
     public string? NutrientDefinitionId { get; set; }
 
@@ -133,7 +131,7 @@ public class Footnote
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    public ICollection<NutrientData> NutrientData { get; set; }
+    public NutrientData NutrientData { get; set; }
     public NutrientDefinition NutrientDefinition { get; set; }
 
 }

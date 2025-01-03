@@ -80,7 +80,7 @@ public class SnackTests
         var weights = foodDescription.Weights;
         Assert.NotNull(weights);
         var weight = weights.Single();
-        Assert.Equal(1.000m, weight.Amount);
+        Assert.Equal(1.000f, weight.Amount);
         Assert.Equal("serving 1/2 cup", weight.Msre_Desc);
     }
 
@@ -116,7 +116,7 @@ public class SnackTests
         var weights = foodDescription.Weights;
         Assert.NotNull(weights);
         var weight = weights.Single();
-        Assert.Equal(3.000m, weight.Amount);
+        Assert.Equal(3.000f, weight.Amount);
         Assert.Equal("cookies", weight.Msre_Desc);
     }
 }

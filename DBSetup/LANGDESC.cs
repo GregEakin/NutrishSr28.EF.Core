@@ -47,7 +47,7 @@ internal class LANGDESC
 
         await foreach (var record in csv.GetRecordsAsync<LangualDescriptionDto>())
         {
-            var item = ParseLanguaLDescription(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             //Console.WriteLine(item.LangualDescriptionId + " " + item.Description);
         }
@@ -56,7 +56,7 @@ internal class LANGDESC
         Console.WriteLine("LanguaL Description done!");
     }
 
-    private static LanguaLDescription ParseLanguaLDescription(LangualDescriptionDto record)
+    private static LanguaLDescription ParseDtoRecord(LangualDescriptionDto record)
     {
         var item = new LanguaLDescription
         {
@@ -71,18 +71,17 @@ internal class LANGDESC
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("LANGDESC")]
+[Table("LANGDESC", Schema = "SR28")]
 [Comment("This file is a support file to the LanguaL Factor file and contains the descriptions for only those factors used in coding the selected food items codes in this release of SR.")]
 public class LanguaLDescription
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("Factor_Code", TypeName = "nchar(5)")]
     [Required]
-    [MaxLength(5)]
-    [Column("Factor_Code")]
     [Comment("The LanguaL factor from the Thesaurus. Only those " +
              "codes used to factor the foods contained in the " + 
              "LanguaL Factor file are included in this file. ")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string LangualDescriptionId { get; set; }
 
     [Required]

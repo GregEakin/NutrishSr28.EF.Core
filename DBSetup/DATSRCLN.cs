@@ -44,7 +44,7 @@ public static class DATSRCLN
 
         await foreach (var record in csv.GetRecordsAsync<DataSourceLinkDto>())
         {
-            var item = await ParseDataSourceLinkAsync(context, record);
+            var item = await ParseDtoRecordAsync(context, record);
             if (item == null)
                 continue;
 
@@ -57,22 +57,26 @@ public static class DATSRCLN
         Console.WriteLine("Source Code done!");
     }
 
-    private static async Task<DataSourceLink?> ParseDataSourceLinkAsync(DbContext context, DataSourceLinkDto record)
+    private static async Task<DataSourceLink?> ParseDtoRecordAsync(DbContext context, DataSourceLinkDto record)
     {
         var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
         if (foodDescription == null)
         {
-            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(DataSourceLink), nameof(FoodDescription), record.NDB_No);
             return null;
         }
 
-        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
-                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
+        if (nutrientDefinition == null)
+        {
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(DataSourceLink), nameof(NutrientDefinition), record.Nutr_No);
+            throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+        }
 
         var dataSource = await context.FindAsync<DataSource>(record.DataSrc_ID);
         if (dataSource == null)
         {
-            Console.WriteLine("Can't find DataSource {0}", record.DataSrc_ID);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(DataSourceLink), nameof(DataSource), record.DataSrc_ID);
             return null;
         }
 
@@ -90,33 +94,29 @@ public static class DATSRCLN
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("DATSRCLN")]
+[Table("DATSRCLN", Schema = "SR28")]
+[PrimaryKey(nameof(FoodDescriptionId), nameof(NutrientDefinitionId), nameof(DataSourceId))]
 [Comment("This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.")]
 public class DataSourceLink
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("NDB_No", TypeName = "nchar(5)")]
     [Required]
-    [MaxLength(5)]
-    [Column("NDB_No")]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item. " +
              "If this field is defined as numeric, the leading zero will be lost.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodDescriptionId { get; set; }
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("Nutr_No", TypeName = "nchar(3)")]
     [Required]
-    [MaxLength(3)]
-    [Column("Nutr_No")]
     [Comment("Unique 3-digit identifier code for a nutrient.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string NutrientDefinitionId { get; set; }
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Required]
-    [MaxLength(6)]
     [Column("DataSrc_ID")]
+    [MaxLength(6)]
+    [Required]
     [Comment("Unique ID identifying the reference/source.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string DataSourceId { get; set; }
 
     //-----------------------------------------------

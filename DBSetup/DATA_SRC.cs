@@ -44,7 +44,7 @@ public static class DATA_SRC
 
         await foreach (var record in csv.GetRecordsAsync<DataSourceDto>())
         {
-            var item = ParseDataSource(record);
+            var item = ParseDtoRecord(record);
             context.Add(item);
             // Console.WriteLine(item.DataSourceId + " " + item.Title);
         }
@@ -53,7 +53,7 @@ public static class DATA_SRC
         Console.WriteLine("Data Source done!");
     }
 
-    private static DataSource ParseDataSource(DataSourceDto record)
+    private static DataSource ParseDtoRecord(DataSourceDto record)
     {
         var item = new DataSource
         {
@@ -75,56 +75,55 @@ public static class DATA_SRC
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("DATA_SRC")]
+[Table("DATA_SRC", Schema = "SR28")]
 [Comment("This file provides a citation to the DataSrc_ID in the Sources of Data Link file.")]
 public class DataSource
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Required]
-    [MaxLength(6)]
     [Column("DataSrc_ID")]
+    [MaxLength(6)]
+    [Required]
     [Comment("Unique ID identifying the reference/source.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string DataSourceId { get; set; }
 
-    [MaxLength(255)]
     [Column("Authors")]
+    [MaxLength(255)]
     [Comment("List of authors for a journal article or name of sponsoring organization for other documents.")]
     public string? Authors { get; set; }
 
     [Required]
-    [MaxLength(255)]
     [Column("Title")]
+    [MaxLength(255)]
     [Comment("Title of article or name of document, such as a report from a company or trade association.")]
     public string Title { get; set; }
 
-    [MaxLength(4)]
-    [Column("Year")]
+    [Column("Year", TypeName = "nchar(4)")]
     [Comment("Year article or document was published.")]
     public string? Year { get; set; }
     
-    [MaxLength(135)]
     [Column("Journal")]
+    [MaxLength(135)]
     [Comment("Name of the journal in which the article was published.")]
     public string? Journal { get; set; }
     
-    [MaxLength(16)]
     [Column("Vol_City")]
+    [MaxLength(16)]
     [Comment("Volume number for journal articles, books, or reports; city where sponsoring organization is located.")]
     public string? Vol_City { get; set; }
     
-    [MaxLength(5)]
     [Column("Issue_State")]
+    [MaxLength(5)]
     [Comment("Issue number for journal article; State where the sponsoring organization is located.")]
     public string? Issue_State { get; set; }
     
-    [MaxLength(5)]
     [Column("Start_Page")]
+    [MaxLength(5)]
     [Comment("Starting page number of article/document.")]
     public string? Start_Page { get; set; }
 
-    [MaxLength(5)]
     [Column("End_Page")]
+    [MaxLength(5)]
     [Comment("Ending page number of article/document.")]
     public string? End_Page { get; set; }
 

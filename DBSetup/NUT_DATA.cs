@@ -44,7 +44,7 @@ public static class NUT_DATA
 
         await foreach (var record in csv.GetRecordsAsync<NutrientDataDto>())
         {
-            var item = await ParseNutrientDataAsync(context, record);
+            var item = await ParseDtoRecordAsync(context, record);
             if (item == null)
                 continue;
 
@@ -56,12 +56,12 @@ public static class NUT_DATA
         Console.WriteLine("Nutrient Data done!");
     }
 
-    private static async Task<NutrientData?> ParseNutrientDataAsync(DbContext context, NutrientDataDto record)
+    private static async Task<NutrientData?> ParseDtoRecordAsync(DbContext context, NutrientDataDto record)
     {
         var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
         if (foodDescription == null)
         {
-            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(NutrientData), nameof(FoodDescription), record.NDB_No);
             return null;
         }
 
@@ -70,14 +70,14 @@ public static class NUT_DATA
         var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
         if (nutrientDefinition == null)
         {
-            Console.WriteLine("Can't find Nutrient Definition {0}", record.Nutr_No);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(NutrientData), nameof(NutrientDefinition), record.Nutr_No);
             return null;
         }
 
 ;        var sourceCode = await context.FindAsync<SourceCode>(record.Src_Cd);
         if (sourceCode == null)
         {
-            Console.WriteLine("Can't find Source Code {0}", record.Src_Cd);
+            Console.WriteLine("Can't find {0} {1} {2}", nameof(NutrientData), nameof(SourceCode), record.Src_Cd);
             return null;
         }
 
@@ -112,25 +112,24 @@ public static class NUT_DATA
 #nullable disable
 #pragma warning disable CS8632
 
-[Table("NUT_DATA")]
+[Table("NUT_DATA", Schema = "SR28")]
+[PrimaryKey(nameof(FoodDescriptionId), nameof(NutrientDefinitionId))]
 [Comment("This file contains the nutrient values and information about the values, including expanded statistical information.")]
 public class NutrientData
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("NDB_No")]
-    [MaxLength(5)]
+    [Column("NDB_No", TypeName = "nchar(5)")]
     [Required]
     [Comment("5-digit Nutrient Databank number that uniquely identifies a food item.  " +
              "If this field is defined as numeric, the leading zero will be lost.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string FoodDescriptionId { get; set; }
 
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("Nutr_No")]
-    [MaxLength(3)]
+    [Column("Nutr_No", TypeName = "nchar(3)")]
     [Required]
     [Comment("Unique 3-digit identifier code for a nutrient.")]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string NutrientDefinitionId { get; set; }
 
     [Column("Nutr_Val")]
@@ -154,12 +153,10 @@ public class NutrientData
     
     [Column("Src_Cd")]
     [Required]
-    [MaxLength(2)]
     [Comment("Code indicating type of data.")]
-    public string SourceCodeId { get; set; }
+    public int SourceCodeId { get; set; }
     
-    [Column("Deriv_Cd")]
-    [MaxLength(4)]
+    [Column("Deriv_Cd", TypeName = "nchar(4)")]
     [Comment("Data Derivation Code giving specific information on how the value is determined. " +
              "This field is populated only for items added or updated starting with SR14. " +
              "This field may not be populated if older records were used in the calculation of the mean value.")]
@@ -227,9 +224,9 @@ public class NutrientData
     //Relationships
     public FoodDescription FoodDescription { get; set; }
     public FoodDescription? FoodDescriptionRef { get; set; }
-    public ICollection<Weight> Weights { get; set; } = [];
+    //public ICollection<Weight> Weights { get; set; } = [];
     public ICollection<Footnote> Footnotes { get; set; } = [];
-    public ICollection<DataSource> DataSources { get; set; } = [];
+    // public ICollection<DataSource> DataSources { get; set; } = [];
     public NutrientDefinition NutrientDefinition { get; set; }
     public SourceCode SourceCode { get; set; }
     public DerivationCode DerivationCode { get; set; }
