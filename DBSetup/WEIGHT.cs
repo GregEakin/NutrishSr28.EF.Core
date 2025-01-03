@@ -46,7 +46,7 @@ public static class WEIGHT
         {
             var item = await ParseWeightAsync(context, record);
             context.Add(item);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.Msre_Desc);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.Msre_Desc);
         }
 
         await context.SaveChangesAsync();

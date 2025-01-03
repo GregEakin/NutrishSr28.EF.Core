@@ -48,21 +48,21 @@ public class EfCoreContext : DbContext
             .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });
 
         modelBuilder.Entity<Weight>()
-            .HasKey(w => new { w.FoodDescriptionId , w.Seq });
+            .HasKey(w => new { w.FoodDescriptionId, w.Seq });
 
         modelBuilder.Entity<NutrientData>()
             .HasKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId });
 
         modelBuilder.Entity<NutrientData>()
             .HasOne(nd => nd.FoodDescription)
-            .WithOne()
-            .HasForeignKey<NutrientData>(nd => nd.FoodDescriptionId)
+            .WithMany(fd => fd.NutrientData)
+            .HasForeignKey(nd => nd.FoodDescriptionId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<NutrientData>()
             .HasOne(nd => nd.FoodDescriptionRef)
-            .WithOne()
-            .HasForeignKey<NutrientData>(nd => nd.FoodDescriptionRefId)
+            .WithMany()
+            .HasForeignKey(nd => nd.FoodDescriptionRefId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<DataSourceLink>()

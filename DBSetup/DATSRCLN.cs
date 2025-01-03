@@ -45,8 +45,11 @@ public static class DATSRCLN
         await foreach (var record in csv.GetRecordsAsync<DataSourceLinkDto>())
         {
             var item = await ParseDataSourceLinkAsync(context, record);
+            if (item == null)
+                continue;
+
             context.Add(item);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
             await context.SaveChangesAsync();
         }
 
@@ -54,26 +57,24 @@ public static class DATSRCLN
         Console.WriteLine("Source Code done!");
     }
 
-    private static async Task<DataSourceLink> ParseDataSourceLinkAsync(DbContext context, DataSourceLinkDto record)
+    private static async Task<DataSourceLink?> ParseDataSourceLinkAsync(DbContext context, DataSourceLinkDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
-                              ?? new FoodDescription
-                              {
-                                  FoodDescriptionId = record.NDB_No,
-                                  FoodGroupId = "2500",
-                                  Long_Desc = $"Unknown {record.NDB_No}",
-                                  Shrt_Desc = $"Unknown {record.NDB_No}",
-                              };
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        if (foodDescription == null)
+        {
+            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            return null;
+        }
 
         var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
                                  ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
 
-        var dataSource = await context.FindAsync<DataSource>(record.DataSrc_ID)
-                         ?? new DataSource
-                         {
-                             DataSourceId = record.DataSrc_ID,
-                             Title = $"Unknown {record.DataSrc_ID}"
-                         };
+        var dataSource = await context.FindAsync<DataSource>(record.DataSrc_ID);
+        if (dataSource == null)
+        {
+            Console.WriteLine("Can't find DataSource {0}", record.DataSrc_ID);
+            return null;
+        }
 
         var item = new DataSourceLink
         {

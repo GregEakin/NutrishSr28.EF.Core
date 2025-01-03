@@ -46,7 +46,7 @@ public static class DATA_SRC
         {
             var item = ParseDataSource(record);
             context.Add(item);
-            Console.WriteLine(item.DataSourceId + " " + item.Title);
+            // Console.WriteLine(item.DataSourceId + " " + item.Title);
         }
 
         await context.SaveChangesAsync();
@@ -130,7 +130,7 @@ public class DataSource
 
     //-----------------------------------------------
     //Relationships
-    ICollection<DataSourceLink> DataSourceLinks { get; set; }
+    public ICollection<DataSourceLink> DataSourceLinks { get; set; }
 }
 
 public class DataSourceDto

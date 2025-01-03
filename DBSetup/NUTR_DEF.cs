@@ -46,7 +46,7 @@ public static class NUTR_DEF
         {
             var item = ParseNutrientDefinition(record);
             context.Add(item);
-            Console.WriteLine(item.NutrientDefinitionId + " " + item.NutrDesc);
+            // Console.WriteLine(item.NutrientDefinitionId + " " + item.NutrDesc);
         }
 
         await context.SaveChangesAsync();
@@ -117,8 +117,8 @@ public class NutrientDefinition
 
     //-----------------------------------------------
     //Relationships
-    ICollection<DataSourceLink> DataSourceLinks { get; set; }
-    ICollection<NutrientData> NutrientData { get; set; }
+    public ICollection<DataSourceLink> DataSourceLinks { get; set; }
+    public ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class NutrientDefinitionDto

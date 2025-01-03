@@ -45,30 +45,43 @@ public static class NUT_DATA
         await foreach (var record in csv.GetRecordsAsync<NutrientDataDto>())
         {
             var item = await ParseNutrientDataAsync(context, record);
+            if (item == null)
+                continue;
+
             context.Add(item);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.NutrientDefinitionId);
         }
 
         await context.SaveChangesAsync();
         Console.WriteLine("Nutrient Data done!");
     }
 
-    private static async Task<NutrientData> ParseNutrientDataAsync(DbContext context, NutrientDataDto record)
+    private static async Task<NutrientData?> ParseNutrientDataAsync(DbContext context, NutrientDataDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
-                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        if (foodDescription == null)
+        {
+            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            return null;
+        }
 
-        var foodDescriptionRef = await context.FindAsync<FoodDescription>(record.Ref_NDB_No)
-                              ?? throw new Exception($"FoodDescription {record.Ref_NDB_No} not found!");
+        var foodDescriptionRef = record.Ref_NDB_No == null ? null : await context.FindAsync<FoodDescription>(record.Ref_NDB_No);
 
-        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
-                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
+        if (nutrientDefinition == null)
+        {
+            Console.WriteLine("Can't find Nutrient Definition {0}", record.Nutr_No);
+            return null;
+        }
 
-        var sourceCode = await context.FindAsync<SourceCode>(record.Src_Cd)
-                         ?? throw new Exception($"SourceCode {record.Src_Cd} not found!");
+;        var sourceCode = await context.FindAsync<SourceCode>(record.Src_Cd);
+        if (sourceCode == null)
+        {
+            Console.WriteLine("Can't find Source Code {0}", record.Src_Cd);
+            return null;
+        }
 
-        var derivationCode = await context.FindAsync<DerivationCode>(record.Deriv_Cd)
-                            ?? throw new Exception($"DerivationCode {record.Deriv_Cd} not found!");
+        var derivationCode = record.Deriv_Cd == null ? null : await context.FindAsync<DerivationCode>(record.Deriv_Cd);
 
         var item = new NutrientData
         {
@@ -213,10 +226,10 @@ public class NutrientData
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    public FoodDescription FoodDescriptionRef { get; set; }
-    private ICollection<Weight> Weights { get; set; } = [];
-    private ICollection<Footnote> Footnotes { get; set; } = [];
-    private ICollection<DataSource> DataSources { get; set; } = [];
+    public FoodDescription? FoodDescriptionRef { get; set; }
+    public ICollection<Weight> Weights { get; set; } = [];
+    public ICollection<Footnote> Footnotes { get; set; } = [];
+    public ICollection<DataSource> DataSources { get; set; } = [];
     public NutrientDefinition NutrientDefinition { get; set; }
     public SourceCode SourceCode { get; set; }
     public DerivationCode DerivationCode { get; set; }

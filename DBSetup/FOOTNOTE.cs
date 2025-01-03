@@ -45,21 +45,32 @@ public static class FOOTNOTE
         await foreach (var record in csv.GetRecordsAsync<FootnoteDto>())
         {
             var item = await ParseFootnoteAsync(context, record);
+            if (item == null)
+                continue;
+
             context.Add(item);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.Footnt_No);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.Footnt_No);
         }
 
         await context.SaveChangesAsync();
-        Console.WriteLine("Source Code done!");
+        Console.WriteLine("Footnote done!");
     }
 
-    private static async Task<Footnote> ParseFootnoteAsync(DbContext context, FootnoteDto record)
+    private static async Task<Footnote?> ParseFootnoteAsync(DbContext context, FootnoteDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No)
-                              ?? throw new Exception($"FoodDescription {record.NDB_No} not found!");
+        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        if (foodDescription == null)
+        {
+            Console.WriteLine("Can't find Food Description {0}", record.NDB_No);
+            return null;
+        }
 
-        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No)
-                                 ?? throw new Exception($"NutrientDefinition {record.Nutr_No} not found!");
+        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
+        if (nutrientDefinition == null)
+        {
+            Console.WriteLine("Can't find Nutrient Definition {0}", record.Nutr_No);
+            return null;
+        }
 
         var item = new Footnote
         {
@@ -122,7 +133,7 @@ public class Footnote
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    public NutrientData NutrientData { get; set; }
+    public ICollection<NutrientData> NutrientData { get; set; }
     public NutrientDefinition NutrientDefinition { get; set; }
 
 }

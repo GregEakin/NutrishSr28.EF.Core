@@ -46,7 +46,7 @@ public static class FD_GROUP
         {
             var item = ParseFoodGroup(record);
             context.Add(item);
-            Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
+            // Console.WriteLine(item.FoodGroupId + " " + item.FoodGroupName);
         }
 
         await context.SaveChangesAsync();

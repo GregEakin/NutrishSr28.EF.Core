@@ -3,6 +3,7 @@ using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250103054738_NutData4")]
+    partial class NutData4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -404,6 +407,9 @@ namespace DBSetup.Migrations
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.");
 
+                    b.Property<string>("FoodDescriptionId1")
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("FoodDescriptionRefId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
@@ -474,6 +480,8 @@ namespace DBSetup.Migrations
                     b.HasKey("FoodDescriptionId", "NutrientDefinitionId");
 
                     b.HasIndex("DerivationCodeId");
+
+                    b.HasIndex("FoodDescriptionId1");
 
                     b.HasIndex("FoodDescriptionRefId");
 
@@ -726,10 +734,14 @@ namespace DBSetup.Migrations
                         .HasForeignKey("DerivationCodeId");
 
                     b.HasOne("DBSetup.FoodDescription", "FoodDescription")
-                        .WithMany("NutrientData")
+                        .WithMany()
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DBSetup.FoodDescription", null)
+                        .WithMany("NutrientData")
+                        .HasForeignKey("FoodDescriptionId1");
 
                     b.HasOne("DBSetup.FoodDescription", "FoodDescriptionRef")
                         .WithMany()

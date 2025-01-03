@@ -49,7 +49,7 @@ internal class LANGDESC
         {
             var item = ParseLanguaLDescription(record);
             context.Add(item);
-            Console.WriteLine(item.LangualDescriptionId + " " + item.Description);
+            //Console.WriteLine(item.LangualDescriptionId + " " + item.Description);
         }
 
         await context.SaveChangesAsync();

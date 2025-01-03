@@ -46,7 +46,7 @@ public static class SRC_CD
         {
             var item = ParseSourceCode(record);
             context.Add(item);
-            Console.WriteLine(item.SourceCodeId + " " + item.SourceCodeDescription);
+            // Console.WriteLine(item.SourceCodeId + " " + item.SourceCodeDescription);
         }
 
         await context.SaveChangesAsync();
@@ -92,7 +92,7 @@ public class SourceCode
     //-----------------------------------------------
     //Relationships
 
-    ICollection<NutrientData> NutrientData { get; set; }
+    public ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class SrcCdDto

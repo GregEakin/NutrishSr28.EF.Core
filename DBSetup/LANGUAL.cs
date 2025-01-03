@@ -49,7 +49,7 @@ internal class LANGUAL
         {
             var item = await ParseLanguaL(context, record);
             context.Add(item);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.LangualDescriptionId);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.LangualDescriptionId);
         }
 
         await context.SaveChangesAsync();

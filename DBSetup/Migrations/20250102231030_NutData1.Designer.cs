@@ -3,6 +3,7 @@ using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250102231030_NutData1")]
+    partial class NutData1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,6 +298,12 @@ namespace DBSetup.Migrations
                         .HasColumnName("Footnt_Typ")
                         .HasComment("Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.");
 
+                    b.Property<string>("NutrientDataFoodDescriptionId")
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("NutrientDataNutrientDefinitionId")
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<string>("NutrientDefinitionId")
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)")
@@ -306,6 +315,8 @@ namespace DBSetup.Migrations
                     b.HasIndex("FoodDescriptionId");
 
                     b.HasIndex("NutrientDefinitionId");
+
+                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
 
                     b.ToTable("FOOTNOTE", t =>
                         {
@@ -404,6 +415,9 @@ namespace DBSetup.Migrations
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.");
 
+                    b.Property<string>("FoodDescriptionId1")
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("FoodDescriptionRefId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
@@ -474,6 +488,10 @@ namespace DBSetup.Migrations
                     b.HasKey("FoodDescriptionId", "NutrientDefinitionId");
 
                     b.HasIndex("DerivationCodeId");
+
+                    b.HasIndex("FoodDescriptionId1")
+                        .IsUnique()
+                        .HasFilter("[FoodDescriptionId1] IS NOT NULL");
 
                     b.HasIndex("FoodDescriptionRefId");
 
@@ -620,24 +638,6 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FootnoteNutrientData", b =>
-                {
-                    b.Property<int>("FootnotesFootnoteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NutrientDataFoodDescriptionId")
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("NutrientDataNutrientDefinitionId")
-                        .HasColumnType("nvarchar(3)");
-
-                    b.HasKey("FootnotesFootnoteId", "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
-
-                    b.ToTable("FootnoteNutrientData");
-                });
-
             modelBuilder.Entity("DBSetup.DataSource", b =>
                 {
                     b.HasOne("DBSetup.NutrientData", null)
@@ -695,7 +695,13 @@ namespace DBSetup.Migrations
                         .WithMany()
                         .HasForeignKey("NutrientDefinitionId");
 
+                    b.HasOne("DBSetup.NutrientData", "NutrientData")
+                        .WithMany("Footnotes")
+                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
+
                     b.Navigation("FoodDescription");
+
+                    b.Navigation("NutrientData");
 
                     b.Navigation("NutrientDefinition");
                 });
@@ -726,10 +732,14 @@ namespace DBSetup.Migrations
                         .HasForeignKey("DerivationCodeId");
 
                     b.HasOne("DBSetup.FoodDescription", "FoodDescription")
-                        .WithMany("NutrientData")
+                        .WithMany()
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DBSetup.FoodDescription", null)
+                        .WithOne("NutrientData")
+                        .HasForeignKey("DBSetup.NutrientData", "FoodDescriptionId1");
 
                     b.HasOne("DBSetup.FoodDescription", "FoodDescriptionRef")
                         .WithMany()
@@ -776,21 +786,6 @@ namespace DBSetup.Migrations
                     b.Navigation("NutrientData");
                 });
 
-            modelBuilder.Entity("FootnoteNutrientData", b =>
-                {
-                    b.HasOne("DBSetup.Footnote", null)
-                        .WithMany()
-                        .HasForeignKey("FootnotesFootnoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBSetup.NutrientData", null)
-                        .WithMany()
-                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DBSetup.DataSource", b =>
                 {
                     b.Navigation("DataSourceLinks");
@@ -825,6 +820,8 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.NutrientData", b =>
                 {
                     b.Navigation("DataSources");
+
+                    b.Navigation("Footnotes");
 
                     b.Navigation("Weights");
                 });

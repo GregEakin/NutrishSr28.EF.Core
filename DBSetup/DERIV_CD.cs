@@ -46,7 +46,7 @@ public static class DERIV_CD
         {
             var item = ParseDerivationCode(record);
             context.Add(item);
-            Console.WriteLine(item.DerivationCodeId + " " + item.DerivationCodeCodeDescription);
+            // Console.WriteLine(item.DerivationCodeId + " " + item.DerivationCodeDescription);
         }
 
         await context.SaveChangesAsync();
@@ -58,7 +58,7 @@ public static class DERIV_CD
         var item = new DerivationCode
         {
             DerivationCodeId = record.Deriv_Cd,
-            DerivationCodeCodeDescription = record.Deriv_Desc,
+            DerivationCodeDescription = record.Deriv_Desc,
         };
 
         return item;
@@ -85,11 +85,11 @@ public class DerivationCode
     [MaxLength(120)]
     [Column("Deriv_Desc")]
     [Comment("Description of derivation code giving specific information on how the value was determined.")]
-    public string DerivationCodeCodeDescription { get; set; }
+    public string DerivationCodeDescription { get; set; }
 
     //-----------------------------------------------
     //Relationships
-    ICollection<NutrientData> NutrientData { get; set; }
+    public ICollection<NutrientData> NutrientData { get; set; }
 }
 
 public class DerivationCodeDto

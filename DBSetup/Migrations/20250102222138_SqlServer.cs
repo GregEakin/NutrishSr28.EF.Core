@@ -11,26 +11,6 @@ namespace DBSetup.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DATA_SRC",
-                columns: table => new
-                {
-                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source."),
-                    Authors = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true, comment: "List of authors for a journal article or name of sponsoring organization for other documents."),
-                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Title of article or name of document, such as a report from a company or trade association."),
-                    Year = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true, comment: "Year article or document was published."),
-                    Journal = table.Column<string>(type: "nvarchar(135)", maxLength: 135, nullable: true, comment: "Name of the journal in which the article was published."),
-                    Vol_City = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true, comment: "Volume number for journal articles, books, or reports; city where sponsoring organization is located."),
-                    Issue_State = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Issue number for journal article; State where the sponsoring organization is located."),
-                    Start_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Starting page number of article/document."),
-                    End_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Ending page number of article/document.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DATA_SRC", x => x.DataSrc_ID);
-                },
-                comment: "This file provides a citation to the DataSrc_ID in the Sources of Data Link file.");
-
-            migrationBuilder.CreateTable(
                 name: "DERIVCD",
                 columns: table => new
                 {
@@ -131,38 +111,6 @@ namespace DBSetup.Migrations
                 comment: "This file contains long and short descriptions and food group designators for all food items, along with common names, manufacturer name, scientific name, percentage and description of refuse, and factors used for calculating protein and kilocalories, if applicable. Items used in the FNDDS are also identified by value of 'Y' in the Survey field. ");
 
             migrationBuilder.CreateTable(
-                name: "DATSRCLN",
-                columns: table => new
-                {
-                    NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
-                    Nutr_No = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false, comment: "Unique 3-digit identifier code for a nutrient."),
-                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DATSRCLN", x => new { x.NDB_No, x.Nutr_No, x.DataSrc_ID });
-                    table.ForeignKey(
-                        name: "FK_DATSRCLN_DATA_SRC_DataSrc_ID",
-                        column: x => x.DataSrc_ID,
-                        principalTable: "DATA_SRC",
-                        principalColumn: "DataSrc_ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DATSRCLN_FOOD_DES_NDB_No",
-                        column: x => x.NDB_No,
-                        principalTable: "FOOD_DES",
-                        principalColumn: "NDB_No",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DATSRCLN_NUTR_DEF_Nutr_No",
-                        column: x => x.Nutr_No,
-                        principalTable: "NUTR_DEF",
-                        principalColumn: "Nutr_No",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.");
-
-            migrationBuilder.CreateTable(
                 name: "LANGUAL",
                 columns: table => new
                 {
@@ -252,6 +200,33 @@ namespace DBSetup.Migrations
                 comment: "This file contains the nutrient values and information about the values, including expanded statistical information.");
 
             migrationBuilder.CreateTable(
+                name: "DATA_SRC",
+                columns: table => new
+                {
+                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source."),
+                    Authors = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true, comment: "List of authors for a journal article or name of sponsoring organization for other documents."),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Title of article or name of document, such as a report from a company or trade association."),
+                    Year = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true, comment: "Year article or document was published."),
+                    Journal = table.Column<string>(type: "nvarchar(135)", maxLength: 135, nullable: true, comment: "Name of the journal in which the article was published."),
+                    Vol_City = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true, comment: "Volume number for journal articles, books, or reports; city where sponsoring organization is located."),
+                    Issue_State = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Issue number for journal article; State where the sponsoring organization is located."),
+                    Start_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Starting page number of article/document."),
+                    End_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Ending page number of article/document."),
+                    NutrientDataFoodDescriptionId = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    NutrientDataNutrientDefinitionId = table.Column<string>(type: "nvarchar(3)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DATA_SRC", x => x.DataSrc_ID);
+                    table.ForeignKey(
+                        name: "FK_DATA_SRC_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                        columns: x => new { x.NutrientDataFoodDescriptionId, x.NutrientDataNutrientDefinitionId },
+                        principalTable: "NUT_DATA",
+                        principalColumns: new[] { "NDB_No", "Nutr_No" });
+                },
+                comment: "This file provides a citation to the DataSrc_ID in the Sources of Data Link file.");
+
+            migrationBuilder.CreateTable(
                 name: "FOOTNOTE",
                 columns: table => new
                 {
@@ -317,6 +292,43 @@ namespace DBSetup.Migrations
                         principalColumns: new[] { "NDB_No", "Nutr_No" });
                 },
                 comment: "This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
+
+            migrationBuilder.CreateTable(
+                name: "DATSRCLN",
+                columns: table => new
+                {
+                    NDB_No = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
+                    Nutr_No = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false, comment: "Unique 3-digit identifier code for a nutrient."),
+                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source.")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DATSRCLN", x => new { x.NDB_No, x.Nutr_No, x.DataSrc_ID });
+                    table.ForeignKey(
+                        name: "FK_DATSRCLN_DATA_SRC_DataSrc_ID",
+                        column: x => x.DataSrc_ID,
+                        principalTable: "DATA_SRC",
+                        principalColumn: "DataSrc_ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DATSRCLN_FOOD_DES_NDB_No",
+                        column: x => x.NDB_No,
+                        principalTable: "FOOD_DES",
+                        principalColumn: "NDB_No",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DATSRCLN_NUTR_DEF_Nutr_No",
+                        column: x => x.Nutr_No,
+                        principalTable: "NUTR_DEF",
+                        principalColumn: "Nutr_No",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "This file is used to link the Nutrient Data file with the Sources of Data table. It is needed to resolve the many-to-many relationship between the two tables.");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DATA_SRC_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                table: "DATA_SRC",
+                columns: new[] { "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DATSRCLN_DataSrc_ID",

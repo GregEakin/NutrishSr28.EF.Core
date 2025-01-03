@@ -45,7 +45,7 @@ public static class FOOD_DES
         await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
         {
             var item = await ParseFoodDescriptionAsync(context, record);
-            Console.WriteLine(item.FoodDescriptionId + " " + item.FoodGroupId + " " + item.Shrt_Desc);
+            // Console.WriteLine(item.FoodDescriptionId + " " + item.FoodGroupId + " " + item.Shrt_Desc);
         }
 
         await context.SaveChangesAsync();
@@ -168,7 +168,7 @@ public class FoodDescription
 
     // Relationships
     public FoodGroup FoodGroup { get; set; }
-    public NutrientData NutrientData { get; set; }
+    public ICollection<NutrientData> NutrientData { get; set; }
     public ICollection<Weight> Weights { get; set; } = [];
     public ICollection<Footnote> Footnotes { get; set; } = [];
     public ICollection<LanguaLFactor> LanguaLFactors { get; set; } = [];
