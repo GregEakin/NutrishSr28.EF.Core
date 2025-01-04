@@ -172,7 +172,7 @@ public class FoodDescription
     public FoodGroup FoodGroup { get; set; }
     public ICollection<NutrientData> NutrientData { get; set; }
     public ICollection<Weight> Weights { get; set; } = [];
-    public ICollection<Footnote> Footnotes { get; set; } = [];
+    //public ICollection<FootnoteM> Footnotes { get; set; } = [];
     public ICollection<LanguaLFactor> LanguaLFactors { get; set; } = [];
     ICollection<DataSourceLink> DataSourceLinks { get; set; } = [];
 }

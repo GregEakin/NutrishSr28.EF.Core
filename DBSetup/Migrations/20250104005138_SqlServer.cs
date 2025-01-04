@@ -63,6 +63,25 @@ namespace DBSetup.Migrations
                 comment: "Contains a list of food groups used in SR28 and their descriptions.");
 
             migrationBuilder.CreateTable(
+                name: "FOOTNOTE",
+                schema: "SR28",
+                columns: table => new
+                {
+                    FootnoteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
+                    Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
+                    Footnt_Typ = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
+                    Nutr_No = table.Column<string>(type: "nchar(3)", nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
+                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text.")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FOOTNOTE", x => x.FootnoteId);
+                },
+                comment: "This file contains additional information about the food item, household weight, and nutrient value.");
+
+            migrationBuilder.CreateTable(
                 name: "LANGDESC",
                 schema: "SR28",
                 columns: table => new
@@ -295,45 +314,6 @@ namespace DBSetup.Migrations
                 },
                 comment: "This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
 
-            migrationBuilder.CreateTable(
-                name: "FOOTNOTE",
-                schema: "SR28",
-                columns: table => new
-                {
-                    FootnoteId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
-                    Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
-                    Footnt_Typ = table.Column<string>(type: "nvarchar(1)", nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
-                    Nutr_No = table.Column<string>(type: "nchar(3)", nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
-                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text.")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FOOTNOTE", x => x.FootnoteId);
-                    table.ForeignKey(
-                        name: "FK_FOOTNOTE_FOOD_DES_NDB_No",
-                        column: x => x.NDB_No,
-                        principalSchema: "SR28",
-                        principalTable: "FOOD_DES",
-                        principalColumn: "NDB_No",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FOOTNOTE_NUTR_DEF_Nutr_No",
-                        column: x => x.Nutr_No,
-                        principalSchema: "SR28",
-                        principalTable: "NUTR_DEF",
-                        principalColumn: "Nutr_No");
-                    table.ForeignKey(
-                        name: "FK_FOOTNOTE_NUT_DATA_NDB_No_Nutr_No",
-                        columns: x => new { x.NDB_No, x.Nutr_No },
-                        principalSchema: "SR28",
-                        principalTable: "NUT_DATA",
-                        principalColumns: new[] { "NDB_No", "Nutr_No" },
-                        onDelete: ReferentialAction.Restrict);
-                },
-                comment: "This file contains additional information about the food item, household weight, and nutrient value.");
-
             migrationBuilder.CreateIndex(
                 name: "IX_DATSRCLN_DataSrc_ID",
                 schema: "SR28",
@@ -351,18 +331,6 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 table: "FOOD_DES",
                 column: "FdGrp_Cd");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FOOTNOTE_NDB_No_Nutr_No_Footnt_No",
-                schema: "SR28",
-                table: "FOOTNOTE",
-                columns: new[] { "NDB_No", "Nutr_No", "Footnt_No" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FOOTNOTE_Nutr_No",
-                schema: "SR28",
-                table: "FOOTNOTE",
-                column: "Nutr_No");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LANGUAL_Factor_Code",
@@ -411,15 +379,15 @@ namespace DBSetup.Migrations
                 schema: "SR28");
 
             migrationBuilder.DropTable(
+                name: "NUT_DATA",
+                schema: "SR28");
+
+            migrationBuilder.DropTable(
                 name: "WEIGHT",
                 schema: "SR28");
 
             migrationBuilder.DropTable(
                 name: "DATA_SRC",
-                schema: "SR28");
-
-            migrationBuilder.DropTable(
-                name: "NUT_DATA",
                 schema: "SR28");
 
             migrationBuilder.DropTable(
@@ -431,15 +399,15 @@ namespace DBSetup.Migrations
                 schema: "SR28");
 
             migrationBuilder.DropTable(
-                name: "FOOD_DES",
-                schema: "SR28");
-
-            migrationBuilder.DropTable(
                 name: "NUTR_DEF",
                 schema: "SR28");
 
             migrationBuilder.DropTable(
                 name: "SRC",
+                schema: "SR28");
+
+            migrationBuilder.DropTable(
+                name: "FOOD_DES",
                 schema: "SR28");
 
             migrationBuilder.DropTable(

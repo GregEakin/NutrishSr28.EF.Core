@@ -65,18 +65,24 @@ public class EfCoreContext : DbContext
             .HasForeignKey(nd => nd.FoodDescriptionRefId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<NutrientData>()
-            .HasMany(nd => nd.Footnotes)
-            .WithOne(f => f.NutrientData)
-            .HasForeignKey(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
-            .HasPrincipalKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId })
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Footnote>()
+            .HasDiscriminator(f => f.Footnt_Typ)
+            .HasValue<FootnoteD>("D")
+            .HasValue<FootnoteM>("M")
+            .HasValue<FootnoteN>("N");
+
+        // modelBuilder.Entity<NutrientData>()
+        //     .HasMany(nd => nd.Footnotes)
+        //     .WithOne(f => f.NutrientData)
+        //     .HasForeignKey(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
+        //     .HasPrincipalKey(nd => new { nd.FoodDescriptionId, nd.NutrientDefinitionId })
+        //     .OnDelete(DeleteBehavior.Restrict);
 
         // modelBuilder.Entity<DataSourceLink>()
         //     .HasKey(dsl => new { dsl.FoodDescriptionId, dsl.NutrientDefinitionId, dsl.DataSourceId });
 
-        modelBuilder.Entity<Footnote>()
-            .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId, f.Footnt_No });
+        // modelBuilder.Entity<Footnote>()
+        //     .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId, f.Footnt_No });
 
         base.OnModelCreating(modelBuilder);
     }

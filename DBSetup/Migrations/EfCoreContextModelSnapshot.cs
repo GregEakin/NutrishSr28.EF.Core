@@ -275,6 +275,7 @@ namespace DBSetup.Migrations
 
                     b.Property<string>("Footnt_Typ")
                         .IsRequired()
+                        .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("Footnt_Typ")
                         .HasComment("Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.");
@@ -286,14 +287,14 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FootnoteId");
 
-                    b.HasIndex("NutrientDefinitionId");
-
-                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId", "Footnt_No");
-
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
                             t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
                         });
+
+                    b.HasDiscriminator<string>("Footnt_Typ").HasValue("Footnote");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
@@ -579,6 +580,42 @@ namespace DBSetup.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DBSetup.FootnoteD", b =>
+                {
+                    b.HasBaseType("DBSetup.Footnote");
+
+                    b.ToTable("FOOTNOTE", "SR28", t =>
+                        {
+                            t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
+                        });
+
+                    b.HasDiscriminator().HasValue("D");
+                });
+
+            modelBuilder.Entity("DBSetup.FootnoteM", b =>
+                {
+                    b.HasBaseType("DBSetup.Footnote");
+
+                    b.ToTable("FOOTNOTE", "SR28", t =>
+                        {
+                            t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
+                        });
+
+                    b.HasDiscriminator().HasValue("M");
+                });
+
+            modelBuilder.Entity("DBSetup.FootnoteN", b =>
+                {
+                    b.HasBaseType("DBSetup.Footnote");
+
+                    b.ToTable("FOOTNOTE", "SR28", t =>
+                        {
+                            t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
+                        });
+
+                    b.HasDiscriminator().HasValue("N");
+                });
+
             modelBuilder.Entity("DBSetup.DataSourceLink", b =>
                 {
                     b.HasOne("DBSetup.DataSource", "DataSource")
@@ -615,30 +652,6 @@ namespace DBSetup.Migrations
                         .IsRequired();
 
                     b.Navigation("FoodGroup");
-                });
-
-            modelBuilder.Entity("DBSetup.Footnote", b =>
-                {
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
-                        .WithMany("Footnotes")
-                        .HasForeignKey("FoodDescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBSetup.NutrientDefinition", "NutrientDefinition")
-                        .WithMany()
-                        .HasForeignKey("NutrientDefinitionId");
-
-                    b.HasOne("DBSetup.NutrientData", "NutrientData")
-                        .WithMany("Footnotes")
-                        .HasForeignKey("FoodDescriptionId", "NutrientDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("FoodDescription");
-
-                    b.Navigation("NutrientData");
-
-                    b.Navigation("NutrientDefinition");
                 });
 
             modelBuilder.Entity("DBSetup.LanguaLFactor", b =>
@@ -723,8 +736,6 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
-                    b.Navigation("Footnotes");
-
                     b.Navigation("LanguaLFactors");
 
                     b.Navigation("NutrientData");
@@ -740,11 +751,6 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
                 {
                     b.Navigation("LanguaLFactors");
-                });
-
-            modelBuilder.Entity("DBSetup.NutrientData", b =>
-                {
-                    b.Navigation("Footnotes");
                 });
 
             modelBuilder.Entity("DBSetup.NutrientDefinition", b =>

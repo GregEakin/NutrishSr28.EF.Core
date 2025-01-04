@@ -48,6 +48,7 @@ public static class FOOTNOTE
             if (item == null)
                 continue;
 
+            // Console.WriteLine("Footnote: {0}, {1}, {2}, {3}", item.FoodDescriptionId, item.Footnt_No, item.Footnt_Typ, item.NutrientDefinitionId);
             context.Add(item);
             // Console.WriteLine(item.FoodDescriptionId + " " + item.Footnt_No);
         }
@@ -58,26 +59,26 @@ public static class FOOTNOTE
 
     private static async Task<Footnote?> ParseDtoRecordAsync(DbContext context, FootnoteDto record)
     {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
-        if (foodDescription == null)
-        {
-            Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(FoodDescription), record.NDB_No);
-            return null;
-        }
-
-        var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
-        if (record.Nutr_No != null && nutrientDefinition == null)
-        {
-            Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(NutrientDefinition), record.Nutr_No);
-            return null;
-        }
+        // var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
+        // if (foodDescription == null)
+        // {
+        //     Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(FoodDescription), record.NDB_No);
+        //     return null;
+        // }
+        //
+        // var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
+        // if (record.Nutr_No != null && nutrientDefinition == null)
+        // {
+        //     Console.WriteLine("Can't find {0} {1} {2}", nameof(Footnote), nameof(NutrientDefinition), record.Nutr_No);
+        //     return null;
+        // }
 
         var item = new Footnote
         {
-            FoodDescription = foodDescription,
+            FoodDescriptionId = record.NDB_No,
             Footnt_No = record.Footnt_No,
-            Footnt_Typ = record.Footnt_Typ[0],
-            NutrientDefinition = nutrientDefinition,
+            Footnt_Typ = record.Footnt_Typ,
+            NutrientDefinitionId = record.Nutr_No,
             Footnt_Txt = record.Footnt_Txt,
         };
 
@@ -110,13 +111,17 @@ public class Footnote
     public string Footnt_No { get; set; }
 
     [Column("Footnt_Typ")]
+    [MaxLength(1)]
     [Required]
     [Comment("Type of footnote: " +
              "D = footnote adding information to the food description;  " +
              "M = footnote adding information to measure description;  " +
              "N = footnote providing additional information on a nutrient value. " +
              "If the Footnt_typ = N, the Nutr_No will also be filled in.")]
-    public char Footnt_Typ { get; set; }
+    public string Footnt_Typ { get; set; }
+
+    // [NotMapped]
+    // public string Footnote_Type { get; set; }
 
     [Column("Nutr_No", TypeName = "nchar(3)")]
     [Comment("Unique 3-digit identifier code for a nutrient to which footnote applies.")]
@@ -130,10 +135,21 @@ public class Footnote
 
     //-----------------------------------------------
     //Relationships
-    public FoodDescription FoodDescription { get; set; }
-    public NutrientData NutrientData { get; set; }
-    public NutrientDefinition NutrientDefinition { get; set; }
+    // public FoodDescription FoodDescription { get; set; }
+    // public NutrientData NutrientData { get; set; }
+    // public NutrientDefinition NutrientDefinition { get; set; }
+}
 
+public class FootnoteD : Footnote
+{
+}
+
+public class FootnoteM : Footnote
+{
+}
+
+public class FootnoteN : Footnote
+{
 }
 
 public class FootnoteDto

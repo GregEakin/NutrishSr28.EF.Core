@@ -84,9 +84,9 @@ public class LanguaLDescription
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string LangualDescriptionId { get; set; }
 
-    [Required]
-    [MaxLength(140)]
     [Column("Description")]
+    [MaxLength(140)]
+    [Required]
     [Comment("The description of the LanguaL Factor Code from the thesaurus. ")]
     public string Description { get; set; }
 

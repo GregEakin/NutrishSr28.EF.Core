@@ -18,15 +18,15 @@ Console.WriteLine("Hello, World!");
 
 await using var context = new EfCoreContext();
 
-await FD_GROUP.ParseFileAsync(context);
-await SRC_CD.ParseFileAsync(context);
-await DERIV_CD.ParseFileAsync(context);
-await LANGDESC.ParseFileAsync(context);
-await DATA_SRC.ParseFileAsync(context);
-await NUTR_DEF.ParseFileAsync(context);
-await FOOD_DES.ParseFileAsync(context);
-await WEIGHT.ParseFileAsync(context);
-await LANGUAL.ParseFileAsync(context);
-await FOOTNOTE.ParseFileAsync(context);
+// await FD_GROUP.ParseFileAsync(context);
+// await SRC_CD.ParseFileAsync(context);
+// await DERIV_CD.ParseFileAsync(context);
+// await LANGDESC.ParseFileAsync(context);
+// await DATA_SRC.ParseFileAsync(context);
+// await NUTR_DEF.ParseFileAsync(context);
+// await FOOD_DES.ParseFileAsync(context);
+// await WEIGHT.ParseFileAsync(context);
+// await LANGUAL.ParseFileAsync(context);
+// await FOOTNOTE.ParseFileAsync(context);
 await NUT_DATA.ParseFileAsync(context);
 await DATSRCLN.ParseFileAsync(context);

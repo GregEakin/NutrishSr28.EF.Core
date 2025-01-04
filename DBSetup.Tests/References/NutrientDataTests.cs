@@ -74,16 +74,16 @@ public class NutrientDataTests
     //         Assert.Equal(nutrientData, weight.NutrientData);
     // }
 
-    [Fact]
-    public async Task FootnotesTest()
-    {
-        await using var context = new EfCoreContext();
-        var nutrientData = await context.NutrientData
-            .Include(nd => nd.Footnotes)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
-
-        Assert.NotNull(nutrientData);
-    }
+    // [Fact]
+    // public async Task FootnotesTest()
+    // {
+    //     await using var context = new EfCoreContext();
+    //     var nutrientData = await context.NutrientData
+    //         .Include(nd => nd.Footnotes)
+    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+    //
+    //     Assert.NotNull(nutrientData);
+    // }
 
     // [Fact]
     // public async Task DataSourcesTest()

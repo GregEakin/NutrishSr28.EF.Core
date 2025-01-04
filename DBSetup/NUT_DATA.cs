@@ -74,7 +74,7 @@ public static class NUT_DATA
             return null;
         }
 
-;        var sourceCode = await context.FindAsync<SourceCode>(record.Src_Cd);
+;        var sourceCode = await context.FindAsync<SourceCode>(int.Parse(record.Src_Cd));
         if (sourceCode == null)
         {
             Console.WriteLine("Can't find {0} {1} {2}", nameof(NutrientData), nameof(SourceCode), record.Src_Cd);
@@ -225,7 +225,7 @@ public class NutrientData
     public FoodDescription FoodDescription { get; set; }
     public FoodDescription? FoodDescriptionRef { get; set; }
     //public ICollection<Weight> Weights { get; set; } = [];
-    public ICollection<Footnote> Footnotes { get; set; } = [];
+    // public ICollection<FootnoteN> Footnotes { get; set; } = [];
     // public ICollection<DataSource> DataSources { get; set; } = [];
     public NutrientDefinition NutrientDefinition { get; set; }
     public SourceCode SourceCode { get; set; }
