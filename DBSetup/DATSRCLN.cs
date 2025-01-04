@@ -63,7 +63,13 @@ public static class DATSRCLN
         if (foodDescription == null)
         {
             Console.WriteLine("Can't find {0} {1} {2}", nameof(DataSourceLink), nameof(FoodDescription), record.NDB_No);
-            return null;
+            foodDescription = new FoodDescription
+            {
+                FoodDescriptionId = record.NDB_No,
+                FoodGroupId = "3600",
+                Shrt_Desc = $"Deleted {record.NDB_No}",
+                Long_Desc = $"Deleted {record.NDB_No}",
+            };
         }
 
         var nutrientDefinition = await context.FindAsync<NutrientDefinition>(record.Nutr_No);
@@ -77,7 +83,11 @@ public static class DATSRCLN
         if (dataSource == null)
         {
             Console.WriteLine("Can't find {0} {1} {2}", nameof(DataSourceLink), nameof(DataSource), record.DataSrc_ID);
-            return null;
+            dataSource = new DataSource
+            {
+                DataSourceId = record.DataSrc_ID,
+                Title = $"Deleted {record.DataSrc_ID}",
+            };
         }
 
         var item = new DataSourceLink

@@ -92,9 +92,9 @@ public class DataSource
     [Comment("List of authors for a journal article or name of sponsoring organization for other documents.")]
     public string? Authors { get; set; }
 
-    [Required]
     [Column("Title")]
     [MaxLength(255)]
+    [Required]
     [Comment("Title of article or name of document, such as a report from a company or trade association.")]
     public string Title { get; set; }
 

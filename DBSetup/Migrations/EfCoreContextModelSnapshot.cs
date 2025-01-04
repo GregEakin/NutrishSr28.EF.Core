@@ -79,6 +79,12 @@ namespace DBSetup.Migrations
 
                     b.HasKey("DataSourceId");
 
+                    b.HasIndex("Authors");
+
+                    b.HasIndex("Journal");
+
+                    b.HasIndex("Title");
+
                     b.ToTable("DATA_SRC", "SR28", t =>
                         {
                             t.HasComment("This file provides a citation to the DataSrc_ID in the Sources of Data Link file.");
@@ -247,7 +253,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FoodGroupId");
 
-                    b.HasIndex("FoodGroupId")
+                    b.HasIndex("FoodGroupName")
                         .IsUnique();
 
                     b.ToTable("FD_GROUP", "SR28", t =>
@@ -298,9 +304,11 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FootnoteId");
 
+                    b.HasIndex("Footnt_Txt");
+
                     b.HasIndex("FoodDescriptionId", "Footnt_No")
                         .IsUnique()
-                        .HasFilter("Footnt_Typ <> 'N'");
+                        .HasFilter("Footnt_Typ = 'M'");
 
                     b.HasIndex("FoodDescriptionId", "NutrientDefinitionId", "Footnt_No")
                         .IsUnique()
@@ -505,12 +513,11 @@ namespace DBSetup.Migrations
                         .HasColumnName("NutrDesc")
                         .HasComment("Name of nutrient/food component.");
 
-                    b.Property<string>("SR_Order")
-                        .IsRequired()
+                    b.Property<int>("SR_Order")
                         .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)")
+                        .HasColumnType("int")
                         .HasColumnName("SR_Order")
-                        .HasComment("Used to sort nutrient records in the same order as \r\nvarious reports produced from SR.");
+                        .HasComment("Used to sort nutrient records in the same order as various reports produced from SR.");
 
                     b.Property<string>("TagName")
                         .HasMaxLength(20)
@@ -608,6 +615,8 @@ namespace DBSetup.Migrations
                         .HasComment("Standard deviation.");
 
                     b.HasKey("FoodDescriptionId", "Seq");
+
+                    b.HasIndex("Msre_Desc");
 
                     b.ToTable("WEIGHT", "SR28", t =>
                         {

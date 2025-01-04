@@ -62,7 +62,7 @@ public static class NUTR_DEF
             TagName = record.Tagname,
             NutrDesc = record.NutrDesc,
             Num_Dec = record.Num_Dec[0],
-            SR_Order = record.SR_Order,
+            SR_Order = int.Parse(record.SR_Order),
         };
 
         return item;
@@ -111,8 +111,8 @@ public class NutrientDefinition
     [Column("SR_Order")]
     [MaxLength(6)]
     [Required]
-    [Comment("Used to sort nutrient records in the same order as \r\nvarious reports produced from SR.")]
-    public string SR_Order { get; set; }
+    [Comment("Used to sort nutrient records in the same order as various reports produced from SR.")]
+    public int SR_Order { get; set; }
 
     //-----------------------------------------------
     //Relationships

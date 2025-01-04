@@ -45,7 +45,7 @@ public class EfCoreContext : DbContext
         // modelBuilder.ApplyConfiguration(entity);
 
         modelBuilder.Entity<FoodGroup>()
-            .HasIndex(fg => fg.FoodGroupId)
+            .HasIndex(fg => fg.FoodGroupName)
             .IsUnique();
 
         modelBuilder.Entity<SourceCode>()
@@ -60,15 +60,20 @@ public class EfCoreContext : DbContext
             .HasIndex(lld => lld.Description)
             .IsUnique();
 
+        modelBuilder.Entity<DataSource>()
+            .HasIndex(lld => lld.Authors);
+        modelBuilder.Entity<DataSource>()
+            .HasIndex(lld => lld.Title);
+        modelBuilder.Entity<DataSource>()
+            .HasIndex(lld => lld.Journal);
+
         modelBuilder.Entity<NutrientDefinition>()
             .HasIndex(nd => new { nd.NutrDesc, nd.Units })
             .IsUnique();
-
         modelBuilder.Entity<NutrientDefinition>()
             .HasIndex(nd => new { nd.TagName, nd.Units })
             .HasFilter(@"Tagname IS NOT NULL")
             .IsUnique();
-
         modelBuilder.Entity<NutrientDefinition>()
             .HasIndex(nd => nd.SR_Order)
             .IsUnique();
@@ -76,19 +81,26 @@ public class EfCoreContext : DbContext
         modelBuilder.Entity<FoodDescription>()
             .HasIndex(fd => fd.Long_Desc)
             .IsUnique();
-
         modelBuilder.Entity<FoodDescription>()
             .HasIndex(fd => fd.Shrt_Desc);
 
         modelBuilder.Entity<Footnote>()
+            .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
+            .HasFilter(@"Footnt_Typ = 'D'")
+            .IsUnique();
+        modelBuilder.Entity<Footnote>()
+            .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
+            .HasFilter(@"Footnt_Typ = 'M'")
+            .IsUnique();
+        modelBuilder.Entity<Footnote>()
             .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId, f.Footnt_No })
             .HasFilter(@"Footnt_Typ = 'N'")
             .IsUnique();
-
         modelBuilder.Entity<Footnote>()
-            .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
-            .HasFilter(@"Footnt_Typ <> 'N'")
-            .IsUnique();
+            .HasIndex(f => f.Footnt_Txt);
+
+        modelBuilder.Entity<Weight>()
+            .HasIndex(w => w.Msre_Desc);
 
         // modelBuilder.Entity<LanguaLFactor>()
         //     .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });

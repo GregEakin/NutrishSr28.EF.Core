@@ -105,7 +105,7 @@ namespace DBSetup.Migrations
                     Tagname = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "International Network of Food Data Systems (INFOODS) Tagnames. A unique abbreviation for a nutrient/food component developed by INFOODS to aid in the interchange of data."),
                     NutrDesc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "Name of nutrient/food component."),
                     Num_Dec = table.Column<string>(type: "nvarchar(1)", nullable: false, comment: "Number of decimal places to which a nutrient value is rounded."),
-                    SR_Order = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Used to sort nutrient records in the same order as \r\nvarious reports produced from SR.")
+                    SR_Order = table.Column<int>(type: "int", maxLength: 6, nullable: false, comment: "Used to sort nutrient records in the same order as various reports produced from SR.")
                 },
                 constraints: table =>
                 {
@@ -315,6 +315,24 @@ namespace DBSetup.Migrations
                 comment: "This file contains codes indicating the type of data (analytical, calculated, assumed zero, and so on) in the Nutrient Data file. To improve the usability of the database and to provide values for the FNDDS, NDL staff imputed nutrient values for a number of proximate components, total dietary fiber, total sugar, and vitamin and mineral values.");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DATA_SRC_Authors",
+                schema: "SR28",
+                table: "DATA_SRC",
+                column: "Authors");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DATA_SRC_Journal",
+                schema: "SR28",
+                table: "DATA_SRC",
+                column: "Journal");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DATA_SRC_Title",
+                schema: "SR28",
+                table: "DATA_SRC",
+                column: "Title");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DATSRCLN_DataSrc_ID",
                 schema: "SR28",
                 table: "DATSRCLN",
@@ -334,10 +352,10 @@ namespace DBSetup.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FD_GROUP_FdGrp_Cd",
+                name: "IX_FD_GROUP_FdGrp_Desc",
                 schema: "SR28",
                 table: "FD_GROUP",
-                column: "FdGrp_Cd",
+                column: "FdGrp_Desc",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -360,12 +378,18 @@ namespace DBSetup.Migrations
                 column: "Shrt_Desc");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FOOTNOTE_Footnt_Txt",
+                schema: "SR28",
+                table: "FOOTNOTE",
+                column: "Footnt_Txt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FOOTNOTE_NDB_No_Footnt_No",
                 schema: "SR28",
                 table: "FOOTNOTE",
                 columns: new[] { "NDB_No", "Footnt_No" },
                 unique: true,
-                filter: "Footnt_Typ <> 'N'");
+                filter: "Footnt_Typ = 'M'");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FOOTNOTE_NDB_No_Nutr_No_Footnt_No",
@@ -440,6 +464,12 @@ namespace DBSetup.Migrations
                 table: "SRC",
                 column: "SrcCd_Desc",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WEIGHT_Msre_Desc",
+                schema: "SR28",
+                table: "WEIGHT",
+                column: "Msre_Desc");
         }
 
         /// <inheritdoc />
