@@ -49,7 +49,7 @@ public class FootnoteTest
     //     Assert.Equal("12538", footnote.FoodDescription.FoodDescriptionId);
     //     Assert.Equal("Seeds, sunflower seed kernels, oil roasted, with salt added", footnote.FoodDescription.Long_Desc);
     // }
-    //
+    
     // [Fact]
     // public async Task NutrientDataTest()
     // {

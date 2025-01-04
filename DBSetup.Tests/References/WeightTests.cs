@@ -45,21 +45,4 @@ public class WeightTests()
         Assert.Equal("01001", weight.FoodDescription.FoodDescriptionId);
         Assert.Equal("Butter, salted", weight.FoodDescription.Long_Desc);
     }
-
-    // [Fact]
-    // public async Task NutrientDataTest()
-    // {
-    //     await using var context = new EfCoreContext();
-    //     var weight = await context.Weights
-    //         .Include(w => w.NutrientData)
-    //         .SingleAsync(w => w.FoodDescriptionId == "01001" && w.Seq == 1);
-    //  
-    //     Assert.NotNull(weight);
-    //     var nutrientData = weight.NutrientData;
-    //     Assert.NotNull(nutrientData);
-    //     // Assert.Equal(822, nutrientData.Count);
-    //     // foreach (var data in nutrientData)
-    //     //     Assert.Equal(weight, data.Weight);
-    //     // Assert.Equal(weight, nutrientData.);
-    // }
 }

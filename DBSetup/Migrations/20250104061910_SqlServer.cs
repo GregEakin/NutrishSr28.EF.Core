@@ -306,7 +306,9 @@ namespace DBSetup.Migrations
                     Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
                     Footnt_Typ = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
                     Nutr_No = table.Column<string>(type: "nchar(3)", nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
-                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text.")
+                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text."),
+                    NutrientDataFoodDescriptionId = table.Column<string>(type: "nchar(5)", nullable: true),
+                    NutrientDataNutrientDefinitionId = table.Column<string>(type: "nchar(3)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -317,14 +319,13 @@ namespace DBSetup.Migrations
                         principalSchema: "SR28",
                         principalTable: "FOOD_DES",
                         principalColumn: "NDB_No",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FOOTNOTE_NUT_DATA_NDB_No_Nutr_No",
-                        columns: x => new { x.NDB_No, x.Nutr_No },
+                        name: "FK_FOOTNOTE_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                        columns: x => new { x.NutrientDataFoodDescriptionId, x.NutrientDataNutrientDefinitionId },
                         principalSchema: "SR28",
                         principalTable: "NUT_DATA",
-                        principalColumns: new[] { "NDB_No", "Nutr_No" },
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumns: new[] { "NDB_No", "Nutr_No" });
                 },
                 comment: "This file contains additional information about the food item, household weight, and nutrient value.");
 
@@ -420,6 +421,12 @@ namespace DBSetup.Migrations
                 columns: new[] { "NDB_No", "Nutr_No" },
                 unique: true,
                 filter: "Footnt_Typ = 'N'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FOOTNOTE_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                schema: "SR28",
+                table: "FOOTNOTE",
+                columns: new[] { "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LANGDESC_Description",

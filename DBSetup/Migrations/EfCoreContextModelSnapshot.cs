@@ -304,19 +304,7 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FootnoteId");
 
-                    b.HasIndex("FoodDescriptionId")
-                        .IsUnique()
-                        .HasFilter("Footnt_Typ = 'M'");
-
                     b.HasIndex("Footnt_Txt");
-
-                    b.HasIndex("FoodDescriptionId", "Footnt_No")
-                        .IsUnique()
-                        .HasFilter("Footnt_Typ = 'D'");
-
-                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId")
-                        .IsUnique()
-                        .HasFilter("Footnt_Typ = 'N'");
 
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
@@ -632,6 +620,10 @@ namespace DBSetup.Migrations
                 {
                     b.HasBaseType("DBSetup.Footnote");
 
+                    b.HasIndex("FoodDescriptionId", "Footnt_No")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ = 'D'");
+
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
                             t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
@@ -644,6 +636,10 @@ namespace DBSetup.Migrations
                 {
                     b.HasBaseType("DBSetup.Footnote");
 
+                    b.HasIndex("FoodDescriptionId")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ = 'M'");
+
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
                             t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
@@ -655,6 +651,18 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.FootnoteN", b =>
                 {
                     b.HasBaseType("DBSetup.Footnote");
+
+                    b.Property<string>("NutrientDataFoodDescriptionId")
+                        .HasColumnType("nchar(5)");
+
+                    b.Property<string>("NutrientDataNutrientDefinitionId")
+                        .HasColumnType("nchar(3)");
+
+                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ = 'N'");
+
+                    b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
 
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
@@ -777,7 +785,7 @@ namespace DBSetup.Migrations
                     b.HasOne("DBSetup.FoodDescription", "FoodDescription")
                         .WithMany("Footnotes")
                         .HasForeignKey("FoodDescriptionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FoodDescription");
@@ -786,9 +794,8 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.FootnoteN", b =>
                 {
                     b.HasOne("DBSetup.NutrientData", "NutrientData")
-                        .WithOne("Footnote")
-                        .HasForeignKey("DBSetup.FootnoteN", "FoodDescriptionId", "NutrientDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
 
                     b.Navigation("NutrientData");
                 });
@@ -822,11 +829,6 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
                 {
                     b.Navigation("LanguaLFactors");
-                });
-
-            modelBuilder.Entity("DBSetup.NutrientData", b =>
-                {
-                    b.Navigation("Footnote");
                 });
 
             modelBuilder.Entity("DBSetup.NutrientDefinition", b =>
