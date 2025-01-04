@@ -327,10 +327,60 @@ namespace DBSetup.Migrations
                 column: "Nutr_No");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DERIVCD_Deriv_Desc",
+                schema: "SR28",
+                table: "DERIVCD",
+                column: "Deriv_Desc",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FD_GROUP_FdGrp_Cd",
+                schema: "SR28",
+                table: "FD_GROUP",
+                column: "FdGrp_Cd",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FOOD_DES_FdGrp_Cd",
                 schema: "SR28",
                 table: "FOOD_DES",
                 column: "FdGrp_Cd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FOOD_DES_Long_Desc",
+                schema: "SR28",
+                table: "FOOD_DES",
+                column: "Long_Desc",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FOOD_DES_Shrt_Desc",
+                schema: "SR28",
+                table: "FOOD_DES",
+                column: "Shrt_Desc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FOOTNOTE_NDB_No_Footnt_No",
+                schema: "SR28",
+                table: "FOOTNOTE",
+                columns: new[] { "NDB_No", "Footnt_No" },
+                unique: true,
+                filter: "Footnt_Typ <> 'N'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FOOTNOTE_NDB_No_Nutr_No_Footnt_No",
+                schema: "SR28",
+                table: "FOOTNOTE",
+                columns: new[] { "NDB_No", "Nutr_No", "Footnt_No" },
+                unique: true,
+                filter: "Footnt_Typ = 'N'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LANGDESC_Description",
+                schema: "SR28",
+                table: "LANGDESC",
+                column: "Description",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LANGUAL_Factor_Code",
@@ -361,6 +411,35 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 table: "NUT_DATA",
                 column: "Src_Cd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NUTR_DEF_NutrDesc_Units",
+                schema: "SR28",
+                table: "NUTR_DEF",
+                columns: new[] { "NutrDesc", "Units" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NUTR_DEF_SR_Order",
+                schema: "SR28",
+                table: "NUTR_DEF",
+                column: "SR_Order",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NUTR_DEF_Tagname_Units",
+                schema: "SR28",
+                table: "NUTR_DEF",
+                columns: new[] { "Tagname", "Units" },
+                unique: true,
+                filter: "Tagname IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SRC_SrcCd_Desc",
+                schema: "SR28",
+                table: "SRC",
+                column: "SrcCd_Desc",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -44,7 +44,7 @@ public static class FOOTNOTE
 
         await foreach (var record in csv.GetRecordsAsync<FootnoteDto>())
         {
-            var item = await ParseDtoRecordAsync(context, record);
+            var item = ParseDtoRecord(context, record);
             if (item == null)
                 continue;
 
@@ -57,7 +57,7 @@ public static class FOOTNOTE
         Console.WriteLine("Footnote done!");
     }
 
-    private static async Task<Footnote?> ParseDtoRecordAsync(DbContext context, FootnoteDto record)
+    private static Footnote? ParseDtoRecord(DbContext context, FootnoteDto record)
     {
         // var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
         // if (foodDescription == null)

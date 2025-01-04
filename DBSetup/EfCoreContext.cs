@@ -44,6 +44,52 @@ public class EfCoreContext : DbContext
         // var entity = new ETC();
         // modelBuilder.ApplyConfiguration(entity);
 
+        modelBuilder.Entity<FoodGroup>()
+            .HasIndex(fg => fg.FoodGroupId)
+            .IsUnique();
+
+        modelBuilder.Entity<SourceCode>()
+            .HasIndex(sc => sc.SourceCodeDescription)
+            .IsUnique();
+
+        modelBuilder.Entity<DerivationCode>()
+            .HasIndex(dc => dc.DerivationCodeDescription)
+            .IsUnique();
+
+        modelBuilder.Entity<LanguaLDescription>()
+            .HasIndex(lld => lld.Description)
+            .IsUnique();
+
+        modelBuilder.Entity<NutrientDefinition>()
+            .HasIndex(nd => new { nd.NutrDesc, nd.Units })
+            .IsUnique();
+
+        modelBuilder.Entity<NutrientDefinition>()
+            .HasIndex(nd => new { nd.TagName, nd.Units })
+            .HasFilter(@"Tagname IS NOT NULL")
+            .IsUnique();
+
+        modelBuilder.Entity<NutrientDefinition>()
+            .HasIndex(nd => nd.SR_Order)
+            .IsUnique();
+
+        modelBuilder.Entity<FoodDescription>()
+            .HasIndex(fd => fd.Long_Desc)
+            .IsUnique();
+
+        modelBuilder.Entity<FoodDescription>()
+            .HasIndex(fd => fd.Shrt_Desc);
+
+        modelBuilder.Entity<Footnote>()
+            .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId, f.Footnt_No })
+            .HasFilter(@"Footnt_Typ = 'N'")
+            .IsUnique();
+
+        modelBuilder.Entity<Footnote>()
+            .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
+            .HasFilter(@"Footnt_Typ <> 'N'")
+            .IsUnique();
+
         // modelBuilder.Entity<LanguaLFactor>()
         //     .HasKey(lf => new { lf.FoodDescriptionId, lf.LangualDescriptionId });
 

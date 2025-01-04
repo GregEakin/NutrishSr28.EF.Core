@@ -131,6 +131,9 @@ namespace DBSetup.Migrations
 
                     b.HasKey("DerivationCodeId");
 
+                    b.HasIndex("DerivationCodeDescription")
+                        .IsUnique();
+
                     b.ToTable("DERIVCD", "SR28", t =>
                         {
                             t.HasComment("This file provides information on how the nutrient values were determined. The file contains the derivation codes and their descriptions.");
@@ -217,6 +220,11 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("FoodGroupId");
 
+                    b.HasIndex("Long_Desc")
+                        .IsUnique();
+
+                    b.HasIndex("Shrt_Desc");
+
                     b.ToTable("FOOD_DES", "SR28", t =>
                         {
                             t.HasComment("This file contains long and short descriptions and food group designators for all food items, along with common names, manufacturer name, scientific name, percentage and description of refuse, and factors used for calculating protein and kilocalories, if applicable. Items used in the FNDDS are also identified by value of 'Y' in the Survey field. ");
@@ -238,6 +246,9 @@ namespace DBSetup.Migrations
                         .HasComment("Name of food group.");
 
                     b.HasKey("FoodGroupId");
+
+                    b.HasIndex("FoodGroupId")
+                        .IsUnique();
 
                     b.ToTable("FD_GROUP", "SR28", t =>
                         {
@@ -287,6 +298,14 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FootnoteId");
 
+                    b.HasIndex("FoodDescriptionId", "Footnt_No")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ <> 'N'");
+
+                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId", "Footnt_No")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ = 'N'");
+
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
                             t.HasComment("This file contains additional information about the food item, household weight, and nutrient value.");
@@ -312,6 +331,9 @@ namespace DBSetup.Migrations
                         .HasComment("The description of the LanguaL Factor Code from the thesaurus. ");
 
                     b.HasKey("LangualDescriptionId");
+
+                    b.HasIndex("Description")
+                        .IsUnique();
 
                     b.ToTable("LANGDESC", "SR28", t =>
                         {
@@ -505,6 +527,16 @@ namespace DBSetup.Migrations
 
                     b.HasKey("NutrientDefinitionId");
 
+                    b.HasIndex("SR_Order")
+                        .IsUnique();
+
+                    b.HasIndex("NutrDesc", "Units")
+                        .IsUnique();
+
+                    b.HasIndex("TagName", "Units")
+                        .IsUnique()
+                        .HasFilter("Tagname IS NOT NULL");
+
                     b.ToTable("NUTR_DEF", "SR28", t =>
                         {
                             t.HasComment("This file is a support file to the Nutrient Data file. It provides the 3-digit nutrient code, unit of measure, INFOODS tagname, and description.");
@@ -526,6 +558,9 @@ namespace DBSetup.Migrations
                         .HasComment("Description of source code that identifies the type of nutrient data.");
 
                     b.HasKey("SourceCodeId");
+
+                    b.HasIndex("SourceCodeDescription")
+                        .IsUnique();
 
                     b.ToTable("SRC", "SR28", t =>
                         {
