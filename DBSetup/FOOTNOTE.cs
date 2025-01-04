@@ -135,13 +135,12 @@ public class Footnote
 
     //-----------------------------------------------
     //Relationships
-    // public FoodDescription FoodDescription { get; set; }
-    // public NutrientData NutrientData { get; set; }
     // public NutrientDefinition NutrientDefinition { get; set; }
 }
 
 public class FootnoteD : Footnote
 {
+    public FoodDescription FoodDescription { get; set; }
 }
 
 public class FootnoteM : Footnote
@@ -150,6 +149,7 @@ public class FootnoteM : Footnote
 
 public class FootnoteN : Footnote
 {
+    public NutrientData NutrientData { get; set; }
 }
 
 public class FootnoteDto

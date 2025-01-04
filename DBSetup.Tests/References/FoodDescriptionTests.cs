@@ -46,7 +46,7 @@ public class FoodDescriptionTests
         Assert.True(foodGroup.FoodDescriptions.Contains(foodDescription));
     }
 
-    //  Links to the LanguaL Factor file by the NDB_No field
+    // Links to the LanguaL Factor file by the NDB_No field
     [Fact]
     public async Task LanguageTest()
     {
@@ -61,5 +61,28 @@ public class FoodDescriptionTests
         Assert.Equal(13, langualFactors.Count);
         foreach (var langualFactor in langualFactors) 
             Assert.Equal(foodDescription, langualFactor.FoodDescription);
+    }
+
+    [Fact]
+    public async Task FootnoteTest()
+    {
+        await using var context = new EfCoreContext();
+        var foodDescription = await context.FoodDescriptions
+            .Include(fd => fd.Footnotes)
+            .SingleAsync(fd => fd.FoodDescriptionId == "12120");
+
+        Assert.NotNull(foodDescription);
+
+        Assert.Equal("Nuts, hazelnuts or filberts", foodDescription.Long_Desc);
+
+        Assert.NotNull(foodDescription.Footnotes);
+        Assert.Equal(2, foodDescription.Footnotes.Count);
+
+        foreach (var footnote in foodDescription.Footnotes)
+            Assert.Equal(foodDescription, footnote.FoodDescription);
+
+        Assert.Equal("Unroasted", foodDescription.Footnotes.Single(f => f.Footnt_No == "01").Footnt_Txt);
+        Assert.Equal("Other phytosterols = 12.0 mg/100g; these include delta 5-avenasterol (2.6), campestanol (3.0), sitostanol (3.9) and other minor phytosterols (2.5 mg).", 
+            foodDescription.Footnotes.Single(f => f.Footnt_No == "02").Footnt_Txt);
     }
 }

@@ -224,8 +224,7 @@ public class NutrientData
     //Relationships
     public FoodDescription FoodDescription { get; set; }
     public FoodDescription? FoodDescriptionRef { get; set; }
-    //public ICollection<Weight> Weights { get; set; } = [];
-    // public ICollection<FootnoteN> Footnotes { get; set; } = [];
+    public FootnoteN Footnote { get; set; }
     // public ICollection<DataSource> DataSources { get; set; } = [];
     public NutrientDefinition NutrientDefinition { get; set; }
     public SourceCode SourceCode { get; set; }

@@ -130,7 +130,6 @@ public class Weight
     //-----------------------------------------------
     //Relationships
     public FoodDescription FoodDescription { get; set; }
-    //public NutrientData NutrientData { get; set; }
 
     // Links to Nutrient Data file by NDB_No 
 }

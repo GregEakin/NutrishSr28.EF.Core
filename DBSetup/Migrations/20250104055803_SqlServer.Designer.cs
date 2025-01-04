@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20250104020114_SqlServer")]
+    [Migration("20250104055803_SqlServer")]
     partial class SqlServer
     {
         /// <inheritdoc />
@@ -307,13 +307,17 @@ namespace DBSetup.Migrations
 
                     b.HasKey("FootnoteId");
 
+                    b.HasIndex("FoodDescriptionId")
+                        .IsUnique()
+                        .HasFilter("Footnt_Typ = 'M'");
+
                     b.HasIndex("Footnt_Txt");
 
                     b.HasIndex("FoodDescriptionId", "Footnt_No")
                         .IsUnique()
-                        .HasFilter("Footnt_Typ = 'M'");
+                        .HasFilter("Footnt_Typ = 'D'");
 
-                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId", "Footnt_No")
+                    b.HasIndex("FoodDescriptionId", "NutrientDefinitionId")
                         .IsUnique()
                         .HasFilter("Footnt_Typ = 'N'");
 
@@ -771,6 +775,27 @@ namespace DBSetup.Migrations
                     b.Navigation("FoodDescription");
                 });
 
+            modelBuilder.Entity("DBSetup.FootnoteD", b =>
+                {
+                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                        .WithMany("Footnotes")
+                        .HasForeignKey("FoodDescriptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FoodDescription");
+                });
+
+            modelBuilder.Entity("DBSetup.FootnoteN", b =>
+                {
+                    b.HasOne("DBSetup.NutrientData", "NutrientData")
+                        .WithOne("Footnote")
+                        .HasForeignKey("DBSetup.FootnoteN", "FoodDescriptionId", "NutrientDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("NutrientData");
+                });
+
             modelBuilder.Entity("DBSetup.DataSource", b =>
                 {
                     b.Navigation("DataSourceLinks");
@@ -783,6 +808,8 @@ namespace DBSetup.Migrations
 
             modelBuilder.Entity("DBSetup.FoodDescription", b =>
                 {
+                    b.Navigation("Footnotes");
+
                     b.Navigation("LanguaLFactors");
 
                     b.Navigation("NutrientData");
@@ -798,6 +825,11 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
                 {
                     b.Navigation("LanguaLFactors");
+                });
+
+            modelBuilder.Entity("DBSetup.NutrientData", b =>
+                {
+                    b.Navigation("Footnote");
                 });
 
             modelBuilder.Entity("DBSetup.NutrientDefinition", b =>

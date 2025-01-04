@@ -12,9 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System.Diagnostics;
 using DBSetup;
 
 Console.WriteLine("Hello, World!");
+
+var watch = Stopwatch.StartNew();
 
 await using var context = new EfCoreContext();
 
@@ -30,3 +33,5 @@ await LANGUAL.ParseFileAsync(context);
 await FOOTNOTE.ParseFileAsync(context);
 await NUT_DATA.ParseFileAsync(context);
 await DATSRCLN.ParseFileAsync(context);
+
+Console.WriteLine($"Elapsed time: {watch.Elapsed}");
