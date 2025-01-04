@@ -124,7 +124,8 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.DerivationCode", b =>
                 {
                     b.Property<string>("DerivationCodeId")
-                        .HasColumnType("nchar(4)")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Derivation Code.");
 
@@ -400,7 +401,8 @@ namespace DBSetup.Migrations
                         .HasComment("Degrees of freedom.");
 
                     b.Property<string>("DerivationCodeId")
-                        .HasColumnType("nchar(4)")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.");
 

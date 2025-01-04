@@ -14,6 +14,8 @@ sqlcmd -S "(localdb)\SR28" -Q "CREATE DATABASE Nutrish"
 cd DBSetup
 dotnet ef database update
 dotnet run
+cd ../DBSetup.Tests
+dotnet test
 ```
 
 ## Database:
@@ -24,12 +26,13 @@ US Department of Agriculture, Agricultural Research Service. 2016. Nutrient Data
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [SQL Server LocalDB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)]
+- [SQL Server Management Sdutio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
 - [PostgreSQL](https://www.postgresql.org/)
 - [pgAdmin](https://www.pgadmin.org/)
-- [SQL Server Management Sdutio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
+- [CsvHelper](https://joshclose.github.io/CsvHelper/)
 - [Visual Studio](https://visualstudio.microsoft.com/)
 - [ReSharper](https://www.jetbrains.com/resharper/)
-- [Unit Tests](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest)
+- [Unit Tests](https://xunit.net/)
 - [Git Extensions](http://gitextensions.github.io/)
 
 ## Author

@@ -39,7 +39,7 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 columns: table => new
                 {
-                    Deriv_Cd = table.Column<string>(type: "nchar(4)", nullable: false, comment: "Derivation Code."),
+                    Deriv_Cd = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Derivation Code."),
                     Deriv_Desc = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false, comment: "Description of derivation code giving specific information on how the value was determined.")
                 },
                 constraints: table =>
@@ -216,7 +216,7 @@ namespace DBSetup.Migrations
                     Num_Data_Pts = table.Column<decimal>(type: "decimal(5,0)", precision: 5, scale: 0, nullable: false, comment: "Number of data points is the number of analyses used to calculate the nutrient value. If the number of data points is 0, the value was calculated or imputed."),
                     Std_Error = table.Column<decimal>(type: "decimal(8,3)", precision: 8, scale: 3, nullable: true, comment: "Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three."),
                     Src_Cd = table.Column<int>(type: "int", nullable: false, comment: "Code indicating type of data."),
-                    Deriv_Cd = table.Column<string>(type: "nchar(4)", nullable: true, comment: "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value."),
+                    Deriv_Cd = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true, comment: "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value."),
                     Ref_NDB_No = table.Column<string>(type: "nchar(5)", maxLength: 5, nullable: true, comment: "NDB number of the item used to calculate a missing value. Populated only for items added or updated starting with SR14."),
                     Add_Nutr_Mark = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true, comment: "Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to eat breakfast cereals and many brand-name hot cereals in food group 08."),
                     Num_Studies = table.Column<decimal>(type: "decimal(2,0)", precision: 2, scale: 0, nullable: true, comment: "Number of studies."),

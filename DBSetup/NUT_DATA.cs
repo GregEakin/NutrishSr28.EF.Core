@@ -156,7 +156,8 @@ public class NutrientData
     [Comment("Code indicating type of data.")]
     public int SourceCodeId { get; set; }
     
-    [Column("Deriv_Cd", TypeName = "nchar(4)")]
+    [Column("Deriv_Cd")]
+    [MaxLength(4)]
     [Comment("Data Derivation Code giving specific information on how the value is determined. " +
              "This field is populated only for items added or updated starting with SR14. " +
              "This field may not be populated if older records were used in the calculation of the mean value.")]
