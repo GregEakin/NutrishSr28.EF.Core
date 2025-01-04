@@ -26,10 +26,9 @@ public class EfCoreContext : DbContext
     public DbSet<DataSource> DataSources { get; set; }
     public DbSet<NutrientDefinition> NutrientDefinitions { get; set; }
     public DbSet<Weight> Weights { get; set; }
-    public DbSet<Footnote> Footnotes { get; set; }
-    // public DbSet<FootnoteD> FootnoteDs { get; set; }
-    // public DbSet<FootnoteM> FootnoteMs { get; set; }
-    // public DbSet<FootnoteN> FootnoteNs { get; set; }
+    public DbSet<FootnoteD> FootnoteDs { get; set; }
+    public DbSet<FootnoteM> FootnoteMs { get; set; }
+    public DbSet<FootnoteN> FootnoteNs { get; set; }
     public DbSet<NutrientData> NutrientData { get; set; }
 
     public EfCoreContext()
@@ -75,7 +74,7 @@ public class EfCoreContext : DbContext
             .IsUnique();
         modelBuilder.Entity<NutrientDefinition>()
             .HasIndex(nd => new { nd.TagName, nd.Units })
-            .HasFilter(@"Tagname IS NOT NULL")
+            .HasFilter("Tagname IS NOT NULL")
             .IsUnique();
         modelBuilder.Entity<NutrientDefinition>()
             .HasIndex(nd => nd.SR_Order)
@@ -96,15 +95,15 @@ public class EfCoreContext : DbContext
             .HasValue<FootnoteN>("N");
         modelBuilder.Entity<FootnoteD>()
             .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
-            .HasFilter(@"Footnt_Typ = 'D'")
+            .HasFilter("Footnt_Typ = 'D'")
             .IsUnique();
         modelBuilder.Entity<FootnoteM>()
             .HasIndex(f => f.FoodDescriptionId)
-            .HasFilter(@"Footnt_Typ = 'M'")
+            .HasFilter("Footnt_Typ = 'M'")
             .IsUnique();
         modelBuilder.Entity<FootnoteN>()
             .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
-            .HasFilter(@"Footnt_Typ = 'N'")
+            .HasFilter("Footnt_Typ = 'N'")
             .IsUnique();
         
         // modelBuilder.Entity<FootnoteD>()
@@ -112,7 +111,7 @@ public class EfCoreContext : DbContext
         //     .WithMany(fd => fd.Footnotes)
         //     .HasForeignKey(f => f.FoodDescriptionId)
         //     .OnDelete(DeleteBehavior.Restrict);
-        //
+        
         // modelBuilder.Entity<FootnoteN>()
         //     .HasOne(f => f.NutrientData)
         //     .WithOne(fd => fd.Footnote)

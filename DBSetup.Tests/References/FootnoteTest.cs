@@ -19,70 +19,42 @@ namespace DBSetup.Tests.References;
 public class FootnoteTest
 {
     [Fact]
-    public async Task FindByKeyTest()
+    public async Task FoodDescriptionTest()
     {
         await using var context = new EfCoreContext();
-        var footnote = await context.Footnotes.SingleAsync(f => f.FoodDescriptionId == "12538" &&
-                                                                f.Footnt_Typ == "N" &&
-                                                                f.NutrientDefinitionId == "204");
-        
-        Assert.NotNull(footnote);
-        Assert.Equal("12538", footnote.FoodDescriptionId);
-        Assert.Equal("01", footnote.Footnt_No);
-        Assert.Equal("N", footnote.Footnt_Typ);
-        Assert.Equal("204", footnote.NutrientDefinitionId);
-        Assert.Equal("Fat and fatty acids based on 25% roasted in cottonseed oil and 75% roasted in sunflower oil", footnote.Footnt_Txt);
+        var footnotes = context.FootnoteDs
+            .Include(f => f.FoodDescription)
+            .AsQueryable()
+            .Where(f => f.FoodDescriptionId == "12120");
+
+        var f1 = await footnotes.SingleAsync(f => f.Footnt_No == "01");
+        Assert.Equal("Unroasted", f1.Footnt_Txt);
+        Assert.Equal("Nuts, hazelnuts or filberts", f1.FoodDescription.Long_Desc);
+
+        var f2 = await footnotes.SingleAsync(f => f.Footnt_No == "02");
+        Assert.Equal("Other phytosterols = 12.0 mg/100g; these include delta 5-avenasterol (2.6), campestanol (3.0), sitostanol (3.9) and other minor phytosterols (2.5 mg).", f2.Footnt_Txt);
+        Assert.Equal("Nuts, hazelnuts or filberts", f2.FoodDescription.Long_Desc);
     }
 
-    // [Fact]
-    // public async Task FoodDescriptionTest()
-    // {
-    //     await using var context = new EfCoreContext();
-    //     var footnote = await context.Footnotes
-    //         .Include(f => f.FoodDescription)
-    //         .SingleAsync(f => f.FoodDescriptionId == "12538" &&
-    //                           f.Footnt_Typ == "N" &&
-    //                           f.NutrientDefinitionId == "204");
-    //
-    //     Assert.NotNull(footnote);
-    //     Assert.NotNull(footnote.FoodDescription);
-    //     Assert.Equal("12538", footnote.FoodDescription.FoodDescriptionId);
-    //     Assert.Equal("Seeds, sunflower seed kernels, oil roasted, with salt added", footnote.FoodDescription.Long_Desc);
-    // }
-    
-    // [Fact]
-    // public async Task NutrientDataTest()
-    // {
-    //     await using var context = new EfCoreContext();
-    //     var footnote = await context.Footnotes
-    //         .Include(f => f.NutrientData)
-    //         .SingleAsync(f => f.FoodDescriptionId == "35234" &&
-    //                           f.Footnt_Typ == "N" &&
-    //                           f.NutrientDefinitionId == "307");
-    //
-    //     Assert.NotNull(footnote);
-    //     var nutrientData = footnote.NutrientData;
-    //     // Assert.Single(nutrientData);
-    //     // foreach (var data in nutrientData)
-    //     // {
-    //     //     Assert.NotNull(data);
-    //     //     Assert.Equal("15066", data.FoodDescriptionId);
-    //     // }
-    // }
+    [Fact]
+    public async Task NutrientDataTest()
+    {
+        await using var context = new EfCoreContext();
+        var footnote = await context.FootnoteNs
+            .Include(f => f.NutrientData)
+            .SingleAsync(f => f.FoodDescriptionId == "12538" && f.NutrientDefinitionId == "204");
 
-    // [Fact]
-    // public async Task NutrientDefinitionTest()
-    // {
-    //     await using var context = new EfCoreContext();
-    //     var footnote = await context.Footnotes
-    //         .Include(f => f.NutrientDefinition)
-    //         .SingleAsync(f => f.FoodDescriptionId == "12538" &&
-    //                           f.Footnt_Typ == "N" &&
-    //                           f.NutrientDefinitionId == "204");
-    //
-    //     Assert.NotNull(footnote);
-    //     Assert.NotNull(footnote.NutrientDefinition);
-    //     Assert.Equal("204", footnote.NutrientDefinition.NutrientDefinitionId);
-    //     Assert.Equal("Total lipid (fat)", footnote.NutrientDefinition.NutrDesc);
-    // }
+        Assert.Equal("Fat and fatty acids based on 25% roasted in cottonseed oil and 75% roasted in sunflower oil", footnote.Footnt_Txt);
+        Assert.Null(footnote.NutrientData);
+    }
+
+    [Fact]
+    public async Task NutrientDefinitionTest()
+    {
+        await using var context = new EfCoreContext();
+        var footnote = await context.FootnoteMs
+            .SingleAsync(f => f.FoodDescriptionId == "14384");
+
+        Assert.Equal("One fl oz = 29.57 g.", footnote.Footnt_Txt);
+    }
 }

@@ -74,8 +74,8 @@ public static class DERIV_CD
 public class DerivationCode
 {
     [Key]
-    [Column("Deriv_Cd", TypeName = "nchar(4)")]
-    [Required]
+    [Column("Deriv_Cd")]
+    [MaxLength(4)]
     [Comment("Derivation Code.")]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string DerivationCodeId { get; set; }
