@@ -404,7 +404,7 @@ namespace DBSetup.Migrations
                 table: "FOOTNOTE",
                 column: "NDB_No",
                 unique: true,
-                filter: "Footnt_Typ = 'M'");
+                filter: "\"Footnt_Typ\" = 'M'");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FOOTNOTE_NDB_No_Footnt_No",
@@ -412,7 +412,7 @@ namespace DBSetup.Migrations
                 table: "FOOTNOTE",
                 columns: new[] { "NDB_No", "Footnt_No" },
                 unique: true,
-                filter: "Footnt_Typ = 'D'");
+                filter: "\"Footnt_Typ\" = 'D'");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FOOTNOTE_NDB_No_Nutr_No",
@@ -420,7 +420,7 @@ namespace DBSetup.Migrations
                 table: "FOOTNOTE",
                 columns: new[] { "NDB_No", "Nutr_No" },
                 unique: true,
-                filter: "Footnt_Typ = 'N'");
+                filter: "\"Footnt_Typ\" = 'N'");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FOOTNOTE_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
@@ -485,7 +485,7 @@ namespace DBSetup.Migrations
                 table: "NUTR_DEF",
                 columns: new[] { "Tagname", "Units" },
                 unique: true,
-                filter: "Tagname IS NOT NULL");
+                filter: "\"Tagname\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SRC_SrcCd_Desc",

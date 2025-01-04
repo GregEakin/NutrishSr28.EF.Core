@@ -12,58 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup;
-
-public static class SRC_CD
-{
-    private static readonly string Filename = "../../../../data/SRC_CD.txt";
-
-    public static async Task ParseFileAsync(DbContext context)
-    {
-        using var reader = new StreamReader(Filename);
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = "^",
-            Quote = '~',
-            Escape = '$',
-            HasHeaderRecord = false,
-            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
-            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
-        };
-
-        using var csv = new CsvReader(reader, config);
-        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
-
-        await foreach (var record in csv.GetRecordsAsync<SrcCdDto>())
-        {
-            var item = ParseDtoRecord(record);
-            context.Add(item);
-            // Console.WriteLine(item.SourceCodeId + " " + item.SourceCodeDescription);
-        }
-
-        await context.SaveChangesAsync();
-        Console.WriteLine("Source Code done!");
-    }
-
-    private static SourceCode ParseDtoRecord(SrcCdDto record)
-    {
-        var item = new SourceCode
-        {
-            SourceCodeId = int.Parse(record.Src_Cd),
-            SourceCodeDescription = record.SrcCd_Desc,
-        };
-
-        return item;
-    }
-}
+namespace DBSetup.Data;
 
 #nullable disable
 #pragma warning disable CS8632
@@ -92,10 +45,4 @@ public class SourceCode
     //Relationships
 
     public ICollection<NutrientData> NutrientData { get; set; }
-}
-
-public class SrcCdDto
-{
-    public string Src_Cd { get; set; }
-    public string SrcCd_Desc { get; set; }
 }

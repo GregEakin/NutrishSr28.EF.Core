@@ -14,24 +14,26 @@
 
 using System.Diagnostics;
 using DBSetup;
+using DBSetup.Loader;
 
 Console.WriteLine("Hello, World!");
+const string dir = @"..\data";
 
 var watch = Stopwatch.StartNew();
 
 await using var context = new EfCoreContext();
 
-await FD_GROUP.ParseFileAsync(context);
-await SRC_CD.ParseFileAsync(context);
-await DERIV_CD.ParseFileAsync(context);
-await LANGDESC.ParseFileAsync(context);
-await DATA_SRC.ParseFileAsync(context);
-await NUTR_DEF.ParseFileAsync(context);
-await FOOD_DES.ParseFileAsync(context);
-await WEIGHT.ParseFileAsync(context);
-await LANGUAL.ParseFileAsync(context);
-await FOOTNOTE.ParseFileAsync(context);
-await NUT_DATA.ParseFileAsync(context);
-await DATSRCLN.ParseFileAsync(context);
+await new FD_GROUP().ParseFileAsync(context, dir);
+await new SRC_CD().ParseFileAsync(context, dir);
+await new DERIV_CD().ParseFileAsync(context, dir);
+await new LANGDESC().ParseFileAsync(context, dir);
+await new DATA_SRC().ParseFileAsync(context, dir);
+await new NUTR_DEF().ParseFileAsync(context, dir);
+await new FOOD_DES().ParseFileAsync(context, dir);
+await new WEIGHT().ParseFileAsync(context, dir);
+await new LANGUAL().ParseFileAsync(context, dir);
+await new FOOTNOTE().ParseFileAsync(context, dir);
+await new NUT_DATA().ParseFileAsync(context, dir);
+await new DATSRCLN().ParseFileAsync(context, dir);
 
 Console.WriteLine($"Elapsed time: {watch.Elapsed}");

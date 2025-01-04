@@ -12,65 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup;
-
-public static class DATA_SRC
-{
-    private static readonly string Filename = "../../../../data/DATA_SRC.txt";
-
-    public static async Task ParseFileAsync(DbContext context)
-    {
-        using var reader = new StreamReader(Filename);
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = "^",
-            Quote = '~',
-            Escape = '$',
-            HasHeaderRecord = false,
-            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
-            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
-        };
-
-        using var csv = new CsvReader(reader, config);
-        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
-
-        await foreach (var record in csv.GetRecordsAsync<DataSourceDto>())
-        {
-            var item = ParseDtoRecord(record);
-            context.Add(item);
-            // Console.WriteLine(item.DataSourceId + " " + item.Title);
-        }
-
-        await context.SaveChangesAsync();
-        Console.WriteLine("Data Source done!");
-    }
-
-    private static DataSource ParseDtoRecord(DataSourceDto record)
-    {
-        var item = new DataSource
-        {
-            DataSourceId = record.DataSrc_ID,
-            Authors = record.Authors,
-            Title = record.Title,
-            Year = record.Year,
-            Journal = record.Journal,
-            Vol_City = record.Vol_City,
-            Issue_State = record.Issue_State,
-            Start_Page = record.Start_Page,
-            End_Page = record.End_Page,
-        };
-
-        return item;
-    }
-}
+namespace DBSetup.Data;
 
 #nullable disable
 #pragma warning disable CS8632
@@ -101,22 +47,22 @@ public class DataSource
     [Column("Year", TypeName = "nchar(4)")]
     [Comment("Year article or document was published.")]
     public string? Year { get; set; }
-    
+
     [Column("Journal")]
     [MaxLength(135)]
     [Comment("Name of the journal in which the article was published.")]
     public string? Journal { get; set; }
-    
+
     [Column("Vol_City")]
     [MaxLength(16)]
     [Comment("Volume number for journal articles, books, or reports; city where sponsoring organization is located.")]
     public string? Vol_City { get; set; }
-    
+
     [Column("Issue_State")]
     [MaxLength(5)]
     [Comment("Issue number for journal article; State where the sponsoring organization is located.")]
     public string? Issue_State { get; set; }
-    
+
     [Column("Start_Page")]
     [MaxLength(5)]
     [Comment("Starting page number of article/document.")]
@@ -130,17 +76,4 @@ public class DataSource
     //-----------------------------------------------
     //Relationships
     public ICollection<DataSourceLink> DataSourceLinks { get; set; }
-}
-
-public class DataSourceDto
-{
-    public string DataSrc_ID { get; set; }
-    public string? Authors { get; set; }
-    public string Title { get; set; }
-    public string? Year { get; set; }
-    public string? Journal { get; set; }
-    public string? Vol_City { get; set; }
-    public string? Issue_State { get; set; }
-    public string? Start_Page { get; set; }
-    public string? End_Page { get; set; }
 }

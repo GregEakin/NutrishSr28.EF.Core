@@ -21,7 +21,7 @@ namespace DBSetup.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DBSetup.DataSource", b =>
+            modelBuilder.Entity("DBSetup.Data.DataSource", b =>
                 {
                     b.Property<string>("DataSourceId")
                         .HasMaxLength(6)
@@ -91,7 +91,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.DataSourceLink", b =>
+            modelBuilder.Entity("DBSetup.Data.DataSourceLink", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -121,7 +121,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.DerivationCode", b =>
+            modelBuilder.Entity("DBSetup.Data.DerivationCode", b =>
                 {
                     b.Property<string>("DerivationCodeId")
                         .HasMaxLength(4)
@@ -147,7 +147,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.FoodDescription", b =>
+            modelBuilder.Entity("DBSetup.Data.FoodDescription", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -238,7 +238,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.FoodGroup", b =>
+            modelBuilder.Entity("DBSetup.Data.FoodGroup", b =>
                 {
                     b.Property<string>("FoodGroupId")
                         .HasColumnType("nchar(4)")
@@ -263,7 +263,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.Footnote", b =>
+            modelBuilder.Entity("DBSetup.Data.Footnote", b =>
                 {
                     b.Property<int>("FootnoteId")
                         .ValueGeneratedOnAdd()
@@ -317,7 +317,7 @@ namespace DBSetup.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
+            modelBuilder.Entity("DBSetup.Data.LanguaLDescription", b =>
                 {
                     b.Property<string>("LangualDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -342,7 +342,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.LanguaLFactor", b =>
+            modelBuilder.Entity("DBSetup.Data.LanguaLFactor", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -364,7 +364,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.NutrientData", b =>
+            modelBuilder.Entity("DBSetup.Data.NutrientData", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -487,7 +487,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.NutrientDefinition", b =>
+            modelBuilder.Entity("DBSetup.Data.NutrientDefinition", b =>
                 {
                     b.Property<string>("NutrientDefinitionId")
                         .HasColumnType("nchar(3)")
@@ -536,7 +536,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("TagName", "Units")
                         .IsUnique()
-                        .HasFilter("Tagname IS NOT NULL");
+                        .HasFilter("\"Tagname\" IS NOT NULL");
 
                     b.ToTable("NUTR_DEF", "SR28", t =>
                         {
@@ -544,7 +544,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.SourceCode", b =>
+            modelBuilder.Entity("DBSetup.Data.SourceCode", b =>
                 {
                     b.Property<int>("SourceCodeId")
                         .HasColumnType("int")
@@ -569,7 +569,7 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.Weight", b =>
+            modelBuilder.Entity("DBSetup.Data.Weight", b =>
                 {
                     b.Property<string>("FoodDescriptionId")
                         .HasColumnType("nchar(5)")
@@ -618,13 +618,13 @@ namespace DBSetup.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DBSetup.FootnoteD", b =>
+            modelBuilder.Entity("DBSetup.Data.FootnoteD", b =>
                 {
-                    b.HasBaseType("DBSetup.Footnote");
+                    b.HasBaseType("DBSetup.Data.Footnote");
 
                     b.HasIndex("FoodDescriptionId", "Footnt_No")
                         .IsUnique()
-                        .HasFilter("Footnt_Typ = 'D'");
+                        .HasFilter("\"Footnt_Typ\" = 'D'");
 
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
@@ -634,13 +634,13 @@ namespace DBSetup.Migrations
                     b.HasDiscriminator().HasValue("D");
                 });
 
-            modelBuilder.Entity("DBSetup.FootnoteM", b =>
+            modelBuilder.Entity("DBSetup.Data.FootnoteM", b =>
                 {
-                    b.HasBaseType("DBSetup.Footnote");
+                    b.HasBaseType("DBSetup.Data.Footnote");
 
                     b.HasIndex("FoodDescriptionId")
                         .IsUnique()
-                        .HasFilter("Footnt_Typ = 'M'");
+                        .HasFilter("\"Footnt_Typ\" = 'M'");
 
                     b.ToTable("FOOTNOTE", "SR28", t =>
                         {
@@ -650,9 +650,9 @@ namespace DBSetup.Migrations
                     b.HasDiscriminator().HasValue("M");
                 });
 
-            modelBuilder.Entity("DBSetup.FootnoteN", b =>
+            modelBuilder.Entity("DBSetup.Data.FootnoteN", b =>
                 {
-                    b.HasBaseType("DBSetup.Footnote");
+                    b.HasBaseType("DBSetup.Data.Footnote");
 
                     b.Property<string>("NutrientDataFoodDescriptionId")
                         .HasColumnType("nchar(5)");
@@ -662,7 +662,7 @@ namespace DBSetup.Migrations
 
                     b.HasIndex("FoodDescriptionId", "NutrientDefinitionId")
                         .IsUnique()
-                        .HasFilter("Footnt_Typ = 'N'");
+                        .HasFilter("\"Footnt_Typ\" = 'N'");
 
                     b.HasIndex("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
 
@@ -674,21 +674,21 @@ namespace DBSetup.Migrations
                     b.HasDiscriminator().HasValue("N");
                 });
 
-            modelBuilder.Entity("DBSetup.DataSourceLink", b =>
+            modelBuilder.Entity("DBSetup.Data.DataSourceLink", b =>
                 {
-                    b.HasOne("DBSetup.DataSource", "DataSource")
+                    b.HasOne("DBSetup.Data.DataSource", "DataSource")
                         .WithMany("DataSourceLinks")
                         .HasForeignKey("DataSourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescription")
                         .WithMany()
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.NutrientDefinition", "NutrientDefinition")
+                    b.HasOne("DBSetup.Data.NutrientDefinition", "NutrientDefinition")
                         .WithMany("DataSourceLinks")
                         .HasForeignKey("NutrientDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -701,9 +701,9 @@ namespace DBSetup.Migrations
                     b.Navigation("NutrientDefinition");
                 });
 
-            modelBuilder.Entity("DBSetup.FoodDescription", b =>
+            modelBuilder.Entity("DBSetup.Data.FoodDescription", b =>
                 {
-                    b.HasOne("DBSetup.FoodGroup", "FoodGroup")
+                    b.HasOne("DBSetup.Data.FoodGroup", "FoodGroup")
                         .WithMany("FoodDescriptions")
                         .HasForeignKey("FoodGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -712,15 +712,15 @@ namespace DBSetup.Migrations
                     b.Navigation("FoodGroup");
                 });
 
-            modelBuilder.Entity("DBSetup.LanguaLFactor", b =>
+            modelBuilder.Entity("DBSetup.Data.LanguaLFactor", b =>
                 {
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescription")
                         .WithMany("LanguaLFactors")
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.LanguaLDescription", "LanguaLDescription")
+                    b.HasOne("DBSetup.Data.LanguaLDescription", "LanguaLDescription")
                         .WithMany("LanguaLFactors")
                         .HasForeignKey("LangualDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -731,30 +731,30 @@ namespace DBSetup.Migrations
                     b.Navigation("LanguaLDescription");
                 });
 
-            modelBuilder.Entity("DBSetup.NutrientData", b =>
+            modelBuilder.Entity("DBSetup.Data.NutrientData", b =>
                 {
-                    b.HasOne("DBSetup.DerivationCode", "DerivationCode")
+                    b.HasOne("DBSetup.Data.DerivationCode", "DerivationCode")
                         .WithMany("NutrientData")
                         .HasForeignKey("DerivationCodeId");
 
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescription")
                         .WithMany("NutrientData")
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescriptionRef")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescriptionRef")
                         .WithMany()
                         .HasForeignKey("FoodDescriptionRefId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("DBSetup.NutrientDefinition", "NutrientDefinition")
+                    b.HasOne("DBSetup.Data.NutrientDefinition", "NutrientDefinition")
                         .WithMany("NutrientData")
                         .HasForeignKey("NutrientDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DBSetup.SourceCode", "SourceCode")
+                    b.HasOne("DBSetup.Data.SourceCode", "SourceCode")
                         .WithMany("NutrientData")
                         .HasForeignKey("SourceCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -771,9 +771,9 @@ namespace DBSetup.Migrations
                     b.Navigation("SourceCode");
                 });
 
-            modelBuilder.Entity("DBSetup.Weight", b =>
+            modelBuilder.Entity("DBSetup.Data.Weight", b =>
                 {
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescription")
                         .WithMany("Weights")
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -782,9 +782,9 @@ namespace DBSetup.Migrations
                     b.Navigation("FoodDescription");
                 });
 
-            modelBuilder.Entity("DBSetup.FootnoteD", b =>
+            modelBuilder.Entity("DBSetup.Data.FootnoteD", b =>
                 {
-                    b.HasOne("DBSetup.FoodDescription", "FoodDescription")
+                    b.HasOne("DBSetup.Data.FoodDescription", "FoodDescription")
                         .WithMany("Footnotes")
                         .HasForeignKey("FoodDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -793,26 +793,26 @@ namespace DBSetup.Migrations
                     b.Navigation("FoodDescription");
                 });
 
-            modelBuilder.Entity("DBSetup.FootnoteN", b =>
+            modelBuilder.Entity("DBSetup.Data.FootnoteN", b =>
                 {
-                    b.HasOne("DBSetup.NutrientData", "NutrientData")
+                    b.HasOne("DBSetup.Data.NutrientData", "NutrientData")
                         .WithMany()
                         .HasForeignKey("NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId");
 
                     b.Navigation("NutrientData");
                 });
 
-            modelBuilder.Entity("DBSetup.DataSource", b =>
+            modelBuilder.Entity("DBSetup.Data.DataSource", b =>
                 {
                     b.Navigation("DataSourceLinks");
                 });
 
-            modelBuilder.Entity("DBSetup.DerivationCode", b =>
+            modelBuilder.Entity("DBSetup.Data.DerivationCode", b =>
                 {
                     b.Navigation("NutrientData");
                 });
 
-            modelBuilder.Entity("DBSetup.FoodDescription", b =>
+            modelBuilder.Entity("DBSetup.Data.FoodDescription", b =>
                 {
                     b.Navigation("Footnotes");
 
@@ -823,24 +823,24 @@ namespace DBSetup.Migrations
                     b.Navigation("Weights");
                 });
 
-            modelBuilder.Entity("DBSetup.FoodGroup", b =>
+            modelBuilder.Entity("DBSetup.Data.FoodGroup", b =>
                 {
                     b.Navigation("FoodDescriptions");
                 });
 
-            modelBuilder.Entity("DBSetup.LanguaLDescription", b =>
+            modelBuilder.Entity("DBSetup.Data.LanguaLDescription", b =>
                 {
                     b.Navigation("LanguaLFactors");
                 });
 
-            modelBuilder.Entity("DBSetup.NutrientDefinition", b =>
+            modelBuilder.Entity("DBSetup.Data.NutrientDefinition", b =>
                 {
                     b.Navigation("DataSourceLinks");
 
                     b.Navigation("NutrientData");
                 });
 
-            modelBuilder.Entity("DBSetup.SourceCode", b =>
+            modelBuilder.Entity("DBSetup.Data.SourceCode", b =>
                 {
                     b.Navigation("NutrientData");
                 });

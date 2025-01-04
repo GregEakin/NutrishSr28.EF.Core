@@ -12,78 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup;
-
-public static class FOOD_DES
-{
-    public static readonly string Filename = "../../../../data/FOOD_DES.txt";
-
-    public static async Task ParseFileAsync(DbContext context)
-    {
-        using var reader = new StreamReader(Filename);
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = "^",
-            Quote = '~',
-            Escape = '$',
-            HasHeaderRecord = false,
-            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
-            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
-        };
-
-        using var csv = new CsvReader(reader, config);
-        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add(string.Empty);
-        
-        await foreach (var record in csv.GetRecordsAsync<FoodDescriptionDto>())
-        {
-            var item = await ParseDtoRecordAsync(context, record);
-            // Console.WriteLine(item.FoodDescriptionId + " " + item.FoodGroupId + " " + item.Shrt_Desc);
-        }
-
-        await context.SaveChangesAsync();
-        Console.WriteLine("Food Description done!");
-    }
-
-    private static async Task<FoodDescription> ParseDtoRecordAsync(DbContext context, FoodDescriptionDto record)
-    {
-        var foodGroup = await context.FindAsync<FoodGroup>(record.FdGrp_Cd);
-        if (foodGroup == null)
-        {
-            Console.WriteLine("Can't find {0} {1} {2}", nameof(FoodDescription), nameof(FoodGroup), record.FdGrp_Cd);
-            throw new Exception($"FoodGroup {record.FdGrp_Cd} not found!");
-        }
-
-        var item = new FoodDescription
-        {
-            FoodDescriptionId = record.NDB_No,
-            FoodGroup = foodGroup,
-            Long_Desc = record.Long_Desc,
-            Shrt_Desc = record.Shrt_Desc,
-            ComName = record.ComName,
-            ManufacName = record.ManufacName,
-            Survey = record.Survey?[0],
-            Ref_desc = record.Ref_desc,
-            Refuse = record.Refuse,
-            SciName = record.SciName,
-            N_Factor = record.N_Factor,
-            Pro_Factor = record.Pro_Factor,
-            Fat_Factor = record.Fat_Factor,
-            CHO_Factor = record.CHO_Factor,
-        };
-
-        foodGroup.FoodDescriptions.Add(item);
-        await context.SaveChangesAsync();
-        return item;
-    }
-}
+namespace DBSetup.Data;
 
 #nullable disable
 #pragma warning disable CS8632
@@ -131,7 +64,7 @@ public class FoodDescription
 
     [MaxLength(65)]
     [Comment("Indicates the company that manufactured the product, when appropriate.")]
-    public string? ManufacName{ get; set; }
+    public string? ManufacName { get; set; }
 
     [Comment("Indicates if the food item is used in the USDA Food " +
              "and Nutrient Database for Dietary Studies (FNDDS) " +
@@ -175,22 +108,4 @@ public class FoodDescription
     public ICollection<FootnoteD> Footnotes { get; set; } = [];
     public ICollection<LanguaLFactor> LanguaLFactors { get; set; } = [];
     ICollection<DataSourceLink> DataSourceLinks { get; set; } = [];
-}
-
-public class FoodDescriptionDto
-{
-    public string NDB_No { get; set; }
-    public string FdGrp_Cd { get; set; }
-    public string Long_Desc { get; set; }
-    public string Shrt_Desc { get; set; }
-    public string? ComName { get; set; }
-    public string? ManufacName { get; set; }
-    public string? Survey { get; set; }
-    public string? Ref_desc { get; set; }
-    public int? Refuse { get; set; }
-    public string? SciName { get; set; }
-    public decimal? N_Factor { get; set; }
-    public decimal? Pro_Factor { get; set; }
-    public decimal? Fat_Factor { get; set; }
-    public decimal? CHO_Factor { get; set; }
 }

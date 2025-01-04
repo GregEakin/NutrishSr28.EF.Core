@@ -12,6 +12,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using DBSetup.Data;
+using DBSetup.Loader;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBSetup;
@@ -46,92 +48,16 @@ public class EfCoreContext : DbContext
         // var entity = new ETC();
         // modelBuilder.ApplyConfiguration(entity);
 
-        modelBuilder.Entity<FoodGroup>()
-            .HasIndex(fg => fg.FoodGroupName)
-            .IsUnique();
-
-        modelBuilder.Entity<SourceCode>()
-            .HasIndex(sc => sc.SourceCodeDescription)
-            .IsUnique();
-
-        modelBuilder.Entity<DerivationCode>()
-            .HasIndex(dc => dc.DerivationCodeDescription)
-            .IsUnique();
-
-        modelBuilder.Entity<LanguaLDescription>()
-            .HasIndex(lld => lld.Description)
-            .IsUnique();
-
-        modelBuilder.Entity<DataSource>()
-            .HasIndex(lld => lld.Authors);
-        modelBuilder.Entity<DataSource>()
-            .HasIndex(lld => lld.Title);
-        modelBuilder.Entity<DataSource>()
-            .HasIndex(lld => lld.Journal);
-
-        modelBuilder.Entity<NutrientDefinition>()
-            .HasIndex(nd => new { nd.NutrDesc, nd.Units })
-            .IsUnique();
-        modelBuilder.Entity<NutrientDefinition>()
-            .HasIndex(nd => new { nd.TagName, nd.Units })
-            .HasFilter("Tagname IS NOT NULL")
-            .IsUnique();
-        modelBuilder.Entity<NutrientDefinition>()
-            .HasIndex(nd => nd.SR_Order)
-            .IsUnique();
-
-        modelBuilder.Entity<FoodDescription>()
-            .HasIndex(fd => fd.Long_Desc)
-            .IsUnique();
-        modelBuilder.Entity<FoodDescription>()
-            .HasIndex(fd => fd.Shrt_Desc);
-
-        modelBuilder.Entity<Footnote>()
-            .HasIndex(f => f.Footnt_Txt);
-        modelBuilder.Entity<Footnote>()
-            .HasDiscriminator(f => f.Footnt_Typ)
-            .HasValue<FootnoteD>("D")
-            .HasValue<FootnoteM>("M")
-            .HasValue<FootnoteN>("N");
-        modelBuilder.Entity<FootnoteD>()
-            .HasIndex(f => new { f.FoodDescriptionId, f.Footnt_No })
-            .HasFilter("Footnt_Typ = 'D'")
-            .IsUnique();
-        modelBuilder.Entity<FootnoteM>()
-            .HasIndex(f => f.FoodDescriptionId)
-            .HasFilter("Footnt_Typ = 'M'")
-            .IsUnique();
-        modelBuilder.Entity<FootnoteN>()
-            .HasIndex(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
-            .HasFilter("Footnt_Typ = 'N'")
-            .IsUnique();
-        
-        // modelBuilder.Entity<FootnoteD>()
-        //     .HasOne(f => f.FoodDescription)
-        //     .WithMany(fd => fd.Footnotes)
-        //     .HasForeignKey(f => f.FoodDescriptionId)
-        //     .OnDelete(DeleteBehavior.Restrict);
-        
-        // modelBuilder.Entity<FootnoteN>()
-        //     .HasOne(f => f.NutrientData)
-        //     .WithOne(fd => fd.Footnote)
-        //     .HasForeignKey<FootnoteN>(f => new { f.FoodDescriptionId, f.NutrientDefinitionId })
-        //     .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Weight>()
-            .HasIndex(w => w.Msre_Desc);
-
-        modelBuilder.Entity<NutrientData>()
-            .HasOne(nd => nd.FoodDescription)
-            .WithMany(fd => fd.NutrientData)
-            .HasForeignKey(nd => nd.FoodDescriptionId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<NutrientData>()
-            .HasOne(nd => nd.FoodDescriptionRef)
-            .WithMany()
-            .HasForeignKey(nd => nd.FoodDescriptionRefId)
-            .OnDelete(DeleteBehavior.Restrict);
+        new FD_GROUP().OnModelCreating(modelBuilder);
+        new SRC_CD().OnModelCreating(modelBuilder);
+        new DERIV_CD().OnModelCreating(modelBuilder);
+        new LANGUAL().OnModelCreating(modelBuilder);
+        new DATA_SRC().OnModelCreating(modelBuilder);
+        new NUTR_DEF().OnModelCreating(modelBuilder);
+        new FOOD_DES().OnModelCreating(modelBuilder);
+        new WEIGHT().OnModelCreating(modelBuilder);
+        new FOOTNOTE().OnModelCreating(modelBuilder);
+        new NUT_DATA().OnModelCreating(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

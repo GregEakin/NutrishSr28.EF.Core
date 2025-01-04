@@ -1,4 +1,4 @@
-﻿// Copyright 2024 Gregory Eakin
+﻿// Copyright 2025 Gregory Eakin
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -12,70 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
+#nullable disable
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup;
-
-public static class WEIGHT
-{
-    private static readonly string Filename = "../../../../data/WEIGHT.txt";
-
-    public static async Task ParseFileAsync(DbContext context)
-    {
-        using var reader = new StreamReader(Filename);
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = "^",
-            Quote = '~',
-            Escape = '$',
-            HasHeaderRecord = false,
-            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
-            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
-        };
-
-        using var csv = new CsvReader(reader, config);
-        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
-
-        await foreach (var record in csv.GetRecordsAsync<WeightDto>())
-        {
-            var item = await ParseDtoRecord(context, record);
-            context.Add(item);
-            // Console.WriteLine(item.FoodDescriptionId + " " + item.Msre_Desc);
-        }
-
-        await context.SaveChangesAsync();
-        Console.WriteLine("Weight done!");
-    }
-
-    private static async Task<Weight> ParseDtoRecord(DbContext context, WeightDto record)
-    {
-        var foodDescription = await context.FindAsync<FoodDescription>(record.NDB_No);
-        if (foodDescription == null)
-        {
-            Console.WriteLine("Can't find {0} {1} {2}", nameof(Weight), nameof(FoodDescription), record.NDB_No);
-            throw new Exception($"{nameof(Weight)} {nameof(FoodDescription)} {record.NDB_No} not found!");
-        }
-
-        var item = new Weight
-        {
-            FoodDescription = foodDescription,
-            Seq = int.Parse(record.Seq),
-            Amount = (float)record.Amount,
-            Msre_Desc = record.Msre_Desc,
-            Gm_Wgt = (float)record.Gm_Wgt,
-            Num_Data_Pts = record.Num_Data_Pts.HasValue ? (int?)record.Num_Data_Pts.Value : null,
-            Std_Dev = (float?)record.Std_Dev,
-        };
-
-        return item;
-    }
-}
+namespace DBSetup.Data;
 
 #nullable disable
 #pragma warning disable CS8632
@@ -118,7 +60,7 @@ public class Weight
     [Required]
     [Comment("Gram weight.")]
     public float Gm_Wgt { get; set; }
-    
+
     [Column("Num_Data_Pts")]
     [Comment("Number of data points.")]
     public int? Num_Data_Pts { get; set; }
@@ -132,15 +74,4 @@ public class Weight
     public FoodDescription FoodDescription { get; set; }
 
     // Links to Nutrient Data file by NDB_No 
-}
-
-public class WeightDto
-{
-    public string NDB_No { get; set; }
-    public string Seq { get; set; }
-    public Decimal Amount { get; set; }
-    public string Msre_Desc { get; set; }
-    public Decimal Gm_Wgt { get; set; }
-    public Decimal? Num_Data_Pts { get; set; }
-    public Decimal? Std_Dev { get; set; }
 }

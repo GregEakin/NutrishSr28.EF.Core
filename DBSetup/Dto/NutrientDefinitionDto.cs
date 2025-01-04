@@ -1,0 +1,28 @@
+﻿// Copyright 2024 Gregory Eakin
+// 
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+// 
+//       http://www.apache.org/licenses/LICENSE-2.0
+// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
+namespace DBSetup.Dto;
+
+#nullable disable
+#pragma warning disable CS8632
+
+public class NutrientDefinitionDto
+{
+    public string Nutr_No { get; set; }
+    public string Units { get; set; }
+    public string? Tagname { get; set; }
+    public string NutrDesc { get; set; }
+    public string Num_Dec { get; set; }
+    public string SR_Order { get; set; }
+}

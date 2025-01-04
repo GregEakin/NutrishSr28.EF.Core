@@ -8,6 +8,11 @@ This is an experiment in configuring an existing [USDA Nutrition Database](https
 1. Unzip the patch file (May 2016) into the data2 folder.
 	Overwrite the DATASRCLN.txt and sr28_doc.pdf
 ```
+cd ~/source/NutrishSr28.EF.Core
+curl https://www.ars.usda.gov/ARSUserFiles/80400535/DATA/SR/sr28/dnload/sr28asc.zip --output sr28asc.zip
+mkdir data/
+unzip sr28asc.zip -d data/
+
 SqllocalDB i
 SqllocalDB create "SR28" -s
 sqlcmd -S "(localdb)\SR28" -Q "CREATE DATABASE Nutrish"
@@ -16,6 +21,16 @@ dotnet ef database update
 dotnet run
 cd ../DBSetup.Tests
 dotnet test
+```
+
+## Convert over to PostgreSQL:
+```
+cd DBSetup
+rm migrations/*
+dotnet ef migrations remove
+dotnet ef migrations add Postgresql
+dotnet ef database update
+dotnet run
 ```
 
 ## Database:
@@ -40,9 +55,9 @@ US Department of Agriculture, Agricultural Research Service. 2016. Nutrient Data
 
 # PostgreSQL DB Stuff
 ```
-docker exec -it sqlserver-sqldb-1 psql -U sqlserver -c "CREATE database sr28;"
-docker exec -it sqlserver-sqldb-1 psql -U sqlserver -c "CREATE USER postgres;"
-docker exec -it sqlserver-sqldb-1 psql -U sqlserver -c "ALTER USER postgres WITH PASSWORD 'sqlserver';"
-docker exec -it sqlserver-sqldb-1 psql -U sqlserver -c "GRANT ALL PRIVILEGES ON DATABASE sr28 TO postgres;"
-docker exec -it sqlserver-sqldb-1 psql -U sqlserver -c "ALTER USER postgres WITH SUPERUSER;"
+docker exec -it postgres-db-1 psql -U greg -c "CREATE database SR28;"
+docker exec -it postgres-db-1 psql -U greg -c "CREATE USER docker;"
+docker exec -it postgres-db-1 psql -U greg -c "ALTER USER docker WITH PASSWORD 'secret';"
+docker exec -it postgres-db-1 psql -U greg -c "GRANT ALL PRIVILEGES ON DATABASE SR28 TO docker;"
+docker exec -it postgres-db-1 psql -U greg -c "ALTER USER docker WITH SUPERUSER;"
 ```

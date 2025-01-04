@@ -12,62 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup;
-
-public static class NUTR_DEF
-{
-    private static readonly string Filename = "../../../../data/NUTR_DEF.txt";
-
-    public static async Task ParseFileAsync(DbContext context)
-    {
-        using var reader = new StreamReader(Filename);
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = "^",
-            Quote = '~',
-            Escape = '$',
-            HasHeaderRecord = false,
-            BadDataFound = x => throw new Exception($"Bad data: <{x.RawRecord}>"),
-            MissingFieldFound = x => throw new Exception($"Missing Filed: <{x.Index}>"),
-        };
-
-        using var csv = new CsvReader(reader, config);
-        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add("");
-
-        await foreach (var record in csv.GetRecordsAsync<NutrientDefinitionDto>())
-        {
-            var item = ParseDtoRecord(record);
-            context.Add(item);
-            // Console.WriteLine(item.NutrientDefinitionId + " " + item.NutrDesc);
-        }
-
-        await context.SaveChangesAsync();
-        Console.WriteLine("Nutrient Definition done!");
-    }
-
-    private static NutrientDefinition ParseDtoRecord(NutrientDefinitionDto record)
-    {
-        var item = new NutrientDefinition
-        {
-            NutrientDefinitionId = record.Nutr_No,
-            Units = record.Units,
-            TagName = record.Tagname,
-            NutrDesc = record.NutrDesc,
-            Num_Dec = record.Num_Dec[0],
-            SR_Order = int.Parse(record.SR_Order),
-        };
-
-        return item;
-    }
-}
+namespace DBSetup.Data;
 
 #nullable disable
 #pragma warning disable CS8632
@@ -118,14 +67,4 @@ public class NutrientDefinition
     //Relationships
     public ICollection<DataSourceLink> DataSourceLinks { get; set; }
     public ICollection<NutrientData> NutrientData { get; set; }
-}
-
-public class NutrientDefinitionDto
-{
-    public string Nutr_No { get; set; }
-    public string Units { get; set; }
-    public string? Tagname { get; set; }
-    public string NutrDesc { get; set; }
-    public string Num_Dec { get; set; }
-    public string SR_Order { get; set; }
 }
