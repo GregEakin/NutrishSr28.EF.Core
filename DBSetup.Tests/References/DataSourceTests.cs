@@ -41,7 +41,7 @@ public class DataSourceTests
 
         Assert.NotNull(dataSource);
         var dataSourceLinks = dataSource.DataSourceLinks;
-        Assert.Equal(175, dataSourceLinks.Count);
+        Assert.Equal(866, dataSourceLinks.Count);
         foreach (var link in dataSourceLinks)
             Assert.Equal(dataSource, link.DataSource);
     }

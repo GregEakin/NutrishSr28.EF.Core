@@ -39,7 +39,7 @@ public class NutrientDefinitionTests
 
         Assert.NotNull(nutrientDefinition);
         var links = nutrientDefinition.DataSourceLinks;
-        Assert.Equal(17, links.Count);
+        Assert.Equal(4339, links.Count);
         foreach (var link in links)
             Assert.Equal(nutrientDefinition, link.NutrientDefinition);
     }
