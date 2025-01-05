@@ -1,0 +1,41 @@
+services:
+  db:
+    image: docker.io/library/postgres:17-bookworm
+    restart: no
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=SR28
+    user: root
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./config:/etc/postgresql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: no
+    environment:
+      PGADMIN_DEFAULT_EMAIL: greg@eakin.dev
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+    user: root
+    ports:
+      - 5080:80
+    depends_on:
+      - db
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+
+volumes:
+  postcifs:
+    driver_opts:
+      type: "cifs"
+      o: "rw,user=postgres,pass=postpass,uid=1001,gid=1001"
+      device: "//192.168.1.14/postgres"
+  postnfs:
+    driver_opts:
+      type: "nfs"
+      o: "nfsvers=3,addr=192.168.1.14,rw"
+      device: ":/nfs/postgres/SR28/postgresql/data"
