@@ -1,7 +1,7 @@
 # NutrishSr28.EF.Core
-:fire: **Gregory Eakin**
+:t-rex: **Gregory Eakin**
 
-This is an experiment in configuring an existing [USDA Nutrition Database](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr11-sr28/) in [NHibernate](https://nhibernate.info/).
+This is an experiment in configuring an existing [USDA Nutrition Database](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr11-sr28/) in [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/).
 
 ## Steps to setup SQL Local DB:
 1. Unzip the [Full Version of the SR28 ASCII file format](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr11-sr28/) into the data folder.
@@ -34,13 +34,13 @@ dotnet run
 ```
 
 ## Database:
-[![USDA Nutrition Database](SR28lib/Nutrish%20SR28.jpg "USDA Nutrition Database")](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr17-sr28/)
+[![USDA Nutrition Database](images/Nutrish%20SR28.jpg "USDA Nutrition Database")](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr17-sr28/)
 US Department of Agriculture, Agricultural Research Service. 2016. Nutrient Data Laboratory. USDA National Nutrient Database for Standard Reference, Release 28 (Slightly revised). Version Current: May 2016. [http://www.ars.usda.gov/nea/bhnrc/mafcl](http://www.ars.usda.gov/nea/bhnrc/mafcl)
 
 ## Tools:
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server)
-- [SQL Server LocalDB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)]
+- [SQL Server LocalDB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)
 - [SQL Server Management Sdutio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
 - [PostgreSQL](https://www.postgresql.org/)
 - [pgAdmin](https://www.pgadmin.org/)
