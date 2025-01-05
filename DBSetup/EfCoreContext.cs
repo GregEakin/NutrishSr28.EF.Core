@@ -62,13 +62,14 @@ public class EfCoreContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    // private const string ConnectionString = "Host=vim3.lab.eakin.wtf;Database=SR28;Username=docker;Password=secret";
+    private const string ConnectionString = "Host=homer.lab.eakin.wtf;Database=SR28;Username=docker;Password=secret";
     // => options.UseSqlite($"Data Source={DbPath}");
-    private const string ConnectionString = @"Server=(localdb)\SR28;Database=Nutrish;";
+    // private const string ConnectionString = @"Server=(localdb)\SR28;Database=Nutrish;";
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options
-            .UseSqlServer(ConnectionString);
+	    .UseNpgsql(ConnectionString);
+            // .UseSqlServer(ConnectionString);
             // .LogTo(Console.WriteLine)
             // .EnableSensitiveDataLogging();
 }

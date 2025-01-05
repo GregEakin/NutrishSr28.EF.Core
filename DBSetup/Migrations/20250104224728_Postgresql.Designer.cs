@@ -2,17 +2,17 @@
 using DBSetup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace DBSetup.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20250104214816_SqlServer")]
-    partial class SqlServer
+    [Migration("20250104224728_Postgresql")]
+    partial class Postgresql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,58 +20,58 @@ namespace DBSetup.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("DBSetup.Data.DataSource", b =>
                 {
                     b.Property<string>("DataSourceId")
                         .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)")
+                        .HasColumnType("character varying(6)")
                         .HasColumnName("DataSrc_ID")
                         .HasComment("Unique ID identifying the reference/source.");
 
                     b.Property<string>("Authors")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("Authors")
                         .HasComment("List of authors for a journal article or name of sponsoring organization for other documents.");
 
                     b.Property<string>("End_Page")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("character varying(5)")
                         .HasColumnName("End_Page")
                         .HasComment("Ending page number of article/document.");
 
                     b.Property<string>("Issue_State")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("character varying(5)")
                         .HasColumnName("Issue_State")
                         .HasComment("Issue number for journal article; State where the sponsoring organization is located.");
 
                     b.Property<string>("Journal")
                         .HasMaxLength(135)
-                        .HasColumnType("nvarchar(135)")
+                        .HasColumnType("character varying(135)")
                         .HasColumnName("Journal")
                         .HasComment("Name of the journal in which the article was published.");
 
                     b.Property<string>("Start_Page")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
+                        .HasColumnType("character varying(5)")
                         .HasColumnName("Start_Page")
                         .HasComment("Starting page number of article/document.");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("Title")
                         .HasComment("Title of article or name of document, such as a report from a company or trade association.");
 
                     b.Property<string>("Vol_City")
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)")
+                        .HasColumnType("character varying(16)")
                         .HasColumnName("Vol_City")
                         .HasComment("Volume number for journal articles, books, or reports; city where sponsoring organization is located.");
 
@@ -108,7 +108,7 @@ namespace DBSetup.Migrations
 
                     b.Property<string>("DataSourceId")
                         .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)")
+                        .HasColumnType("character varying(6)")
                         .HasColumnName("DataSrc_ID")
                         .HasComment("Unique ID identifying the reference/source.");
 
@@ -128,14 +128,14 @@ namespace DBSetup.Migrations
                 {
                     b.Property<string>("DerivationCodeId")
                         .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("character varying(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Derivation Code.");
 
                     b.Property<string>("DerivationCodeDescription")
                         .IsRequired()
                         .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)")
+                        .HasColumnType("character varying(120)")
                         .HasColumnName("Deriv_Desc")
                         .HasComment("Description of derivation code giving specific information on how the value was determined.");
 
@@ -159,17 +159,17 @@ namespace DBSetup.Migrations
 
                     b.Property<decimal?>("CHO_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)")
+                        .HasColumnType("numeric(4,2)")
                         .HasComment("Factor for calculating calories from carbohydrate.");
 
                     b.Property<string>("ComName")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Other names commonly used to describe a food, including local or regional names for various foods, for example, 'soda' or 'pop' for 'carbonated beverages.'");
 
                     b.Property<decimal?>("Fat_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)")
+                        .HasColumnType("numeric(4,2)")
                         .HasComment("Factor for calculating calories from fat.");
 
                     b.Property<string>("FoodGroupId")
@@ -181,49 +181,49 @@ namespace DBSetup.Migrations
                     b.Property<string>("Long_Desc")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("Long_Desc")
                         .HasComment("200-character description of food item.");
 
                     b.Property<string>("ManufacName")
                         .HasMaxLength(65)
-                        .HasColumnType("nvarchar(65)")
+                        .HasColumnType("character varying(65)")
                         .HasComment("Indicates the company that manufactured the product, when appropriate.");
 
                     b.Property<decimal?>("N_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)")
+                        .HasColumnType("numeric(4,2)")
                         .HasComment("Factor for converting nitrogen to protein.");
 
                     b.Property<decimal?>("Pro_Factor")
                         .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)")
+                        .HasColumnType("numeric(4,2)")
                         .HasComment("Factor for calculating calories from protein.");
 
                     b.Property<string>("Ref_desc")
                         .HasMaxLength(135)
-                        .HasColumnType("nvarchar(135)")
+                        .HasColumnType("character varying(135)")
                         .HasComment("Description of inedible parts of a food item (refuse), such as seeds or bone.");
 
                     b.Property<decimal?>("Refuse")
                         .HasPrecision(2)
-                        .HasColumnType("decimal(2,0)")
+                        .HasColumnType("numeric(2,0)")
                         .HasComment("Percentage of refuse.");
 
                     b.Property<string>("SciName")
                         .HasMaxLength(65)
-                        .HasColumnType("nvarchar(65)")
+                        .HasColumnType("character varying(65)")
                         .HasComment("Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable.");
 
                     b.Property<string>("Shrt_Desc")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("character varying(60)")
                         .HasColumnName("Shrt_Desc")
                         .HasComment("60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made. ");
 
-                    b.Property<string>("Survey")
-                        .HasColumnType("nvarchar(1)")
+                    b.Property<char?>("Survey")
+                        .HasColumnType("character(1)")
                         .HasComment("Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients.");
 
                     b.HasKey("FoodDescriptionId");
@@ -251,7 +251,7 @@ namespace DBSetup.Migrations
                     b.Property<string>("FoodGroupName")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("character varying(60)")
                         .HasColumnName("FdGrp_Desc")
                         .HasComment("Name of food group.");
 
@@ -270,9 +270,9 @@ namespace DBSetup.Migrations
                 {
                     b.Property<int>("FootnoteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FootnoteId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FootnoteId"));
 
                     b.Property<string>("FoodDescriptionId")
                         .IsRequired()
@@ -283,21 +283,21 @@ namespace DBSetup.Migrations
                     b.Property<string>("Footnt_No")
                         .IsRequired()
                         .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("character varying(4)")
                         .HasColumnName("Footnt_No")
                         .HasComment("Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. ");
 
                     b.Property<string>("Footnt_Txt")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("Footnt_Txt")
                         .HasComment("Footnote text.");
 
                     b.Property<string>("Footnt_Typ")
                         .IsRequired()
                         .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
+                        .HasColumnType("character varying(1)")
                         .HasColumnName("Footnt_Typ")
                         .HasComment("Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.");
 
@@ -330,7 +330,7 @@ namespace DBSetup.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(140)
-                        .HasColumnType("nvarchar(140)")
+                        .HasColumnType("character varying(140)")
                         .HasColumnName("Description")
                         .HasComment("The description of the LanguaL Factor Code from the thesaurus. ");
 
@@ -381,31 +381,31 @@ namespace DBSetup.Migrations
 
                     b.Property<string>("AddMod_Date")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("AddMod_Date")
                         .HasComment("Indicates when a value was either added to the database or last modified.");
 
                     b.Property<string>("Add_Nutr_Mark")
                         .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
+                        .HasColumnType("character varying(1)")
                         .HasColumnName("Add_Nutr_Mark")
                         .HasComment("Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to eat breakfast cereals and many brand-name hot cereals in food group 08.");
 
                     b.Property<string>("CC")
                         .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
+                        .HasColumnType("character varying(1)")
                         .HasColumnName("CC")
                         .HasComment("Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytical quality control, and number of samples analysed. Not included in this release, but is planned for future releases.");
 
                     b.Property<decimal?>("DF")
                         .HasPrecision(4)
-                        .HasColumnType("decimal(4,0)")
+                        .HasColumnType("numeric(4,0)")
                         .HasColumnName("DF")
                         .HasComment("Degrees of freedom.");
 
                     b.Property<string>("DerivationCodeId")
                         .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)")
+                        .HasColumnType("character varying(4)")
                         .HasColumnName("Deriv_Cd")
                         .HasComment("Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.");
 
@@ -417,60 +417,60 @@ namespace DBSetup.Migrations
 
                     b.Property<decimal?>("Low_EB")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(10,3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("Low_EB")
                         .HasComment("Lower 95% error bound.");
 
                     b.Property<decimal?>("Max")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(10,3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("Max")
                         .HasComment("Maximum value.");
 
                     b.Property<decimal?>("Min")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(10,3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("Min")
                         .HasComment("Minimum value.");
 
                     b.Property<decimal>("Num_Data_Pts")
                         .HasPrecision(5)
-                        .HasColumnType("decimal(5,0)")
+                        .HasColumnType("numeric(5,0)")
                         .HasColumnName("Num_Data_Pts")
                         .HasComment("Number of data points is the number of analyses used to calculate the nutrient value. If the number of data points is 0, the value was calculated or imputed.");
 
                     b.Property<decimal?>("Num_Studies")
                         .HasPrecision(2)
-                        .HasColumnType("decimal(2,0)")
+                        .HasColumnType("numeric(2,0)")
                         .HasColumnName("Num_Studies")
                         .HasComment("Number of studies.");
 
                     b.Property<decimal>("Nutr_Val")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(10,3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("Nutr_Val")
                         .HasComment("Amount in 100 grams, edible portion.");
 
                     b.Property<int>("SourceCodeId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("Src_Cd")
                         .HasComment("Code indicating type of data.");
 
                     b.Property<string>("Stat_cmt")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("Stat_cmt")
                         .HasComment("Statistical comments.");
 
                     b.Property<decimal?>("Std_Error")
                         .HasPrecision(8, 3)
-                        .HasColumnType("decimal(8,3)")
+                        .HasColumnType("numeric(8,3)")
                         .HasColumnName("Std_Error")
                         .HasComment("Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three.");
 
                     b.Property<decimal?>("Up_EB")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(10,3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("Up_EB")
                         .HasComment("Upper 95% error bound.");
 
@@ -497,35 +497,34 @@ namespace DBSetup.Migrations
                         .HasColumnName("Nutr_No")
                         .HasComment("Unique 3-digit identifier code for a nutrient.");
 
-                    b.Property<string>("Num_Dec")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
+                    b.Property<char>("Num_Dec")
+                        .HasColumnType("character(1)")
                         .HasColumnName("Num_Dec")
                         .HasComment("Number of decimal places to which a nutrient value is rounded.");
 
                     b.Property<string>("NutrDesc")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("character varying(60)")
                         .HasColumnName("NutrDesc")
                         .HasComment("Name of nutrient/food component.");
 
                     b.Property<int>("SR_Order")
                         .HasMaxLength(6)
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("SR_Order")
                         .HasComment("Used to sort nutrient records in the same order as various reports produced from SR.");
 
                     b.Property<string>("TagName")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("Tagname")
                         .HasComment("International Network of Food Data Systems (INFOODS) Tagnames. A unique abbreviation for a nutrient/food component developed by INFOODS to aid in the interchange of data.");
 
                     b.Property<string>("Units")
                         .IsRequired()
                         .HasMaxLength(7)
-                        .HasColumnType("nvarchar(7)")
+                        .HasColumnType("character varying(7)")
                         .HasColumnName("Units")
                         .HasComment("Units of measure (mg, g, μg, and so on).");
 
@@ -550,14 +549,14 @@ namespace DBSetup.Migrations
             modelBuilder.Entity("DBSetup.Data.SourceCode", b =>
                 {
                     b.Property<int>("SourceCodeId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("Src_Cd")
                         .HasComment("A 2-digit code indicating type of data.");
 
                     b.Property<string>("SourceCodeDescription")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("character varying(60)")
                         .HasColumnName("SrcCd_Desc")
                         .HasComment("Description of source code that identifies the type of nutrient data.");
 
@@ -580,7 +579,7 @@ namespace DBSetup.Migrations
                         .HasComment("5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost.");
 
                     b.Property<int>("Seq")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("Seq")
                         .HasComment("Sequence number.");
 
@@ -597,12 +596,12 @@ namespace DBSetup.Migrations
                     b.Property<string>("Msre_Desc")
                         .IsRequired()
                         .HasMaxLength(84)
-                        .HasColumnType("nvarchar(84)")
+                        .HasColumnType("character varying(84)")
                         .HasColumnName("Msre_Desc")
                         .HasComment("Description (for example, cup, diced, and 1-inch pieces)");
 
                     b.Property<int?>("Num_Data_Pts")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("Num_Data_Pts")
                         .HasComment("Number of data points.");
 

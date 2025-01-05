@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace DBSetup.Migrations
 {
     /// <inheritdoc />
-    public partial class SqlServer : Migration
+    public partial class Postgresql : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,15 +19,15 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 columns: table => new
                 {
-                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source."),
-                    Authors = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true, comment: "List of authors for a journal article or name of sponsoring organization for other documents."),
-                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Title of article or name of document, such as a report from a company or trade association."),
+                    DataSrc_ID = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source."),
+                    Authors = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true, comment: "List of authors for a journal article or name of sponsoring organization for other documents."),
+                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false, comment: "Title of article or name of document, such as a report from a company or trade association."),
                     Year = table.Column<string>(type: "nchar(4)", nullable: true, comment: "Year article or document was published."),
-                    Journal = table.Column<string>(type: "nvarchar(135)", maxLength: 135, nullable: true, comment: "Name of the journal in which the article was published."),
-                    Vol_City = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true, comment: "Volume number for journal articles, books, or reports; city where sponsoring organization is located."),
-                    Issue_State = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Issue number for journal article; State where the sponsoring organization is located."),
-                    Start_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Starting page number of article/document."),
-                    End_Page = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true, comment: "Ending page number of article/document.")
+                    Journal = table.Column<string>(type: "character varying(135)", maxLength: 135, nullable: true, comment: "Name of the journal in which the article was published."),
+                    Vol_City = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: true, comment: "Volume number for journal articles, books, or reports; city where sponsoring organization is located."),
+                    Issue_State = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true, comment: "Issue number for journal article; State where the sponsoring organization is located."),
+                    Start_Page = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true, comment: "Starting page number of article/document."),
+                    End_Page = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true, comment: "Ending page number of article/document.")
                 },
                 constraints: table =>
                 {
@@ -39,8 +40,8 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 columns: table => new
                 {
-                    Deriv_Cd = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Derivation Code."),
-                    Deriv_Desc = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false, comment: "Description of derivation code giving specific information on how the value was determined.")
+                    Deriv_Cd = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false, comment: "Derivation Code."),
+                    Deriv_Desc = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false, comment: "Description of derivation code giving specific information on how the value was determined.")
                 },
                 constraints: table =>
                 {
@@ -54,7 +55,7 @@ namespace DBSetup.Migrations
                 columns: table => new
                 {
                     FdGrp_Cd = table.Column<string>(type: "nchar(4)", nullable: false, comment: "4-digit code identifying a food group. Only the first 2 ndigits are currently assigned. In the future, the last 2 digits may be used. Codes may not be consecutive."),
-                    FdGrp_Desc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "Name of food group.")
+                    FdGrp_Desc = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false, comment: "Name of food group.")
                 },
                 constraints: table =>
                 {
@@ -68,7 +69,7 @@ namespace DBSetup.Migrations
                 columns: table => new
                 {
                     Factor_Code = table.Column<string>(type: "nchar(5)", nullable: false, comment: "The LanguaL factor from the Thesaurus. Only those codes used to factor the foods contained in the LanguaL Factor file are included in this file. "),
-                    Description = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "The description of the LanguaL Factor Code from the thesaurus. ")
+                    Description = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: false, comment: "The description of the LanguaL Factor Code from the thesaurus. ")
                 },
                 constraints: table =>
                 {
@@ -82,11 +83,11 @@ namespace DBSetup.Migrations
                 columns: table => new
                 {
                     Nutr_No = table.Column<string>(type: "nchar(3)", nullable: false, comment: "Unique 3-digit identifier code for a nutrient."),
-                    Units = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false, comment: "Units of measure (mg, g, μg, and so on)."),
-                    Tagname = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "International Network of Food Data Systems (INFOODS) Tagnames. A unique abbreviation for a nutrient/food component developed by INFOODS to aid in the interchange of data."),
-                    NutrDesc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "Name of nutrient/food component."),
-                    Num_Dec = table.Column<string>(type: "nvarchar(1)", nullable: false, comment: "Number of decimal places to which a nutrient value is rounded."),
-                    SR_Order = table.Column<int>(type: "int", maxLength: 6, nullable: false, comment: "Used to sort nutrient records in the same order as various reports produced from SR.")
+                    Units = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: false, comment: "Units of measure (mg, g, μg, and so on)."),
+                    Tagname = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true, comment: "International Network of Food Data Systems (INFOODS) Tagnames. A unique abbreviation for a nutrient/food component developed by INFOODS to aid in the interchange of data."),
+                    NutrDesc = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false, comment: "Name of nutrient/food component."),
+                    Num_Dec = table.Column<char>(type: "character(1)", nullable: false, comment: "Number of decimal places to which a nutrient value is rounded."),
+                    SR_Order = table.Column<int>(type: "integer", maxLength: 6, nullable: false, comment: "Used to sort nutrient records in the same order as various reports produced from SR.")
                 },
                 constraints: table =>
                 {
@@ -99,8 +100,8 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 columns: table => new
                 {
-                    Src_Cd = table.Column<int>(type: "int", nullable: false, comment: "A 2-digit code indicating type of data."),
-                    SrcCd_Desc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "Description of source code that identifies the type of nutrient data.")
+                    Src_Cd = table.Column<int>(type: "integer", nullable: false, comment: "A 2-digit code indicating type of data."),
+                    SrcCd_Desc = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false, comment: "Description of source code that identifies the type of nutrient data.")
                 },
                 constraints: table =>
                 {
@@ -115,18 +116,18 @@ namespace DBSetup.Migrations
                 {
                     NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
                     FdGrp_Cd = table.Column<string>(type: "nchar(4)", nullable: false, comment: "4-digit code indicating food group to which a food item belongs."),
-                    Long_Desc = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "200-character description of food item."),
-                    Shrt_Desc = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false, comment: "60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made. "),
-                    ComName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "Other names commonly used to describe a food, including local or regional names for various foods, for example, 'soda' or 'pop' for 'carbonated beverages.'"),
-                    ManufacName = table.Column<string>(type: "nvarchar(65)", maxLength: 65, nullable: true, comment: "Indicates the company that manufactured the product, when appropriate."),
-                    Survey = table.Column<string>(type: "nvarchar(1)", nullable: true, comment: "Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients."),
-                    Ref_desc = table.Column<string>(type: "nvarchar(135)", maxLength: 135, nullable: true, comment: "Description of inedible parts of a food item (refuse), such as seeds or bone."),
-                    Refuse = table.Column<decimal>(type: "decimal(2,0)", precision: 2, scale: 0, nullable: true, comment: "Percentage of refuse."),
-                    SciName = table.Column<string>(type: "nvarchar(65)", maxLength: 65, nullable: true, comment: "Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable."),
-                    N_Factor = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for converting nitrogen to protein."),
-                    Pro_Factor = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from protein."),
-                    Fat_Factor = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from fat."),
-                    CHO_Factor = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from carbohydrate.")
+                    Long_Desc = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "200-character description of food item."),
+                    Shrt_Desc = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false, comment: "60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made. "),
+                    ComName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, comment: "Other names commonly used to describe a food, including local or regional names for various foods, for example, 'soda' or 'pop' for 'carbonated beverages.'"),
+                    ManufacName = table.Column<string>(type: "character varying(65)", maxLength: 65, nullable: true, comment: "Indicates the company that manufactured the product, when appropriate."),
+                    Survey = table.Column<char>(type: "character(1)", nullable: true, comment: "Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients."),
+                    Ref_desc = table.Column<string>(type: "character varying(135)", maxLength: 135, nullable: true, comment: "Description of inedible parts of a food item (refuse), such as seeds or bone."),
+                    Refuse = table.Column<decimal>(type: "numeric(2,0)", precision: 2, scale: 0, nullable: true, comment: "Percentage of refuse."),
+                    SciName = table.Column<string>(type: "character varying(65)", maxLength: 65, nullable: true, comment: "Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable."),
+                    N_Factor = table.Column<decimal>(type: "numeric(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for converting nitrogen to protein."),
+                    Pro_Factor = table.Column<decimal>(type: "numeric(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from protein."),
+                    Fat_Factor = table.Column<decimal>(type: "numeric(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from fat."),
+                    CHO_Factor = table.Column<decimal>(type: "numeric(4,2)", precision: 4, scale: 2, nullable: true, comment: "Factor for calculating calories from carbohydrate.")
                 },
                 constraints: table =>
                 {
@@ -148,7 +149,7 @@ namespace DBSetup.Migrations
                 {
                     NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
                     Nutr_No = table.Column<string>(type: "nchar(3)", nullable: false, comment: "Unique 3-digit identifier code for a nutrient."),
-                    DataSrc_ID = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source.")
+                    DataSrc_ID = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false, comment: "Unique ID identifying the reference/source.")
                 },
                 constraints: table =>
                 {
@@ -212,22 +213,22 @@ namespace DBSetup.Migrations
                 {
                     NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost."),
                     Nutr_No = table.Column<string>(type: "nchar(3)", nullable: false, comment: "Unique 3-digit identifier code for a nutrient."),
-                    Nutr_Val = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false, comment: "Amount in 100 grams, edible portion."),
-                    Num_Data_Pts = table.Column<decimal>(type: "decimal(5,0)", precision: 5, scale: 0, nullable: false, comment: "Number of data points is the number of analyses used to calculate the nutrient value. If the number of data points is 0, the value was calculated or imputed."),
-                    Std_Error = table.Column<decimal>(type: "decimal(8,3)", precision: 8, scale: 3, nullable: true, comment: "Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three."),
-                    Src_Cd = table.Column<int>(type: "int", nullable: false, comment: "Code indicating type of data."),
-                    Deriv_Cd = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true, comment: "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value."),
+                    Nutr_Val = table.Column<decimal>(type: "numeric(10,3)", precision: 10, scale: 3, nullable: false, comment: "Amount in 100 grams, edible portion."),
+                    Num_Data_Pts = table.Column<decimal>(type: "numeric(5,0)", precision: 5, scale: 0, nullable: false, comment: "Number of data points is the number of analyses used to calculate the nutrient value. If the number of data points is 0, the value was calculated or imputed."),
+                    Std_Error = table.Column<decimal>(type: "numeric(8,3)", precision: 8, scale: 3, nullable: true, comment: "Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three."),
+                    Src_Cd = table.Column<int>(type: "integer", nullable: false, comment: "Code indicating type of data."),
+                    Deriv_Cd = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: true, comment: "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value."),
                     Ref_NDB_No = table.Column<string>(type: "nchar(5)", maxLength: 5, nullable: true, comment: "NDB number of the item used to calculate a missing value. Populated only for items added or updated starting with SR14."),
-                    Add_Nutr_Mark = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true, comment: "Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to eat breakfast cereals and many brand-name hot cereals in food group 08."),
-                    Num_Studies = table.Column<decimal>(type: "decimal(2,0)", precision: 2, scale: 0, nullable: true, comment: "Number of studies."),
-                    Min = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true, comment: "Minimum value."),
-                    Max = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true, comment: "Maximum value."),
-                    DF = table.Column<decimal>(type: "decimal(4,0)", precision: 4, scale: 0, nullable: true, comment: "Degrees of freedom."),
-                    Low_EB = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true, comment: "Lower 95% error bound."),
-                    Up_EB = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true, comment: "Upper 95% error bound."),
-                    Stat_cmt = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "Statistical comments."),
-                    AddMod_Date = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "Indicates when a value was either added to the database or last modified."),
-                    CC = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true, comment: "Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytical quality control, and number of samples analysed. Not included in this release, but is planned for future releases.")
+                    Add_Nutr_Mark = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: true, comment: "Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to eat breakfast cereals and many brand-name hot cereals in food group 08."),
+                    Num_Studies = table.Column<decimal>(type: "numeric(2,0)", precision: 2, scale: 0, nullable: true, comment: "Number of studies."),
+                    Min = table.Column<decimal>(type: "numeric(10,3)", precision: 10, scale: 3, nullable: true, comment: "Minimum value."),
+                    Max = table.Column<decimal>(type: "numeric(10,3)", precision: 10, scale: 3, nullable: true, comment: "Maximum value."),
+                    DF = table.Column<decimal>(type: "numeric(4,0)", precision: 4, scale: 0, nullable: true, comment: "Degrees of freedom."),
+                    Low_EB = table.Column<decimal>(type: "numeric(10,3)", precision: 10, scale: 3, nullable: true, comment: "Lower 95% error bound."),
+                    Up_EB = table.Column<decimal>(type: "numeric(10,3)", precision: 10, scale: 3, nullable: true, comment: "Upper 95% error bound."),
+                    Stat_cmt = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true, comment: "Statistical comments."),
+                    AddMod_Date = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true, comment: "Indicates when a value was either added to the database or last modified."),
+                    CC = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: true, comment: "Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytical quality control, and number of samples analysed. Not included in this release, but is planned for future releases.")
                 },
                 constraints: table =>
                 {
@@ -275,11 +276,11 @@ namespace DBSetup.Migrations
                 columns: table => new
                 {
                     NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item.  If this field is defined as numeric, the leading zero will be lost."),
-                    Seq = table.Column<int>(type: "int", nullable: false, comment: "Sequence number."),
+                    Seq = table.Column<int>(type: "integer", nullable: false, comment: "Sequence number."),
                     Amount = table.Column<float>(type: "real", nullable: false, comment: "Unit modifier (for example, 1 in '1 cup')."),
-                    Msre_Desc = table.Column<string>(type: "nvarchar(84)", maxLength: 84, nullable: false, comment: "Description (for example, cup, diced, and 1-inch pieces)"),
+                    Msre_Desc = table.Column<string>(type: "character varying(84)", maxLength: 84, nullable: false, comment: "Description (for example, cup, diced, and 1-inch pieces)"),
                     Gm_Wgt = table.Column<float>(type: "real", nullable: false, comment: "Gram weight."),
-                    Num_Data_Pts = table.Column<int>(type: "int", nullable: true, comment: "Number of data points."),
+                    Num_Data_Pts = table.Column<int>(type: "integer", nullable: true, comment: "Number of data points."),
                     Std_Dev = table.Column<float>(type: "real", nullable: true, comment: "Standard deviation.")
                 },
                 constraints: table =>
@@ -300,13 +301,13 @@ namespace DBSetup.Migrations
                 schema: "SR28",
                 columns: table => new
                 {
-                    FootnoteId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FootnoteId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     NDB_No = table.Column<string>(type: "nchar(5)", nullable: false, comment: "5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost."),
-                    Footnt_No = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
-                    Footnt_Typ = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
+                    Footnt_No = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false, comment: "Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key. "),
+                    Footnt_Typ = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: false, comment: "Type of footnote: D = footnote adding information to the food description;  M = footnote adding information to measure description;  N = footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in."),
                     Nutr_No = table.Column<string>(type: "nchar(3)", nullable: true, comment: "Unique 3-digit identifier code for a nutrient to which footnote applies."),
-                    Footnt_Txt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Footnote text."),
+                    Footnt_Txt = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "Footnote text."),
                     NutrientDataFoodDescriptionId = table.Column<string>(type: "nchar(5)", nullable: true),
                     NutrientDataNutrientDefinitionId = table.Column<string>(type: "nchar(3)", nullable: true)
                 },
@@ -321,7 +322,7 @@ namespace DBSetup.Migrations
                         principalColumn: "NDB_No",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FOOTNOTE_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                        name: "FK_FOOTNOTE_NUT_DATA_NutrientDataFoodDescriptionId_NutrientDat~",
                         columns: x => new { x.NutrientDataFoodDescriptionId, x.NutrientDataNutrientDefinitionId },
                         principalSchema: "SR28",
                         principalTable: "NUT_DATA",
@@ -423,7 +424,7 @@ namespace DBSetup.Migrations
                 filter: "\"Footnt_Typ\" = 'N'");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FOOTNOTE_NutrientDataFoodDescriptionId_NutrientDataNutrientDefinitionId",
+                name: "IX_FOOTNOTE_NutrientDataFoodDescriptionId_NutrientDataNutrient~",
                 schema: "SR28",
                 table: "FOOTNOTE",
                 columns: new[] { "NutrientDataFoodDescriptionId", "NutrientDataNutrientDefinitionId" });
