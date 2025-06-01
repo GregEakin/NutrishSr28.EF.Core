@@ -22,7 +22,7 @@ public class NutrientDefinitionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var nutrientDefinition = await context.NutrientDefinitions.FindAsync("255");
+        var nutrientDefinition = await context.NutrientDefinitions.FindAsync("255", TestContext.Current.CancellationToken);
         Assert.NotNull(nutrientDefinition);
         Assert.Equal("255", nutrientDefinition.NutrientDefinitionId);
         Assert.Equal("Water", nutrientDefinition.NutrDesc);
@@ -35,7 +35,7 @@ public class NutrientDefinitionTests
         await using var context = new EfCoreContext();
         var nutrientDefinition = await context.NutrientDefinitions
             .Include(nd => nd.DataSourceLinks)
-            .SingleAsync(nd => nd.NutrientDefinitionId == "255");
+            .SingleAsync(nd => nd.NutrientDefinitionId == "255", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientDefinition);
         var links = nutrientDefinition.DataSourceLinks;
@@ -50,7 +50,7 @@ public class NutrientDefinitionTests
         await using var context = new EfCoreContext();
         var nutrientDefinition = await context.NutrientDefinitions
             .Include(nd => nd.NutrientData)
-            .SingleAsync(nd => nd.NutrientDefinitionId == "255");
+            .SingleAsync(nd => nd.NutrientDefinitionId == "255", TestContext.Current.CancellationToken);
      
         Assert.NotNull(nutrientDefinition);
         var nutrientData = nutrientDefinition.NutrientData;

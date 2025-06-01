@@ -14,20 +14,32 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup.Tests.References;
+namespace DBSetup.Tests.Quantitative;
 
-public class DataSourceTests
+public class DataSourceCounts
 {
-    [Fact]
-    public async Task FindByKeyTest()
+    [Fact] 
+    public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var dataSource = await context.DataSources.FindAsync("S12", TestContext.Current.CancellationToken);
+        var count = await context.DataSources.CountAsync();
+
+        Assert.Equal(683, count);
+    }
+
+    [Fact]
+    public async Task DataSourceLinksTest()
+    {
+        await using var context = new EfCoreContext();
+        var dataSource = await context.DataSources
+            .Include(ds => ds.DataSourceLinks)
+            .SingleAsync(ds => ds.DataSourceId == "S8382", TestContext.Current.CancellationToken);
 
         Assert.NotNull(dataSource);
-        Assert.Equal("S12", dataSource.DataSourceId);
-        Assert.Equal("Food and Drug Administration (FDA), DHHS", dataSource.Authors);
-        Assert.Equal("FDA Total Diet Study", dataSource.Title);
-        Assert.Equal("1997", dataSource.Year);
+        var dataSourceLinks = dataSource.DataSourceLinks;
+        Assert.Equal(866, dataSourceLinks.Count);
+        foreach (var link in dataSourceLinks)
+            Assert.Equal(dataSource, link.DataSource);
     }
 }
+

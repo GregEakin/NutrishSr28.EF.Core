@@ -22,7 +22,7 @@ public class FoodGroupTests
     public async Task RecordNotFoundTest()
     {
         await using var context = new EfCoreContext();
-        var foodGroup = await context.FoodGroups.FindAsync("9999");
+        var foodGroup = await context.FoodGroups.FindAsync("9999", TestContext.Current.CancellationToken);
 
         Assert.Null(foodGroup);
     }
@@ -31,7 +31,7 @@ public class FoodGroupTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var foodGroup = await context.FoodGroups.FindAsync("0400");
+        var foodGroup = await context.FoodGroups.FindAsync("0400", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodGroup);
         Assert.Equal("0400", foodGroup.FoodGroupId);
@@ -43,7 +43,7 @@ public class FoodGroupTests
     {
         await using var context = new EfCoreContext();
         var foodGroup = await context.FoodGroups
-            .SingleAsync(fg => fg.FoodGroupName == "Fats and Oils");
+            .SingleAsync(fg => fg.FoodGroupName == "Fats and Oils", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodGroup);
         Assert.Equal("0400", foodGroup.FoodGroupId);
@@ -56,7 +56,7 @@ public class FoodGroupTests
         await using var context = new EfCoreContext();
         var foodGroup = await context.FoodGroups
             .Include(fg => fg.FoodDescriptions)
-            .SingleAsync(fg => fg.FoodGroupId == "0400");
+            .SingleAsync(fg => fg.FoodGroupId == "0400", TestContext.Current.CancellationToken);
 
         Assert.Equal(220, foodGroup.FoodDescriptions.Count);
         foreach (var foodDescription in foodGroup.FoodDescriptions) 

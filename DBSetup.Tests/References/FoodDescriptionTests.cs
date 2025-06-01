@@ -22,7 +22,7 @@ public class FoodDescriptionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var foodDescription = await context.FoodDescriptions.FindAsync("01119");
+        var foodDescription = await context.FoodDescriptions.FindAsync("01119", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodDescription);
         Assert.Equal("01119", foodDescription.FoodDescriptionId);
@@ -37,7 +37,7 @@ public class FoodDescriptionTests
         var foodDescription = await context.FoodDescriptions
             .Include(fd => fd.FoodGroup)
             .ThenInclude(fg => fg.FoodDescriptions)
-            .SingleAsync(fd => fd.FoodDescriptionId == "01119");
+            .SingleAsync(fd => fd.FoodDescriptionId == "01119", TestContext.Current.CancellationToken);
         
         Assert.NotNull(foodDescription);
         var foodGroup = foodDescription.FoodGroup;
@@ -54,7 +54,7 @@ public class FoodDescriptionTests
         var foodDescription = await context.FoodDescriptions
             .Include(fd => fd.LanguaLFactors)
             .ThenInclude(lf => lf.LanguaLDescription)
-            .SingleAsync(fd => fd.FoodDescriptionId == "02002");
+            .SingleAsync(fd => fd.FoodDescriptionId == "02002", TestContext.Current.CancellationToken);
         
         Assert.NotNull(foodDescription);
         var langualFactors = foodDescription.LanguaLFactors;
@@ -69,7 +69,7 @@ public class FoodDescriptionTests
         await using var context = new EfCoreContext();
         var foodDescription = await context.FoodDescriptions
             .Include(fd => fd.Footnotes)
-            .SingleAsync(fd => fd.FoodDescriptionId == "12120");
+            .SingleAsync(fd => fd.FoodDescriptionId == "12120", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodDescription);
 

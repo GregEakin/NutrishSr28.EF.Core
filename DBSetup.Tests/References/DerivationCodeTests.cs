@@ -22,7 +22,7 @@ public class DerivationCodeTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var derivationCode = await context.DerivationCodes.FindAsync("RC");
+        var derivationCode = await context.DerivationCodes.FindAsync("RC", TestContext.Current.CancellationToken);
 
         Assert.NotNull(derivationCode);
         Assert.Equal("RC", derivationCode.DerivationCodeId);
@@ -35,7 +35,7 @@ public class DerivationCodeTests
         await using var context = new EfCoreContext();
         var derivationCode = await context.DerivationCodes
             .Include(dc => dc.NutrientData)
-            .SingleAsync(dc => dc.DerivationCodeId == "RC");
+            .SingleAsync(dc => dc.DerivationCodeId == "RC", TestContext.Current.CancellationToken);
 
         Assert.NotNull(derivationCode);
         var nutrientData = derivationCode.NutrientData;
