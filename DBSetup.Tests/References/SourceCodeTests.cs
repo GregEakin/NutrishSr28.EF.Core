@@ -22,7 +22,7 @@ public class SourceCodeTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var sourceCode = await context.SourceCodes.FindAsync(11);
+        var sourceCode = await context.SourceCodes.FindAsync(11, TestContext.Current.CancellationToken);
 
         Assert.NotNull(sourceCode);
         Assert.Equal(11, sourceCode.SourceCodeId);
@@ -35,7 +35,7 @@ public class SourceCodeTests
         await using var context = new EfCoreContext();
         var sourceCode = await context.SourceCodes
             .Include(sc => sc.NutrientData)
-            .SingleAsync(sc => sc.SourceCodeId == 11);
+            .SingleAsync(sc => sc.SourceCodeId == 11, TestContext.Current.CancellationToken);
         
         Assert.NotNull(sourceCode);
         var nutrientData = sourceCode.NutrientData;

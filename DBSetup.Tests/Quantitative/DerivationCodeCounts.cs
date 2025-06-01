@@ -14,20 +14,16 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup.Tests.References;
+namespace DBSetup.Tests.Quantitative;
 
-public class DataSourceTests
+public class DerivationCodeCounts
 {
     [Fact]
-    public async Task FindByKeyTest()
+    public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var dataSource = await context.DataSources.FindAsync("S12", TestContext.Current.CancellationToken);
+        var count = await context.DerivationCodes.CountAsync();
 
-        Assert.NotNull(dataSource);
-        Assert.Equal("S12", dataSource.DataSourceId);
-        Assert.Equal("Food and Drug Administration (FDA), DHHS", dataSource.Authors);
-        Assert.Equal("FDA Total Diet Study", dataSource.Title);
-        Assert.Equal("1997", dataSource.Year);
+        Assert.Equal(55, count);
     }
 }

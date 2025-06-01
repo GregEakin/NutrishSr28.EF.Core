@@ -22,7 +22,7 @@ public class NutrientDataTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var nutrientData = await context.NutrientData.FindAsync("12538", "421");
+        var nutrientData = await context.NutrientData.FindAsync("12538", "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
         Assert.Equal("12538", nutrientData.FoodDescriptionId);
@@ -37,7 +37,7 @@ public class NutrientDataTests
         await using var context = new EfCoreContext();
         var nutrientData = await context.NutrientData
             .Include(nd => nd.FoodDescription)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
         Assert.NotNull(nutrientData.FoodDescription);
@@ -51,7 +51,7 @@ public class NutrientDataTests
         await using var context = new EfCoreContext();
         var nutrientData = await context.NutrientData
             .Include(nd => nd.FoodDescriptionRef)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
         Assert.NotNull(nutrientData.FoodDescriptionRef);
@@ -65,7 +65,7 @@ public class NutrientDataTests
     //     await using var context = new EfCoreContext();
     //     var nutrientData = await context.NutrientData
     //         .Include(nd => nd.Footnote)
-    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
     //
     //     Assert.NotNull(nutrientData);
     // }
@@ -76,7 +76,7 @@ public class NutrientDataTests
     //     await using var context = new EfCoreContext();
     //     var nutrientData = await context.NutrientData
     //         .Include(nd => nd.DataSources)
-    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+    //         .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
     //
     //     Assert.NotNull(nutrientData);
     // }
@@ -87,7 +87,7 @@ public class NutrientDataTests
         await using var context = new EfCoreContext();
         var nutrientData = await context.NutrientData
             .Include(nd => nd.NutrientDefinition)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
         Assert.NotNull(nutrientData.NutrientDefinition);
@@ -101,7 +101,7 @@ public class NutrientDataTests
         await using var context = new EfCoreContext();
         var nutrientData = await context.NutrientData
             .Include(nd => nd.SourceCode)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
     }
@@ -112,7 +112,7 @@ public class NutrientDataTests
         await using var context = new EfCoreContext();
         var nutrientData = await context.NutrientData
             .Include(nd => nd.DerivationCode)
-            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421");
+            .SingleAsync(nd => nd.FoodDescriptionId == "12538" && nd.NutrientDefinitionId == "421", TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
     }

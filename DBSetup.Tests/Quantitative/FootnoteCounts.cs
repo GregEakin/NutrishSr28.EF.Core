@@ -14,20 +14,32 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DBSetup.Tests.References;
+namespace DBSetup.Tests.Quantitative;
 
-public class DataSourceTests
+public class FootnoteCounts
 {
     [Fact]
-    public async Task FindByKeyTest()
+    public async Task FullCountDTest()
     {
         await using var context = new EfCoreContext();
-        var dataSource = await context.DataSources.FindAsync("S12", TestContext.Current.CancellationToken);
+        var count = await context.FootnoteDs.CountAsync();
 
-        Assert.NotNull(dataSource);
-        Assert.Equal("S12", dataSource.DataSourceId);
-        Assert.Equal("Food and Drug Administration (FDA), DHHS", dataSource.Authors);
-        Assert.Equal("FDA Total Diet Study", dataSource.Title);
-        Assert.Equal("1997", dataSource.Year);
+        Assert.Equal(261, count);
+    }
+    [Fact]
+    public async Task FullCountMTest()
+    {
+        await using var context = new EfCoreContext();
+        var count = await context.FootnoteMs.CountAsync();
+
+        Assert.Equal(18, count);
+    }
+    [Fact]
+    public async Task FullCountNTest()
+    {
+        await using var context = new EfCoreContext();
+        var count = await context.FootnoteNs.CountAsync();
+
+        Assert.Equal(273, count);
     }
 }

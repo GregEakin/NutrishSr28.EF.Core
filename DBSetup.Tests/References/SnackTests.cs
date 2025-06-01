@@ -25,7 +25,7 @@ public class SnackTests
         var foodDescription = await context.FoodDescriptions
             .Include(fd => fd.NutrientData)
             .ThenInclude(nd => nd.NutrientDefinition)
-            .SingleAsync(fd => fd.Long_Desc == "Spinach, raw");
+            .SingleAsync(fd => fd.Long_Desc == "Spinach, raw", TestContext.Current.CancellationToken);
         
         Assert.NotNull(foodDescription);
 
@@ -56,7 +56,7 @@ public class SnackTests
             .Include(fd => fd.NutrientData)
             .ThenInclude(nd => nd.NutrientDefinition)
             .Include(fd => fd.Weights)
-            .SingleAsync(fd => fd.Long_Desc == "Ice creams, BREYERS, No Sugar Added, Butter Pecan");
+            .SingleAsync(fd => fd.Long_Desc == "Ice creams, BREYERS, No Sugar Added, Butter Pecan", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodDescription);
 
@@ -92,7 +92,7 @@ public class SnackTests
             .Include(fd => fd.NutrientData)
             .ThenInclude(nd => nd.NutrientDefinition)
             .Include(fd => fd.Weights)
-            .SingleAsync(fd => fd.Long_Desc == "MURRAY, SUGAR FREE, Chocolate Chip & Pecan Cookies");
+            .SingleAsync(fd => fd.Long_Desc == "MURRAY, SUGAR FREE, Chocolate Chip & Pecan Cookies", TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodDescription);
 
