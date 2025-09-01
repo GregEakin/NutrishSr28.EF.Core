@@ -22,7 +22,7 @@ public class SourceCodeCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.SourceCodes.CountAsync();
+        var count = await context.SourceCodes.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(10, count);
     }

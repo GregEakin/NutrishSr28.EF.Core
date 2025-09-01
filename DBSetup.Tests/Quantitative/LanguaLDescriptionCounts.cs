@@ -22,7 +22,7 @@ public class LanguaLDescriptionCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.LanguaLDescriptions.CountAsync();
+        var count = await context.LanguaLDescriptions.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(774, count);
     }

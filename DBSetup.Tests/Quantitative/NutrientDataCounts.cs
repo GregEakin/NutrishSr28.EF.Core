@@ -22,7 +22,7 @@ public class NutrientDataCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.NutrientData.CountAsync();
+        var count = await context.NutrientData.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(679045, count);
     }
@@ -55,7 +55,7 @@ public class NutrientDataCounts
             .OrderBy(nd => nd.NutrDesc)
             .Select(nd => new Tuple<string, int>(nd.NutrDesc, nd.NutrientData.Count).ToValueTuple())
             .Take(14)
-            .ToArrayAsync();
+            .ToArrayAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(expectedValues, foodGroupCounts);
     }

@@ -22,7 +22,7 @@ public class WeightCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.Weights.CountAsync();
+        var count = await context.Weights.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(15438, count);
     }

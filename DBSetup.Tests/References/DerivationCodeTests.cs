@@ -22,7 +22,7 @@ public class DerivationCodeTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var derivationCode = await context.DerivationCodes.FindAsync("RC", TestContext.Current.CancellationToken);
+        var derivationCode = await context.DerivationCodes.FindAsync(["RC"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(derivationCode);
         Assert.Equal("RC", derivationCode.DerivationCodeId);

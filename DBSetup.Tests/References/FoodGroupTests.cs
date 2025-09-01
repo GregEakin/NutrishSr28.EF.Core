@@ -22,7 +22,7 @@ public class FoodGroupTests
     public async Task RecordNotFoundTest()
     {
         await using var context = new EfCoreContext();
-        var foodGroup = await context.FoodGroups.FindAsync("9999", TestContext.Current.CancellationToken);
+        var foodGroup = await context.FoodGroups.FindAsync(["9999"], TestContext.Current.CancellationToken);
 
         Assert.Null(foodGroup);
     }
@@ -31,7 +31,7 @@ public class FoodGroupTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var foodGroup = await context.FoodGroups.FindAsync("0400", TestContext.Current.CancellationToken);
+        var foodGroup = await context.FoodGroups.FindAsync(["0400"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodGroup);
         Assert.Equal("0400", foodGroup.FoodGroupId);

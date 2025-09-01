@@ -22,7 +22,7 @@ public class DerivationCodeCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.DerivationCodes.CountAsync();
+        var count = await context.DerivationCodes.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(55, count);
     }

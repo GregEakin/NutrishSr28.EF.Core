@@ -22,7 +22,7 @@ public class WeightTests()
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var weight = await context.Weights.FindAsync("01001", 1, TestContext.Current.CancellationToken);
+        var weight = await context.Weights.FindAsync(["01001", 1], TestContext.Current.CancellationToken);
      
         Assert.NotNull(weight);
         Assert.Equal("01001", weight.FoodDescriptionId);

@@ -22,7 +22,7 @@ public class DataSourceTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var dataSource = await context.DataSources.FindAsync("S12", TestContext.Current.CancellationToken);
+        var dataSource = await context.DataSources.FindAsync(["S12"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(dataSource);
         Assert.Equal("S12", dataSource.DataSourceId);
