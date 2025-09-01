@@ -41,7 +41,7 @@ public class FootnoteTest
     {
         await using var context = new EfCoreContext();
         var footnoteDs = context.FootnoteDs;
-        var count = await footnoteDs.CountAsync();
+        var count = await footnoteDs.CountAsync(TestContext.Current.CancellationToken);
         Assert.Equal(261, count);
     }
 
@@ -62,7 +62,7 @@ public class FootnoteTest
     {
         await using var context = new EfCoreContext();
         var footnoteNs = context.FootnoteNs;
-        var count = await footnoteNs.CountAsync();
+        var count = await footnoteNs.CountAsync(TestContext.Current.CancellationToken);
         Assert.Equal(273, count);
     }
 

@@ -22,7 +22,7 @@ public class NutrientDefinitionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var nutrientDefinition = await context.NutrientDefinitions.FindAsync("255", TestContext.Current.CancellationToken);
+        var nutrientDefinition = await context.NutrientDefinitions.FindAsync(["255"], TestContext.Current.CancellationToken);
         Assert.NotNull(nutrientDefinition);
         Assert.Equal("255", nutrientDefinition.NutrientDefinitionId);
         Assert.Equal("Water", nutrientDefinition.NutrDesc);

@@ -22,7 +22,7 @@ public class NutrientDefinitionCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.NutrientDefinitions.CountAsync();
+        var count = await context.NutrientDefinitions.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(150, count);
     }

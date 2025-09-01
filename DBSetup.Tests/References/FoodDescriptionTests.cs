@@ -22,7 +22,7 @@ public class FoodDescriptionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var foodDescription = await context.FoodDescriptions.FindAsync("01119", TestContext.Current.CancellationToken);
+        var foodDescription = await context.FoodDescriptions.FindAsync(["01119"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(foodDescription);
         Assert.Equal("01119", foodDescription.FoodDescriptionId);

@@ -22,7 +22,7 @@ public class LanguaLDescriptionTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var languaLDescription = await context.LanguaLDescriptions.FindAsync("A0208", TestContext.Current.CancellationToken);
+        var languaLDescription = await context.LanguaLDescriptions.FindAsync(["A0208"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(languaLDescription);
         Assert.Equal("A0208", languaLDescription.LangualDescriptionId);

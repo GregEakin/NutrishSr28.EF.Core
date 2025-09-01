@@ -22,7 +22,7 @@ public class DataSourceCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.DataSources.CountAsync();
+        var count = await context.DataSources.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(683, count);
     }

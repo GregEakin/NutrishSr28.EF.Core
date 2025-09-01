@@ -22,7 +22,7 @@ public class NutrientDataTests
     public async Task FindByKeyTest()
     {
         await using var context = new EfCoreContext();
-        var nutrientData = await context.NutrientData.FindAsync("12538", "421", TestContext.Current.CancellationToken);
+        var nutrientData = await context.NutrientData.FindAsync(["12538", "421"], TestContext.Current.CancellationToken);
 
         Assert.NotNull(nutrientData);
         Assert.Equal("12538", nutrientData.FoodDescriptionId);

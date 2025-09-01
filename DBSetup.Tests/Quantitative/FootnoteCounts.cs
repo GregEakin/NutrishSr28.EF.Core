@@ -22,7 +22,7 @@ public class FootnoteCounts
     public async Task FullCountDTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.FootnoteDs.CountAsync();
+        var count = await context.FootnoteDs.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(261, count);
     }
@@ -30,7 +30,7 @@ public class FootnoteCounts
     public async Task FullCountMTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.FootnoteMs.CountAsync();
+        var count = await context.FootnoteMs.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(18, count);
     }
@@ -38,7 +38,7 @@ public class FootnoteCounts
     public async Task FullCountNTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.FootnoteNs.CountAsync();
+        var count = await context.FootnoteNs.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(273, count);
     }

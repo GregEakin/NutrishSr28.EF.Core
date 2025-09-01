@@ -22,7 +22,7 @@ public class FoodDescriptionCounts
     public async Task FullCountTest()
     {
         await using var context = new EfCoreContext();
-        var count = await context.FoodDescriptions.CountAsync();
+        var count = await context.FoodDescriptions.CountAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(8790, count);
     }
