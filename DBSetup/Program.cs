@@ -15,13 +15,37 @@
 using System.Diagnostics;
 using DBSetup;
 using DBSetup.Loader;
+using Microsoft.EntityFrameworkCore;
 
 Console.WriteLine("Hello, World!");
-const string dir = @"../data";
+
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb");
+var optionsBuilder = new DbContextOptionsBuilder<EfCoreContext>()
+    .UseNpgsql(connectionString);
+
+Console.WriteLine("Current working dir {0}", Environment.CurrentDirectory);
+// foreach (var file in Directory.GetFiles(Environment.CurrentDirectory))
+//     Console.WriteLine(file);
+// Console.WriteLine("-----");
+// foreach (var file in Directory.GetDirectories(Environment.CurrentDirectory))
+//     Console.WriteLine(file);
+// Console.WriteLine("-----");
+
+var dir = Path.Join(Environment.CurrentDirectory, "Data");
+
+// Console.WriteLine(dir);
+// foreach (var file in Directory.GetFiles(dir))
+//     Console.WriteLine(file);
+// Console.WriteLine("-----");
+
+
+// if (Directory.Exists(dir))
+//     throw new DirectoryNotFoundException(dir);
 
 var watch = Stopwatch.StartNew();
 
-await using var context = new EfCoreContext();
+await using var context = new EfCoreContext(optionsBuilder.Options);
+await context.Database.EnsureCreatedAsync();
 
 await new FD_GROUP().ParseFileAsync(context, dir);
 await new SRC_CD().ParseFileAsync(context, dir);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11010.61 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBSetup", "DBSetup\DBSetup.csproj", "{2601E2D3-23D1-4EA0-8F31-CD7564C84854}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "AppHost\AppHost.csproj", "{4E863325-DD71-428F-839F-3BCE3F358FF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,8 +28,15 @@ Global
 		{78056528-8578-4F3D-AC98-88652B17562D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78056528-8578-4F3D-AC98-88652B17562D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78056528-8578-4F3D-AC98-88652B17562D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E863325-DD71-428F-839F-3BCE3F358FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E863325-DD71-428F-839F-3BCE3F358FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E863325-DD71-428F-839F-3BCE3F358FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E863325-DD71-428F-839F-3BCE3F358FF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E50E9FA-A9FB-475E-A589-A1064661A38F}
 	EndGlobalSection
 EndGlobal
