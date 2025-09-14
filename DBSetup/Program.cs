@@ -17,7 +17,7 @@ using DBSetup;
 using DBSetup.Loader;
 
 Console.WriteLine("Hello, World!");
-const string dir = @"..\data";
+const string dir = @"..\..\..\..\data";
 
 var watch = Stopwatch.StartNew();
 
