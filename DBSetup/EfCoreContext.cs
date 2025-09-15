@@ -66,16 +66,6 @@ public class EfCoreContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options
             .UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb"));
-
-    // private const string ConnectionString = "Host=homer.lab.eakin.wtf;Database=SR28;Username=docker;Password=secret";
-    // => options.UseSqlite($"Data Source={DbPath}");
-    // private const string ConnectionString = @"Server=(localdb)\SR28;Database=Nutrish;";
-    //
-    // protected override void OnConfiguring(DbContextOptionsBuilder options)
-    //     => options
-    //         .UseSqlServer(ConnectionString);
-    //         // .LogTo(Console.WriteLine)
-    //         // .EnableSensitiveDataLogging();
 }
 
 // public class ETC : IEntityTypeConfiguration<FoodDescription>

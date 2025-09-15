@@ -53,7 +53,7 @@ US Department of Agriculture, Agricultural Research Service. 2016. Nutrient Data
 ## Author
 :fire: [Greg Eakin](https://www.linkedin.com/in/gregeakin)
 
-# PostgreSQL DB Stuff
+## PostgreSQL DB Stuff
 ```shell
 docker exec -it postgres-db-1 psql -U greg -c "CREATE database SR28;"
 docker exec -it postgres-db-1 psql -U greg -c "CREATE USER docker;"
