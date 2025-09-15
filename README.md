@@ -7,7 +7,7 @@ This is an experiment in configuring an existing [USDA Nutrition Database](https
 1. Unzip the [Full Version of the SR28 ASCII file format](https://www.ars.usda.gov/northeast-area/beltsville-md-bhnrc/beltsville-human-nutrition-research-center/methods-and-application-of-food-composition-laboratory/mafcl-site-pages/sr11-sr28/) into the data folder.
 1. Unzip the patch file (May 2016) into the data2 folder.
 	Overwrite the DATASRCLN.txt and sr28_doc.pdf
-```
+```shell
 cd ~/source/NutrishSr28.EF.Core
 curl https://www.ars.usda.gov/ARSUserFiles/80400535/DATA/SR/sr28/dnload/sr28asc.zip --output sr28asc.zip
 mkdir data/
@@ -24,7 +24,7 @@ dotnet test
 ```
 
 ## Convert over to PostgreSQL:
-```
+```shell
 cd DBSetup
 rm migrations/*
 dotnet ef migrations remove
@@ -54,10 +54,53 @@ US Department of Agriculture, Agricultural Research Service. 2016. Nutrient Data
 :fire: [Greg Eakin](https://www.linkedin.com/in/gregeakin)
 
 # PostgreSQL DB Stuff
-```
+```shell
 docker exec -it postgres-db-1 psql -U greg -c "CREATE database SR28;"
 docker exec -it postgres-db-1 psql -U greg -c "CREATE USER docker;"
 docker exec -it postgres-db-1 psql -U greg -c "ALTER USER docker WITH PASSWORD 'secret';"
 docker exec -it postgres-db-1 psql -U greg -c "GRANT ALL PRIVILEGES ON DATABASE SR28 TO docker;"
 docker exec -it postgres-db-1 psql -U greg -c "ALTER USER docker WITH SUPERUSER;"
+```
+
+## Common Measure of Foods
+```SQL
+SELECT * FROM "SR28"."FOOD_DES"
+where 
+	"SR28"."FOOD_DES"."NDB_No" = '03213'
+ORDER BY "NDB_No" ASC 
+```
+
+```SQL
+SELECT * FROM "SR28"."WEIGHT"
+where 
+	"SR28"."WEIGHT"."NDB_No" = '03213'
+ORDER BY "NDB_No" ASC, "Seq" ASC 
+```
+
+```SQL
+select 
+	"SR28"."NUTR_DEF"."NutrDesc",
+	"SR28"."NUTR_DEF"."Units",
+	"SR28"."NUT_DATA"."Nutr_Val"
+from 
+	"SR28"."NUTR_DEF" 
+inner join 
+	"SR28"."NUT_DATA" 
+on 
+	"SR28"."NUTR_DEF"."Nutr_No" = "SR28"."NUT_DATA"."Nutr_No" 
+where 
+	"SR28"."NUT_DATA"."NDB_No" = '03213'
+order by
+	"SR28"."NUTR_DEF"."SR_Order"
+```
+
+The following formula is used to calculate the nutrient content per household measure: 
+```
+N = (V*W)/100 
+```
+where: 
+```
+N = nutrient value per household measure, 
+V = nutrient value per 100 g (Nutr_Val in the Nutrient Data file), and 
+W = g weight of portion (Gm_Wgt in the Weight file).
 ```
