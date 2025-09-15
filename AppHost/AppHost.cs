@@ -15,27 +15,28 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("postgres")
-    .WithDataVolume(isReadOnly: false);
+    .WithDataVolume(isReadOnly: false)
+    .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))
+    .WithPgWeb(pgWeb => pgWeb.WithHostPort(5051));
 
 var nutrishDb = postgres.AddDatabase("nutrishdb");
 
-// Add pgAdmin container and link to Postgres
-var pgadmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
-    .WithEnvironment("PGADMIN_DEFAULT_EMAIL", "admin@localhost.com")
-    .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "admin")
-    .WithReference(postgres) // This links pgAdmin to the Postgres server
-    .WithHttpEndpoint(port: 5050, targetPort: 80, name: "pgadmin"); // Expose pgAdmin web UI
+// var pgadmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
+//     .WithEnvironment("PGADMIN_DEFAULT_EMAIL", "admin@localhost.com")
+//     .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "admin")
+//     .WithReference(postgres)
+//     .WithHttpEndpoint(port: 5050, targetPort: 80, name: "pgadmin");
+//     // .WithVolume("../../AppHost/register_server.sh", "/docker-entrypoint-init.d/register_server.sh", isReadOnly: true)
+//     // .WithVolume("/tmp/pgadmin-servers", "/pgadmin4/servers", isReadOnly: false)
+//     // .WithEnvironment("PGADMIN_SERVER_JSON_FILE", "/pgadmin4/servers/servers.json")
+//     // .WithCommand("/bin/bash", "-c", "/docker-entrypoint-init.d/register_server.sh && /entrypoint.sh");
 
-// var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
-//     .WithReference(nutrishDb)
-//     // .WithExternalHttpEndpoints()
-//     .WithVolume("sr28src", "../../sr28asc:/app/sr28asc", isReadOnly: true);
-
-// var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
-//     .WithReference(nutrishDb)
-//     .WithProjectVolume("../../sr28asc", "/app/sr28asc", isReadOnly: true);
 
 var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
     .WithReference(nutrishDb);
+
+var tests = builder.AddProject<Projects.DBSetup_Tests>("tests")
+    .WithReference(nutrishDb)
+    .WithEnvironment("ConnectionStrings__nutrishdb", nutrishDb);
 
 builder.Build().Run();

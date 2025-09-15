@@ -11,11 +11,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\register_server.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\register_server.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.4.2" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.4.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DBSetup.Tests\DBSetup.Tests.csproj" />
     <ProjectReference Include="..\DBSetup\DBSetup.csproj" />
   </ItemGroup>
 

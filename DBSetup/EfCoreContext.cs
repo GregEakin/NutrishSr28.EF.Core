@@ -62,6 +62,11 @@ public class EfCoreContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
+    // var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb");
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        => options
+            .UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb"));
+
     // private const string ConnectionString = "Host=homer.lab.eakin.wtf;Database=SR28;Username=docker;Password=secret";
     // => options.UseSqlite($"Data Source={DbPath}");
     // private const string ConnectionString = @"Server=(localdb)\SR28;Database=Nutrish;";
