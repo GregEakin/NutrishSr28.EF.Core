@@ -21,22 +21,12 @@ var postgres = builder.AddPostgres("postgres")
 
 var nutrishDb = postgres.AddDatabase("nutrishdb");
 
-// var pgadmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
-//     .WithEnvironment("PGADMIN_DEFAULT_EMAIL", "admin@localhost.com")
-//     .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "admin")
-//     .WithReference(postgres)
-//     .WithHttpEndpoint(port: 5050, targetPort: 80, name: "pgadmin");
-//     // .WithVolume("../../AppHost/register_server.sh", "/docker-entrypoint-init.d/register_server.sh", isReadOnly: true)
-//     // .WithVolume("/tmp/pgadmin-servers", "/pgadmin4/servers", isReadOnly: false)
-//     // .WithEnvironment("PGADMIN_SERVER_JSON_FILE", "/pgadmin4/servers/servers.json")
-//     // .WithCommand("/bin/bash", "-c", "/docker-entrypoint-init.d/register_server.sh && /entrypoint.sh");
-
-
 var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
     .WithReference(nutrishDb);
 
 var tests = builder.AddProject<Projects.DBSetup_Tests>("tests")
     .WithReference(nutrishDb)
     .WithEnvironment("ConnectionStrings__nutrishdb", nutrishDb);
+    // .DependsOn(setup);
 
 builder.Build().Run();
