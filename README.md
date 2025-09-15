@@ -11,7 +11,7 @@ This is an experiment in configuring an existing [USDA Nutrition Database](https
 cd ~/source/NutrishSr28.EF.Core
 curl https://www.ars.usda.gov/ARSUserFiles/80400535/DATA/SR/sr28/dnload/sr28asc.zip --output sr28asc.zip
 mkdir data/
-unzip sr28asc.zip -d data/
+unzip sr28asc.zip -d ar28asc/
 
 SqllocalDB i
 SqllocalDB create "SR28" -s

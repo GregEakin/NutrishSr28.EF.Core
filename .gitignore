@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/data/
+
+# Copy of the SR28ASC Database
+/sr28asc/

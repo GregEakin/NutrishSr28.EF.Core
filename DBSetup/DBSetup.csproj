@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Data\**\*">
-      <Link>Data\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    <Content Include="..\sr28asc\**\*">
+      <Link>sr28asc\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

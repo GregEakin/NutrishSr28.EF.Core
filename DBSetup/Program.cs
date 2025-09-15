@@ -31,7 +31,7 @@ Console.WriteLine("Current working dir {0}", Environment.CurrentDirectory);
 //     Console.WriteLine(file);
 // Console.WriteLine("-----");
 
-var dir = Path.Join(Environment.CurrentDirectory, "Data");
+var dir = Path.Join(Environment.CurrentDirectory, "sr28asc");
 
 // Console.WriteLine(dir);
 // foreach (var file in Directory.GetFiles(dir))

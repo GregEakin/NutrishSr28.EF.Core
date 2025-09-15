@@ -29,11 +29,11 @@ var pgadmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
 // var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
 //     .WithReference(nutrishDb)
 //     // .WithExternalHttpEndpoints()
-//     .WithVolume("data", "../../Data:/app/data", isReadOnly: true);
+//     .WithVolume("sr28src", "../../sr28asc:/app/sr28asc", isReadOnly: true);
 
 // var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
 //     .WithReference(nutrishDb)
-//     .WithProjectVolume("../../Data", "/app/data", isReadOnly: true);
+//     .WithProjectVolume("../../sr28asc", "/app/sr28asc", isReadOnly: true);
 
 var setup = builder.AddProject<Projects.DBSetup>("dbsetup")
     .WithReference(nutrishDb);
