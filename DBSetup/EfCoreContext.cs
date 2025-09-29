@@ -12,6 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using CsvHelper.Configuration;
 using DBSetup.Data;
 using DBSetup.Loader;
 using Microsoft.EntityFrameworkCore;
@@ -62,10 +63,12 @@ public class EfCoreContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    // var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb");
     protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options
-            .UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb"));
+    {
+        var environmentVariable = Environment.GetEnvironmentVariable("ConnectionStrings__nutrishdb");
+        if (!string.IsNullOrWhiteSpace(environmentVariable))
+            options.UseNpgsql(environmentVariable);
+    }
 }
 
 // public class ETC : IEntityTypeConfiguration<FoodDescription>
